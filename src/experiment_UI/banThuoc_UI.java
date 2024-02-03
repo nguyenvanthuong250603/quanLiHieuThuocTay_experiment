@@ -1,6 +1,7 @@
 package experiment_UI;
 
 import javax.print.attribute.TextSyntax;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -13,6 +14,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.BorderUIResource.BevelBorderUIResource;
@@ -23,6 +25,7 @@ import experiment_UI.Generate_All.CustomTableCellRenderer;
 import static experiment_UI.Generate_All.*;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.FocusEvent;
@@ -35,30 +38,36 @@ public class banThuoc_UI {
 	private Object[][] object_custommer, object_sell;
 	private JComboBox optionGender;
 	private JLabel labelTotal,ll;
-	public JPanel banThuoc() {
+	private JButton btnTimKH;
+	private JTextField jtextMaKH;
+	private JTextArea jtextNote;
+	public JPanel getBanThuoc() {
 		JPanel sellManagement = new JPanel(new BorderLayout());
 		sellManagement.add(table_Drug(), BorderLayout.CENTER);
 		sellManagement.add(inputSell(), BorderLayout.EAST);
 		forcusListen();
+		
+		hidden(false);
 		cb.addActionListener(e -> {
 
 			if (cb.isSelected()) {
-				for (int i = 0; i < object_custommer.length; i++) {
-					((JTextField) object_custommer[i][1]).setEditable(true);
-					optionGender.setEnabled(true);
-
-				}
+				hidden(true);
 			} else {
 
-				for (int i = 0; i < object_custommer.length; i++) {
-					((JTextField) object_custommer[i][1]).setEditable(false);
-					optionGender.setEnabled(false);
-				}
+				hidden(false);
 			}
 		});
 		return sellManagement;
 	}
+	public void hidden(boolean value) {
+		btnTimKH.setEnabled(value);
+		jtextMaKH.setEditable(value);
+		for (int i = 0; i < object_custommer.length; i++) {
+			((JTextField) object_custommer[i][1]).setEditable(value);
+			optionGender.setEnabled(value);
 
+		}
+	}
 	public JPanel table_Drug() {
 		JPanel Jpanel_table = new JPanel(new BorderLayout());
 		Jpanel_table.add(findID(), BorderLayout.NORTH);
@@ -72,7 +81,7 @@ public class banThuoc_UI {
 		f.setLayout(new BorderLayout());
 		JTextField text = new JTextField();
 		f.add(text, BorderLayout.CENTER);
-		f.setBorder(new EmptyBorder(5, 5, 5, 0));
+		f.setBorder(new EmptyBorder(5, 0, 5, 0));
 		JButton timkiemMaThuocHoacTen = buttonInPageSell("Tìm kiếm", "");
 		f.add(timkiemMaThuocHoacTen, BorderLayout.EAST);
 		return f;
@@ -123,11 +132,12 @@ public class banThuoc_UI {
 		JPanel input = new JPanel();
 		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
 		JPanel t = new JPanel(new BorderLayout());
+		
 		t.add(sampleModel("Mã KH"), BorderLayout.WEST);
-		t.add(new JTextField(15),BorderLayout.CENTER);
-		JButton btn = buttonInPageSell("Tìm", "");
-		btn.setPreferredSize(new Dimension(80, 30));
-		t.add(btn,BorderLayout.AFTER_LINE_ENDS);
+		t.add(jtextMaKH = new JTextField(15),BorderLayout.CENTER);
+		btnTimKH = buttonInPageSell("Tìm", "");
+		btnTimKH.setPreferredSize(new Dimension(80, 30));
+		t.add(btnTimKH,BorderLayout.AFTER_LINE_ENDS);
 		input.add(t);
 		Object[][] trage = { { "Tên KH", new JTextField() },
 				{ "SDT", new JTextField() } };
@@ -160,12 +170,8 @@ public class banThuoc_UI {
 			box.add(createNameAndTextField((JTextField) objects[1], objects[0].toString()));
 
 		}
-		
-		JPanel note = new JPanel(new BorderLayout());
-		note.add(sampleModel("Chú ý"),BorderLayout.NORTH);
-		note.add( new JTextField(),BorderLayout.CENTER);
-		note.setPreferredSize(new Dimension(100, 200));
-		box.add(note);
+		jtextNote = new JTextArea();
+		box.add(createTextArea("Lưu ý", jtextNote));
 		sell.add(box);
  		return sell;
 	}
@@ -218,13 +224,13 @@ public class banThuoc_UI {
 	public JPanel footer_sell() {
 		
 			JPanel footer = new JPanel();
-
+			JButton btn = null;
 			String[] object = { "Xóa", "gift\\trash-bin.png", "Thanh toán", "gift\\excel-file.png" };
 			for (int i = 0; i < object.length; i += 2) {
-				JButton btn = buttonInPageSell(object[i], object[i + 1]);
+				 btn = buttonInPageSell(object[i], object[i + 1]);
 				footer.add(btn);
 			}
-
+			btn.setPreferredSize(new Dimension(180, 40));
 			return footer;
 		
 	}

@@ -3,6 +3,7 @@ package experiment_UI;
 import static experiment_UI.brief.T;
 import static experiment_UI.brief.HD;
 import static experiment_UI.brief.BT;
+import static experiment_UI.brief.DT;
 import java.awt.Adjustable;
 import java.awt.BorderLayout;
 
@@ -42,6 +43,7 @@ public class default_UI extends JFrame {
 	private quanLyThuoc_UI quanLyThuoc = new quanLyThuoc_UI();
 	private AbstractButton selectedButton = null;
 	private banThuoc_UI banThuoc = new banThuoc_UI();
+	private doiThuoc_UI doiThuoc = new doiThuoc_UI();
 
 	public default_UI() {
 
@@ -77,7 +79,7 @@ public class default_UI extends JFrame {
 		String[][] t = {};
 		boxx.add(createCompoment("gift\\thuoc.png", "Bán thuốc", t, "gift\\thuoc.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Thuốc", t, "gift\\hoadon.png", true));
-		boxx.add(createCompoment("gift\\upload.png", "Trả thuốc", t, "gift\\hoadon.png", true));
+		boxx.add(createCompoment("gift\\upload.png", "Đổi Thuốc", t, "gift\\hoadon.png", true));
 		boxx.add(createCompoment("gift\\down.png", "Hóa đơn", t, "gift\\hoadon.png", false));
 		boxx.add(createCompoment("gift\\upload.png", "Khách hàng", t, "gift\\hoadon.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Nhân viên", t, "gift\\hoadon.png", true));
@@ -173,14 +175,14 @@ public class default_UI extends JFrame {
 					if (selectedButton != null) {
 						selectedButton.setBackground(new Color(0, 132, 255));
 					}
-					btn.setBackground(Color.RED);
+					btn.setBackground(Color.red);
 					selectedButton = btn;
 
 					switch (nameButton) {
 
 					case T: {
-						add(quanLyThuoc.thuocc(), BorderLayout.CENTER);
-
+						add(quanLyThuoc.getQuanLiThuoc(), BorderLayout.CENTER);
+						
 						break;
 					}
 					case HD: {
@@ -211,14 +213,18 @@ public class default_UI extends JFrame {
 					}
 					case BT: {
 
-						add(banThuoc.banThuoc(), BorderLayout.CENTER);
+						add(banThuoc.getBanThuoc(), BorderLayout.CENTER);
 
+						break;
+					}
+					case DT:{
+						add(doiThuoc.getDoiThuoc(),BorderLayout.CENTER);
 						break;
 					}
 					default:
 						throw new IllegalArgumentException("Unexpected value: " + nameButton);
 					}
-
+					
 					repaint();
 					revalidate();
 

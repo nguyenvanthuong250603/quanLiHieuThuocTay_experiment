@@ -30,7 +30,7 @@ import javax.swing.JPanel;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
@@ -47,12 +47,12 @@ public class quanLyThuoc_UI {
 	private JLabel labelImage;
 	private JTextField jTextMaThuoc, jTextTenThuoc, jTextGiaThuoc, jTextSoLuong, jTextNgaySx, jTextNgayHetHan,
 			jTextDonVi;
-	private JComboBox cbNSX,cbLoaiThuoc;
+	private JComboBox cbNSX,cbLoaiThuoc,cbTuoiSD;
 	private JCheckBox cb;
 	private JDateChooser JdateNgaySanXuat, JdateNgayHetHan;
 	private Object[][] object_inf, object_detail;
-
-	public JPanel thuocc() {
+	private JTextArea jTextAreaMoTa;
+	public JPanel getQuanLiThuoc() {
 		JPanel container = new JPanel(new BorderLayout());
 		container.add(searchAndfilter(), BorderLayout.CENTER);
 		container.add(inputProduct(), BorderLayout.EAST);
@@ -135,6 +135,7 @@ public class quanLyThuoc_UI {
 		cbLoaiThuoc = new JComboBox(optionNsx);
 		box1.add(createJcombobox("Loại thuốc",cbLoaiThuoc));
 
+		
 		box.add(box1, BorderLayout.CENTER);
 		JButton loc = buttonInPage("Lọc", "");
 		box.add(loc, BorderLayout.EAST);
@@ -208,7 +209,7 @@ public class quanLyThuoc_UI {
 		bottom.setLayout(new BoxLayout(bottom, BoxLayout.Y_AXIS));
 		String[] optionNsx = { "NSX1", "NSX2", "NSX3" };
 		Object[][] trage = { { "Số lượng", new JTextField() }, { "Giá", new JTextField() },
-				{ "Đơn vị", new JTextField() }, { "NSX", new JComboBox(optionNsx) }, { "Loại thuốc", new JComboBox(optionNsx)},
+				{ "Đơn vị", new JTextField() }, { "Loại thuốc", new JComboBox(optionNsx)},{"Độ tuổi",new JComboBox(optionNsx)},{ "NSX", new JComboBox(optionNsx) },
 				{ "Ngày SX", new JDateChooser() }, { "Ngày Hết Hạn", new JDateChooser() } };
 		object_inf = trage;
 		for (Object[] objects : object_inf) {
@@ -238,11 +239,13 @@ public class quanLyThuoc_UI {
 		detail_compoment.setLayout(new BoxLayout(detail_compoment, BoxLayout.Y_AXIS));
 		Object[][] trage = { { "Thành phần", new JTextField() }, { "Chỉ định", new JTextField() },
 				 { "Liều dùng", new JTextField() }, { "Chống chỉ đinh", new JTextField() },
-				{ "Bảo quản", new JTextField() },{ "Chỉ định", new JTextField() },{"Địa chỉ NSX", new JTextField()}};
+				{ "Bảo quản", new JTextField() },{"Địa chỉ NSX", new JTextField()}};
 		object_detail = trage;
 		for (Object[] objects : trage) {
 			detail_compoment.add(createNameAndTextField((JTextField)objects[1], objects[0].toString()));
 		};
+		jTextAreaMoTa  = new JTextArea();
+		detail_compoment.add(createTextArea("Mô tả", jTextAreaMoTa));
 		JScrollPane scroll = new JScrollPane(detail_compoment);
 		detail_big.add(scroll);
 		detail_big.add(footer_inf(),BorderLayout.SOUTH);
@@ -296,8 +299,6 @@ public class quanLyThuoc_UI {
 			public void actionPerformed(ActionEvent e) {
 				if (nameBtn.equals("Chọn hình ảnh")) {
 					chooseImage();
-
-					
 
 						System.out.println(((JTextField) object_inf[0][1])
 								.getText());

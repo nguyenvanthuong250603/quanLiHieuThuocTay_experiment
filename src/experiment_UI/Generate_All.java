@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
@@ -39,7 +40,7 @@ public class Generate_All {
 	}
 
 	public static void createTitle(JPanel t, String title) {
-		TitledBorder boderDecor = new TitledBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 4), title);
+		TitledBorder boderDecor = new TitledBorder(BorderFactory.createLineBorder(new Color(190,195,199), 4), title);
 
 		boderDecor.setTitleColor(new Color(0, 132, 255));
 		boderDecor.setTitleFont(new Font("Arial", Font.ITALIC, 20));
@@ -62,7 +63,7 @@ public class Generate_All {
 		JPanel div = new JPanel(new BorderLayout());
 		div.add(sampleModel(nameLabel), BorderLayout.WEST);
 		div.add(jtext, BorderLayout.CENTER);
-		div.setBorder(new EmptyBorder(5,0,5,0));
+		div.setBorder(new EmptyBorder(5,5,5,5));
 		return div;
 	}
 
@@ -97,5 +98,14 @@ public class Generate_All {
 		return t3;
 
 	}
-	
+	public static JPanel createTextArea(String label,JTextArea jtextNote) {
+		
+		JPanel note = new JPanel(new BorderLayout());
+		note.add(sampleModel(label),BorderLayout.NORTH);
+		note.add(jtextNote ,BorderLayout.CENTER);
+		jtextNote.setBorder(BorderFactory.createLineBorder(new Color(0,0,0)));
+		note.setPreferredSize(new Dimension(100, 200));
+		note.setBorder(new EmptyBorder(0, 5, 5, 5));
+		return note;
+	}
 }
