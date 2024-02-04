@@ -31,6 +31,7 @@ public class doiThuoc_UI {
 	private ButtonGroup group;
 	private JLabel labelMoney;
 	private JTextArea jTextAreaNote , jtetJTextAreReason;
+	private timThuoc_UI timThuoc = new timThuoc_UI();
 	public JPanel getDoiThuoc() {
 		JPanel doithuoc = new JPanel(new BorderLayout());
 		doithuoc.add(table_Exchange(), BorderLayout.CENTER);
@@ -99,7 +100,7 @@ public class doiThuoc_UI {
 //		sell.setLayout(new BoxLayout(sell, BoxLayout.Y_AXIS));
 		sell.add(inf_custommer(),BorderLayout.NORTH);
 		sell.add(inf_sell(),BorderLayout.CENTER);
-//		sell.add(footer_sell(),BorderLayout.SOUTH);
+		sell.add(footer_sell(),BorderLayout.SOUTH);
 //		sell.add(boxx);
 		return sell;
 	}
@@ -146,33 +147,43 @@ public class doiThuoc_UI {
 		JPanel JpenlMoney = new JPanel(new BorderLayout());
 		JpenlMoney.add(labelMoney = sampleModel("Tổng tiền : "),BorderLayout.WEST);
 		box.add(JpenlMoney);
-		jTextAreaNote = new JTextArea();
-	
-		box.add(createTextArea("Lưu ý", jTextAreaNote));
-		
 		jtetJTextAreReason = new JTextArea();
 
 		box.add(createTextArea("Lý do", jtetJTextAreReason));
 		
 		
-
 		sell.add(box);
  		return sell;
+	}
+	public JPanel footer_sell() {
+		
+		JPanel footer = new JPanel();
+		JButton btn = null;
+		String[] object = { "Xóa", "gift\\trash-bin.png", "Thanh toán", "gift\\excel-file.png" };
+		for (int i = 0; i < object.length; i += 2) {
+			 btn = buttonInPageExChange(object[i], object[i + 1]);
+			footer.add(btn);
+		}
+		btn.setPreferredSize(new Dimension(180, 40));
+		return footer;
+	
+}
+	public JRadioButton customRadio(String name) {
+		JRadioButton rd = new JRadioButton(name);
+		
+		rd.setBorderPainted(false);
+		
+		return rd;
 	}
 	
 	public JButton buttonInPageExChange(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
 
 		btn.addActionListener(e -> {
-			System.out.println(nameButton);
+			if(nameButton.equals("Thêm thuốc")) {
+				timThuoc.getTimThuoc();
+			}
 		});
 		return btn;
-	}
-	public JRadioButton customRadio(String name) {
-		JRadioButton rd = new JRadioButton(name);
-
-		rd.setBorderPainted(false);
-		
-		return rd;
 	}
 }

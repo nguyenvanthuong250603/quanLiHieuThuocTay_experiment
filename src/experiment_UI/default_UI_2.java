@@ -3,7 +3,7 @@ package experiment_UI;
 import static experiment_UI.brief.T;
 import static experiment_UI.brief.HD;
 import static experiment_UI.brief.BT;
-import static experiment_UI.brief.DT;
+import static experiment_UI.brief.*;
 import java.awt.Adjustable;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -12,6 +12,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
@@ -40,21 +41,23 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.IconifyAction;
 
-public class default_UI_2 extends JFrame {
+public class default_UI_2 {
 	private JPanel sidebar;
 	private JPanel container;
 	private CardLayout cardLayout;
 	private AbstractButton selectedButton = null;
+	private JFrame jFrame;
 
-	public default_UI_2() {
-		setTitle("Giao diện Sidebar & Container");
-		setExtendedState(MAXIMIZED_BOTH);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public default_UI_2(JFrame jFrame) {
+		this.jFrame = jFrame;
+		jFrame.setTitle("Hiệu Thuốc Ánh Dương");
+		jFrame.setExtendedState(jFrame.MAXIMIZED_BOTH);
+		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		String iconPath = "gift\\store.png";
 		ImageIcon icon = new ImageIcon(iconPath);
 		Image iconImage = icon.getImage();
-		setIconImage(iconImage);
-		setLocationRelativeTo(null);
+		jFrame.setIconImage(iconImage);
+		jFrame.setLocationRelativeTo(null);
 
 		JScrollPane sidebar = new JScrollPane(west());
 		sidebar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -66,21 +69,18 @@ public class default_UI_2 extends JFrame {
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
 
-		container.add(createGioiThieuPage(), "GioiThieu");
-		container.add(createTrangChuPage(), "TrangChu");
-		container.add(createDoiThuoc(), "DoiThuoc");
-		
-		add(sidebar, BorderLayout.WEST);
-		add(container, BorderLayout.CENTER);
-
-		setVisible(true);
+		container.add(createQuanLyNhapThuoc(),QLDNT);
+		container.add(createBanThuoc(), BT);
+		container.add(createQuanLyThuoc(), T);
+		container.add(createDoiThuoc(), DT);
+		container.add(createNhapThuoc(),NT);
+		jFrame.add(sidebar, BorderLayout.WEST);
+		jFrame.add(container, BorderLayout.CENTER);
+		jFrame.setResizable(false);
+		jFrame.setVisible(true);
 	}
 
-	public static void main(String[] args) {
-		new default_UI_2();
-	}
-
-	public JPanel createCompoment(String iconRight, String nameButton, String[][] obj, String iconLeft, boolean type) {
+	public JPanel createCompoment(String iconRight, String nameButton, String iconLeft, boolean type) {
 		JPanel compoment = new JPanel(new BorderLayout());
 		compoment.setBackground(new Color(0, 132, 255));
 		AbstractButton btn;
@@ -112,72 +112,78 @@ public class default_UI_2 extends JFrame {
 		btn.add(lableicon);
 
 		btn.setHorizontalAlignment(SwingConstants.RIGHT);
-		if (obj.length <= 0) {
-			btn.addActionListener(new ActionListener() {
 
-				public void actionPerformed(ActionEvent e) {
+		btn.addActionListener(new ActionListener() {
 
+			public void actionPerformed(ActionEvent e) {
+				if (type) {
 					if (selectedButton != null) {
 						selectedButton.setBackground(new Color(0, 132, 255));
 					}
 					btn.setBackground(Color.red);
 					selectedButton = btn;
-
-					switch (nameButton) {
-
-						case T: {
-							cardLayout.show(container, "GioiThieu");
-
-							break;
-						}
-						case HD: {
-							if (btn.isSelected()) {
-
-								btn.setIcon(new ImageIcon("gift//upload.png"));
-								String[][] objj = {};
-								JPanel r = new JPanel();
-								r.setLayout(new BoxLayout(r, BoxLayout.Y_AXIS));
-								JPanel v = createCompoment("gift\\upload.png", "new", objj, "gift\\hoadon.png", true);
-								JPanel o = createCompoment("gift\\upload.png", "kdfsksa", objj, "gift\\hoadon.png", true);
-								JPanel z = createCompoment("gift\\upload.png", "kdfsksa", objj, "gift\\hoadon.png", true);
-								Object[] xx = { v, o, z };
-								for (Object s : xx) {
-									r.add((Component) s);
-								}
-
-								compoment.add(r, BorderLayout.AFTER_LAST_LINE);
-
-							} else {
-
-								btn.setIcon(new ImageIcon("gift//down.png"));
-								for (int i = 1; i < compoment.getComponentCount(); i++) {
-									compoment.remove(i);
-								}
-							}
-							break;
-						}
-						case BT: {
-
-							cardLayout.show(container, "TrangChu");
-
-							break;
-						}
-						case DT:{
-							cardLayout.show(container, "DoiThuoc");
-							break;
-						}
-						default:
-							throw new IllegalArgumentException("Unexpected value: " + nameButton);
-					}
-
-					repaint();
-					revalidate();
-
 				}
-			});
-		} else {
+				switch (nameButton) {
 
-		}
+				case T: {
+					cardLayout.show(container, T);
+
+					break;
+				}
+				case HD: {
+					if (btn.isSelected()) {
+
+						btn.setIcon(new ImageIcon("gift//upload.png"));
+
+						JPanel r = new JPanel();
+						r.setLayout(new BoxLayout(r, BoxLayout.Y_AXIS));
+						JPanel v = createCompoment("gift\\upload.png", "Nhập thuốc", "gift\\hoadon.png", true);
+						JPanel o = createCompoment("gift\\upload.png", "QL Đơn bán", "gift\\hoadon.png", true);
+						JPanel z = createCompoment("gift\\upload.png", "QL Nhập thuốc", "gift\\hoadon.png", true);
+						Object[] xx = { v, o, z };
+						for (Object s : xx) {
+							r.add((Component) s);
+						}
+
+						compoment.add(r, BorderLayout.AFTER_LAST_LINE);
+
+					} else {
+
+						btn.setIcon(new ImageIcon("gift//down.png"));
+						for (int i = 1; i < compoment.getComponentCount(); i++) {
+							compoment.remove(i);
+						}
+					}
+					break;
+				}
+				case BT: {
+
+					cardLayout.show(container, BT);
+
+					break;
+				}
+				case DT: {
+					cardLayout.show(container, DT);
+					break;
+				}
+				case NT:{
+					cardLayout.show(container, NT);
+					break;
+				}
+				case QLDNT:{
+					cardLayout.show(container, QLDNT);
+					break;
+				}
+				default:
+					throw new IllegalArgumentException("Unexpected value: " + nameButton);
+				}
+
+				jFrame.repaint();
+				jFrame.revalidate();
+
+			}
+		});
+
 		compoment.add(btn);
 		return compoment;
 	}
@@ -187,17 +193,17 @@ public class default_UI_2 extends JFrame {
 		Box boxx = Box.createVerticalBox();
 		westt.setBackground(new Color(0, 132, 255));
 		boxx.add(brand());
-		String[][] t = {};
-		boxx.add(createCompoment("gift\\thuoc.png", "Bán thuốc", t, "gift\\thuoc.png", true));
-		boxx.add(createCompoment("gift\\thuoc.png", "Thuốc", t, "gift\\hoadon.png", true));
-		boxx.add(createCompoment("gift\\upload.png", "Đổi Thuốc", t, "gift\\hoadon.png", true));
-		boxx.add(createCompoment("gift\\down.png", "Hóa đơn", t, "gift\\hoadon.png", false));
-		boxx.add(createCompoment("gift\\upload.png", "Khách hàng", t, "gift\\hoadon.png", true));
-		boxx.add(createCompoment("gift\\thuoc.png", "Nhân viên", t, "gift\\hoadon.png", true));
 
-		boxx.add(createCompoment("gift\\thuoc.png", "Thống kê", t, "gift\\drug.png", true));
-		boxx.add(createCompoment("gift\\thuoc.png", "Kiểm toán", t, "gift\\hoadon.png", true));
-		boxx.add(createCompoment("gift\\thuoc.png", "Đăng xuất", t, "gift\\hoadon.png", true));
+		boxx.add(createCompoment("gift\\thuoc.png", "Bán thuốc", "gift\\thuoc.png", true));
+		boxx.add(createCompoment("gift\\thuoc.png", "Thuốc", "gift\\hoadon.png", true));
+		boxx.add(createCompoment("gift\\upload.png", "Đổi Thuốc", "gift\\hoadon.png", true));
+		boxx.add(createCompoment("gift\\down.png", "Hóa đơn", "gift\\hoadon.png", false));
+		boxx.add(createCompoment("gift\\upload.png", "Khách hàng", "gift\\hoadon.png", true));
+		boxx.add(createCompoment("gift\\thuoc.png", "Nhân viên", "gift\\hoadon.png", true));
+
+		boxx.add(createCompoment("gift\\thuoc.png", "Thống kê", "gift\\drug.png", true));
+		boxx.add(createCompoment("gift\\thuoc.png", "Kiểm toán", "gift\\hoadon.png", true));
+		boxx.add(createCompoment("gift\\thuoc.png", "Đăng xuất", "gift\\hoadon.png", true));
 		westt.add(boxx);
 		return westt;
 	}
@@ -216,19 +222,26 @@ public class default_UI_2 extends JFrame {
 		return compomet;
 	}
 
-	private JPanel createTrangChuPage() {
+	private JPanel createQuanLyThuoc() {
 		quanLyThuoc_UI quanLyThuocUI = new quanLyThuoc_UI();
 		return quanLyThuocUI.getQuanLiThuoc();
 	}
 
-	// Add this method to create and return the JPanel for the "GioiThieu" page
-	private JPanel createGioiThieuPage() {
+	private JPanel createBanThuoc() {
 		banThuoc_UI banThuocUI = new banThuoc_UI();
 		return banThuocUI.getBanThuoc();
 	}
+
 	private JPanel createDoiThuoc() {
 		doiThuoc_UI doiThuoc = new doiThuoc_UI();
 		return doiThuoc.getDoiThuoc();
 	}
-
+	private JPanel createNhapThuoc() {
+		nhapThuoc_UI nhapThuoc = new  nhapThuoc_UI();
+		return nhapThuoc.getNhapThuoc();
+	}
+	private JPanel createQuanLyNhapThuoc() {
+		quanLyDonNhapThuoc_UI QLDNT = new quanLyDonNhapThuoc_UI();
+		return QLDNT.getQuanLyDonNhapThuoc();
+	}
 }

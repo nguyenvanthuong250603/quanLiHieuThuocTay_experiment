@@ -63,7 +63,7 @@ public class Generate_All {
 		JPanel div = new JPanel(new BorderLayout());
 		div.add(sampleModel(nameLabel), BorderLayout.WEST);
 		div.add(jtext, BorderLayout.CENTER);
-		div.setBorder(new EmptyBorder(5,5,5,5));
+		div.setBorder(new EmptyBorder(5,0,5,0));
 		return div;
 	}
 

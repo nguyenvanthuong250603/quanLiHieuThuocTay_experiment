@@ -98,7 +98,6 @@ public class quanLyThuoc_UI {
 		compoment.setLayout(new BorderLayout());
 		compoment.add(rubi(), BorderLayout.NORTH);
 		compoment.add(table_information(), BorderLayout.CENTER);
-
 		return compoment;
 	}
 
@@ -209,7 +208,7 @@ public class quanLyThuoc_UI {
 		bottom.setLayout(new BoxLayout(bottom, BoxLayout.Y_AXIS));
 		String[] optionNsx = { "NSX1", "NSX2", "NSX3" };
 		Object[][] trage = { { "Số lượng", new JTextField() }, { "Giá", new JTextField() },
-				{ "Đơn vị", new JTextField() }, { "Loại thuốc", new JComboBox(optionNsx)},{"Độ tuổi",new JComboBox(optionNsx)},{ "NSX", new JComboBox(optionNsx) },
+				{ "Đơn vị", new JTextField() }, { "Loại thuốc",new JComboBox(optionNsx)},{"Độ tuổi",new JComboBox(optionNsx)},{ "NSX", new JComboBox(optionNsx) },
 				{ "Ngày SX", new JDateChooser() }, { "Ngày Hết Hạn", new JDateChooser() } };
 		object_inf = trage;
 		for (Object[] objects : object_inf) {
@@ -237,6 +236,9 @@ public class quanLyThuoc_UI {
 		createTitle(detail_big, "Chi tiết thông tin");
 		JPanel detail_compoment = new JPanel();
 		detail_compoment.setLayout(new BoxLayout(detail_compoment, BoxLayout.Y_AXIS));
+		
+		
+ 		
 		Object[][] trage = { { "Thành phần", new JTextField() }, { "Chỉ định", new JTextField() },
 				 { "Liều dùng", new JTextField() }, { "Chống chỉ đinh", new JTextField() },
 				{ "Bảo quản", new JTextField() },{"Địa chỉ NSX", new JTextField()}};
