@@ -168,13 +168,7 @@ public class doiThuoc_UI {
 		return footer;
 	
 }
-	public JRadioButton customRadio(String name) {
-		JRadioButton rd = new JRadioButton(name);
-		
-		rd.setBorderPainted(false);
-		
-		return rd;
-	}
+	
 	
 	public JButton buttonInPageExChange(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);

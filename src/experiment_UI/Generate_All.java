@@ -1,6 +1,6 @@
 package experiment_UI;
 
-import static experiment_UI.Generate_All.sampleModel;
+
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,6 +16,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -107,5 +108,10 @@ public class Generate_All {
 		note.setPreferredSize(new Dimension(100, 200));
 		note.setBorder(new EmptyBorder(0, 5, 5, 5));
 		return note;
+	}
+	public static JRadioButton customRadio(String name) {
+		JRadioButton rd = new JRadioButton(name);
+		
+		return rd;
 	}
 }

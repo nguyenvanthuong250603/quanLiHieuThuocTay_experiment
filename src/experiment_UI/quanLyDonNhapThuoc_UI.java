@@ -1,22 +1,20 @@
 package experiment_UI;
 
-import static experiment_UI.Generate_All.createJbutton;
-import static experiment_UI.Generate_All.createJcombobox;
-import static experiment_UI.Generate_All.createNameAndTextField;
-import static experiment_UI.Generate_All.createTextArea;
-import static experiment_UI.Generate_All.createTitle;
-import static experiment_UI.Generate_All.sampleModel;
+import static experiment_UI.Generate_All.*;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -33,6 +31,7 @@ public class quanLyDonNhapThuoc_UI {
 	private JLabel labelTotal;
 	private Object[][] objects;
 	private JTextArea jtextNote;
+	private ButtonGroup group;
  	public JPanel getQuanLyDonNhapThuoc() {
 		JPanel nhapThuoc = new JPanel(new BorderLayout());
 		nhapThuoc.add(table_AddDrug());
@@ -89,11 +88,12 @@ public class quanLyDonNhapThuoc_UI {
 	public JPanel East() {
 		JPanel east = new JPanel(new GridLayout(2, 1));
 		east.add(input());
+		east.add(inf());
 		return east;
 	}
 	public JPanel input() {
 		JPanel 	input = new JPanel(new BorderLayout());
-		
+		createTitle(input, "Chi tiết đơn nhập hàng");
 		String[] column = { "Mã thuốc", "Tên thuốc ", "Số lượng", "Giá", "Loại thuốc", "Nhà sản xuất", "Ngày sản xuất",
 				"Ngày hết Hạn", };
 
@@ -106,33 +106,56 @@ public class quanLyDonNhapThuoc_UI {
 		JTable table = new JTable(model);
 		
 			
-			table.getColumnModel().getColumn(0).setPreferredWidth(800);
-			table.getColumnModel().getColumn(1).setPreferredWidth(800);
-			table.getColumnModel().getColumn(2).setPreferredWidth(800);
-			table.getColumnModel().getColumn(3).setPreferredWidth(800);
-			table.getColumnModel().getColumn(4).setPreferredWidth(800);
-			table.getColumnModel().getColumn(5).setPreferredWidth(800);
-			table.getColumnModel().getColumn(6).setPreferredWidth(800);
 		
 		table.setShowGrid(false);
 		table.setShowVerticalLines(false);
-//		table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
 		JScrollPane scoll = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		input.add(scoll, BorderLayout.CENTER);
 		return input;
 		
 	}
+	public JPanel inf() {
+		JPanel inf = new JPanel(new BorderLayout());
+		Box box = Box.createVerticalBox();
+		createTitle(inf, "Thông tin");
+		Object[] trageStatus = {customRadio("Chưa nhận "),customRadio("Đã nhận"),customRadio("Đã hủy")};
+		JPanel status = new JPanel(new BorderLayout());
+		status.add(sampleModel("Tình trạng"),BorderLayout.WEST);
+		JPanel div = new JPanel(new GridLayout(1, 3));
+		group = new ButtonGroup();
+		for (Object object : trageStatus) {
+			div.add((JRadioButton)object);
+			group.add((JRadioButton)object);
+		}
+		status.add(div,BorderLayout.CENTER);		
+		box.add(status);
+		
+		Object[][] trage = {{"Ngày nhập hàng",new JTextField()},{"Nhà cung cấp", new JTextField()}};
+		objects = trage;
+		for (Object[] objects : trage) {
+			box.add(createNameAndTextField((JTextField)objects[1], objects[0].toString()));
+		}
+		jtextNote = new JTextArea();
+		box.add(createTextArea("Lưu ý", jtextNote));
+		inf.add(box,BorderLayout.CENTER);
+		inf.add(footer_table(),BorderLayout.SOUTH);
+		
+		return inf;
+	}
+	
 	
 	public JPanel footer_table() {
 		JPanel footer = new JPanel();
 
-		String[] object = { "Thay đổi","gift\\exit.png" , "Xuất hóa đơn", "gift\\check.png" };
+		String[] object = { "Xác nhận","gift\\exit.png" , "Xuất hóa đơn", "gift\\check.png" };
 	
 		for (int i = 0; i < object.length; i += 2) {
 			JButton btn = buttonInPageAdd(object[i], object[i + 1]);
 			footer.add(btn);
 		}
-
+		
 		return footer;
 	}
 	public JButton buttonInPageAdd(String nameButton, String pathIcon) {
