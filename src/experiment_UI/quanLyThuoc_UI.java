@@ -57,6 +57,7 @@ public class quanLyThuoc_UI {
 		JPanel container = new JPanel(new BorderLayout());
 		container.add(searchAndfilter(), BorderLayout.CENTER);
 		container.add(inputProduct(), BorderLayout.EAST);
+	
 		hienBangTableThuoc();
 		return container;
 	}
@@ -67,12 +68,7 @@ public class quanLyThuoc_UI {
 		managerment.setLayout(new BorderLayout());
 		String[] column = { "Mã thuốc", "Tên thuốc ", "Số lượng", "Giá","Loại thuốc","Nhà sản xuất","Ngày sản xuất", "Ngày hết Hạn", 
 				 };
-//
-//		String[][] row = {
-//				{ "SP01", "Bảo thanh", ""+20, ""+10000,
-//						"Thực phẩm chức năng", "Công Ty Nam Cao", "31/01/2024", "30/04/2024" },
-//
-//				{ "", "", "", "", "", "", "", "" } };
+
 		 model =  new DefaultTableModel(column,0);
 		 table = new JTable(model);
 		table.setShowGrid(false);
@@ -322,6 +318,7 @@ public class quanLyThuoc_UI {
 	public void hienBangTableThuoc() {
 		ArrayList<Thuoc> list_thuoc = list_Thuoc.getThuocDataBase();
 		for (Thuoc thuoc : list_thuoc) {
+			System.out.println("hi");
 			String[] row = {thuoc.getMaThuoc(),thuoc.getTenThuoc(),thuoc.getSoLuong()+"",thuoc.getGia()+"",thuoc.getNhaSanXuat(),thuoc.getNgaySanXuat()+"",""+thuoc.getNgaySanXuat()};
 			model.addRow(row);
 		}
