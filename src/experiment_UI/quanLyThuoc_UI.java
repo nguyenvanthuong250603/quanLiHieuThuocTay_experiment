@@ -10,13 +10,8 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.lang.reflect.Array;
-import java.time.LocalDate;
-import java.time.chrono.JapaneseDate;
-import java.util.Iterator;
-import java.util.List;
+import java.util.ArrayList;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -37,9 +32,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import javax.swing.table.DefaultTableModel;
-import javax.xml.stream.events.Comment;
+
 
 import com.toedter.calendar.JDateChooser;
+
+import dao.Thuoc_DAO;
+import entity.Thuoc;
 
 import static experiment_UI.Generate_All.*;
 
@@ -52,10 +50,14 @@ public class quanLyThuoc_UI {
 	private JDateChooser JdateNgaySanXuat, JdateNgayHetHan;
 	private Object[][] object_inf, object_detail;
 	private JTextArea jTextAreaMoTa;
+	private JTable table;
+	private DefaultTableModel model;
+	private Thuoc_DAO list_Thuoc = new Thuoc_DAO(); 
 	public JPanel getQuanLiThuoc() {
 		JPanel container = new JPanel(new BorderLayout());
 		container.add(searchAndfilter(), BorderLayout.CENTER);
 		container.add(inputProduct(), BorderLayout.EAST);
+		hienBangTableThuoc();
 		return container;
 	}
 
@@ -65,14 +67,14 @@ public class quanLyThuoc_UI {
 		managerment.setLayout(new BorderLayout());
 		String[] column = { "Mã thuốc", "Tên thuốc ", "Số lượng", "Giá","Loại thuốc","Nhà sản xuất","Ngày sản xuất", "Ngày hết Hạn", 
 				 };
-
-		String[][] row = {
-				{ "SP01", "Bảo thanh", ""+20, ""+10000,
-						"Thực phẩm chức năng", "Công Ty Nam Cao", "31/01/2024", "30/04/2024" },
-
-				{ "", "", "", "", "", "", "", "" } };
-		DefaultTableModel model = new DefaultTableModel(row, column);
-		JTable table = new JTable(model);
+//
+//		String[][] row = {
+//				{ "SP01", "Bảo thanh", ""+20, ""+10000,
+//						"Thực phẩm chức năng", "Công Ty Nam Cao", "31/01/2024", "30/04/2024" },
+//
+//				{ "", "", "", "", "", "", "", "" } };
+		 model =  new DefaultTableModel(column,0);
+		 table = new JTable(model);
 		table.setShowGrid(false);
 		table.setShowVerticalLines(false);
 		table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
@@ -240,7 +242,7 @@ public class quanLyThuoc_UI {
 		
  		
 		Object[][] trage = { { "Thành phần", new JTextField() }, { "Chỉ định", new JTextField() },
-				 { "Liều dùng", new JTextField() }, { "Chống chỉ đinh", new JTextField() },
+				 { "Liều dùng", new JTextField() },
 				{ "Bảo quản", new JTextField() },{"Địa chỉ NSX", new JTextField()}};
 		object_detail = trage;
 		for (Object[] objects : trage) {
@@ -284,6 +286,7 @@ public class quanLyThuoc_UI {
 			ImageIcon imageIcon = new ImageIcon(file.getAbsolutePath());
 			Image image = imageIcon.getImage().getScaledInstance(200, 150, Image.SCALE_SMOOTH);
 			imageIcon = new ImageIcon(image);
+			System.out.println(file.getAbsolutePath());
 			labelImage.setIcon(imageIcon);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -315,6 +318,14 @@ public class quanLyThuoc_UI {
 		});
 
 		return btn;
+	}
+	public void hienBangTableThuoc() {
+		ArrayList<Thuoc> list_thuoc = list_Thuoc.getThuocDataBase();
+		for (Thuoc thuoc : list_thuoc) {
+			String[] row = {thuoc.getMaThuoc(),thuoc.getTenThuoc(),thuoc.getSoLuong()+"",thuoc.getGia()+"",thuoc.getNhaSanXuat(),thuoc.getNgaySanXuat()+"",""+thuoc.getNgaySanXuat()};
+			model.addRow(row);
+		}
+		table.setModel(model);
 	}
 
 }

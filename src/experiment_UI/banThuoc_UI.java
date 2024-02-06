@@ -18,6 +18,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.BorderUIResource.BevelBorderUIResource;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.IconifyAction;
 import javax.swing.table.DefaultTableModel;
 
 import experiment_UI.Generate_All.CustomTableCellRenderer;
@@ -36,7 +37,7 @@ public class banThuoc_UI {
 
 	private JCheckBox cb;
 	private Object[][] object_custommer, object_sell;
-	private JComboBox optionGender, optionPTTT;
+	private JComboBox optionGender, optionPTTT, optionDoTuoi;
 	private JLabel labelTotal, ll;
 	private JButton btnTimKH;
 	private JTextField jtextMaKH;
@@ -65,8 +66,11 @@ public class banThuoc_UI {
 		btnTimKH.setEnabled(value);
 		jtextMaKH.setEditable(value);
 		for (int i = 0; i < object_custommer.length; i++) {
-			((JTextField) object_custommer[i][1]).setEditable(value);
-			optionGender.setEnabled(value);
+			if (object_custommer[i][1] instanceof JTextField) {
+				((JTextField) object_custommer[i][1]).setEditable(value);
+			}else {
+				((JComboBox)object_custommer[i][1]).setEnabled(value);
+			}
 
 		}
 	}
@@ -142,16 +146,18 @@ public class banThuoc_UI {
 		btnTimKH.setPreferredSize(new Dimension(80, 30));
 		t.add(btnTimKH, BorderLayout.AFTER_LINE_ENDS);
 		input.add(t);
-		Object[][] trage = { { "Tên KH", new JTextField() }, { "SDT", new JTextField() } };
+		String[] doTuoi = { "Từ 1-23 tháng tuổi", "Từ 2-11 tuổi", "Từ 12-18 tuổi", "Từ 18 tuổi trở lên" };
+		String[] gt = { "Nam", "Nữ" };
+		Object[][] trage = { { "Tên KH", new JTextField() }, { "Tuổi", optionDoTuoi = new JComboBox(doTuoi) },
+				{ "Giới tính", optionGender = new JComboBox(gt) }, { "SDT", new JTextField() } };
 		object_custommer = trage;
 		for (Object[] objects : object_custommer) {
-
-			input.add(createNameAndTextField((JTextField) objects[1], objects[0].toString()));
+			if (!(objects[1] instanceof JComboBox)) {
+				input.add(createNameAndTextField((JTextField) objects[1], objects[0].toString()));
+			} else {
+				input.add(createJcombobox(objects[0].toString(), (JComboBox) objects[1]));
+			}
 		}
-
-		String[] gt = { "Nam", "Nữ" };
-		optionGender = new JComboBox(gt);
-		input.add(createJcombobox("Giới tính", optionGender));
 
 		inf.add(check, BorderLayout.NORTH);
 		inf.add(input, BorderLayout.CENTER);
@@ -164,17 +170,18 @@ public class banThuoc_UI {
 		createTitle(sell, "Thông tin hóa đơn");
 		Box box = Box.createVerticalBox();
 //		sell.setLayout(new BoxLayout(sell, BoxLayout.Y_AXIS));
-		String [] pttt = {"Tiền mặt","Chuyển khoản","Quẹt thẻ"};
-		
- 		Object[][] trage = { { "Mã HĐ", new JTextField(25) }, { "Ngày tạo", new JTextField() },
-				{ "Khách cần trả", new JTextField() },{"PTTT", new JComboBox(pttt)}, { "Khách đưa", new JTextField() } };
+		String[] pttt = { "Tiền mặt", "Chuyển khoản", "Quẹt thẻ" };
+
+		Object[][] trage = { { "Mã HĐ", new JTextField(25) }, { "Ngày tạo", new JTextField() },
+				{ "Khách cần trả", new JTextField() }, { "PTTT", new JComboBox(pttt) },
+				{ "Khách đưa", new JTextField() } };
 		object_sell = trage;
 		for (Object[] objects : object_sell) {
-		    if (!(objects[1] instanceof JComboBox)) {
-		        box.add(createNameAndTextField((JTextField) objects[1], objects[0].toString()));
-		    } else  {
-		        box.add(createJcombobox(objects[0].toString(), (JComboBox) objects[1]));
-		    }
+			if (!(objects[1] instanceof JComboBox)) {
+				box.add(createNameAndTextField((JTextField) objects[1], objects[0].toString()));
+			} else {
+				box.add(createJcombobox(objects[0].toString(), (JComboBox) objects[1]));
+			}
 		}
 		jtextNote = new JTextArea();
 		box.add(createTextArea("Lưu ý", jtextNote));
