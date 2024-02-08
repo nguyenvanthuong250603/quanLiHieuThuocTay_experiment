@@ -69,14 +69,14 @@ public class default_UI_2 {
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
 
+		container.add(createQuanLyThuoc(), T);
 		container.add(createQuanLyNhapThuoc(),QLDNT);
 		container.add(createBanThuoc(), BT);
-		container.add(createQuanLyThuoc(), T);
 		container.add(createDoiThuoc(), DT);
 		container.add(createNhapThuoc(),NT);
 		jFrame.add(sidebar, BorderLayout.WEST);
 		jFrame.add(container, BorderLayout.CENTER);
-		jFrame.setResizable(false);
+//		jFrame.setResizable(false);
 		jFrame.setVisible(true);
 	}
 

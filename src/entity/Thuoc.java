@@ -1,16 +1,21 @@
 package entity;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Thuoc {
+
+
 	private String maThuoc,tenThuoc;
 	private int soLuong;
 	private double gia;
-	private String donVi,loaiThuoc,doTuoi,nhaSanXuat;
+	private String donVi,loaiThuoc,doTuoi;
+	private NhaSanXuat tenNhaSanXuat;
 	private LocalDate ngaySanXuat,ngayHetHan;
 	private String hinhAnh;
 	public Thuoc(String maThuoc, String tenThuoc, int soLuong, double gia, String donVi, String loaiThuoc,
-			String doTuoi, String nhaSanXuat, LocalDate ngaySanXuat, LocalDate ngayHetHan, String hinhAnh) {
+			String doTuoi, NhaSanXuat tenNhaSanXuat, LocalDate ngaySanXuat, LocalDate ngayHetHan, String hinhAnh,
+			String thanhPhan, String chiDinh, String lieuDung, String baoQuan, String moTa) {
 		
 		this.maThuoc = maThuoc;
 		this.tenThuoc = tenThuoc;
@@ -19,13 +24,83 @@ public class Thuoc {
 		this.donVi = donVi;
 		this.loaiThuoc = loaiThuoc;
 		this.doTuoi = doTuoi;
-		this.nhaSanXuat = nhaSanXuat;
+		this.tenNhaSanXuat = tenNhaSanXuat;
 		this.ngaySanXuat = ngaySanXuat;
 		this.ngayHetHan = ngayHetHan;
 		this.hinhAnh = hinhAnh;
+		this.thanhPhan = thanhPhan;
+		this.chiDinh = chiDinh;
+		this.lieuDung = lieuDung;
+		this.baoQuan = baoQuan;
+		this.moTa = moTa;
 	}
+	@Override
+	public String toString() {
+		return "Thuoc [maThuoc=" + maThuoc + ", tenThuoc=" + tenThuoc + ", soLuong=" + soLuong + ", gia=" + gia
+				+ ", donVi=" + donVi + ", loaiThuoc=" + loaiThuoc + ", doTuoi=" + doTuoi + ", tenNhaSanXuat="
+				+ tenNhaSanXuat + ", ngaySanXuat=" + ngaySanXuat + ", ngayHetHan=" + ngayHetHan + ", hinhAnh=" + hinhAnh
+				+ ", thanhPhan=" + thanhPhan + ", chiDinh=" + chiDinh + ", lieuDung=" + lieuDung + ", baoQuan="
+				+ baoQuan + ", moTa=" + moTa + "]";
+	}
+	private String thanhPhan,chiDinh,lieuDung,baoQuan,moTa;
+	
+	public String getThanhPhan() {
+		return thanhPhan;
+	}
+	public void setThanhPhan(String thanhPhan) {
+		this.thanhPhan = thanhPhan;
+	}
+	public String getChiDinh() {
+		return chiDinh;
+	}
+	public void setChiDinh(String chiDinh) {
+		this.chiDinh = chiDinh;
+	}
+	public String getLieuDung() {
+		return lieuDung;
+	}
+	public void setLieuDung(String lieuDung) {
+		this.lieuDung = lieuDung;
+	}
+	public String getBaoQuan() {
+		return baoQuan;
+	}
+	public void setBaoQuan(String baoQuan) {
+		this.baoQuan = baoQuan;
+	}
+	public String getMoTa() {
+		return moTa;
+	}
+	public void setMoTa(String moTa) {
+		this.moTa = moTa;
+	}
+	
+
 	public String getMaThuoc() {
 		return maThuoc;
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(maThuoc);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Thuoc other = (Thuoc) obj;
+		return Objects.equals(maThuoc, other.maThuoc);
+	}
+
+
+	public NhaSanXuat getTenNhaSanXuat() {
+		return tenNhaSanXuat;
+	}
+	public void setTenNhaSanXuat(NhaSanXuat tenNhaSanXuat) {
+		this.tenNhaSanXuat = tenNhaSanXuat;
 	}
 	public void setMaThuoc(String maThuoc) {
 		this.maThuoc = maThuoc;
@@ -66,12 +141,7 @@ public class Thuoc {
 	public void setDoTuoi(String doTuoi) {
 		this.doTuoi = doTuoi;
 	}
-	public String getNhaSanXuat() {
-		return nhaSanXuat;
-	}
-	public void setNhaSanXuat(String nhaSanXuat) {
-		this.nhaSanXuat = nhaSanXuat;
-	}
+	
 	public LocalDate getNgaySanXuat() {
 		return ngaySanXuat;
 	}
@@ -91,7 +161,6 @@ public class Thuoc {
 		this.hinhAnh = hinhAnh;
 	}
 	public Thuoc(String maThuoc) {
-		super();
 		this.maThuoc = maThuoc;
 	}
 	

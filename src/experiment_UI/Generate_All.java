@@ -1,12 +1,13 @@
 package experiment_UI;
 
-
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -41,7 +42,7 @@ public class Generate_All {
 	}
 
 	public static void createTitle(JPanel t, String title) {
-		TitledBorder boderDecor = new TitledBorder(BorderFactory.createLineBorder(new Color(190,195,199), 4), title);
+		TitledBorder boderDecor = new TitledBorder(BorderFactory.createLineBorder(new Color(190, 195, 199), 4), title);
 
 		boderDecor.setTitleColor(new Color(0, 132, 255));
 		boderDecor.setTitleFont(new Font("Arial", Font.ITALIC, 20));
@@ -53,7 +54,7 @@ public class Generate_All {
 		JLabel lb = new JLabel(string);
 		lb.setFont(new Font("Arial", Font.BOLD, 15));
 		lb.setHorizontalTextPosition(JLabel.LEFT);
-		lb.setPreferredSize(new Dimension(113,30));
+		lb.setPreferredSize(new Dimension(113, 30));
 		lb.setBorder(new EmptyBorder(5, 0, 5, 0));
 		return lb;
 
@@ -64,7 +65,7 @@ public class Generate_All {
 		JPanel div = new JPanel(new BorderLayout());
 		div.add(sampleModel(nameLabel), BorderLayout.WEST);
 		div.add(jtext, BorderLayout.CENTER);
-		div.setBorder(new EmptyBorder(5,0,5,0));
+		div.setBorder(new EmptyBorder(5, 0, 5, 0));
 		return div;
 	}
 
@@ -81,11 +82,9 @@ public class Generate_All {
 				component.setBackground(table.getBackground());
 				component.setForeground(table.getForeground());
 			}
-			((JComponent) component).setBorder(null);
-			if (row % 2 == 0) {
-				component.setBackground(new Color(0, 143, 255));
+			table.setRowHeight(30);
+			table.setBackground(Color.white);
 
-			}
 			return component;
 		}
 
@@ -99,19 +98,45 @@ public class Generate_All {
 		return t3;
 
 	}
-	public static JPanel createTextArea(String label,JTextArea jtextNote) {
-		
+
+	public static JPanel createTextArea(String label, JTextArea jtextNote) {
+
 		JPanel note = new JPanel(new BorderLayout());
-		note.add(sampleModel(label),BorderLayout.NORTH);
-		note.add(jtextNote ,BorderLayout.CENTER);
-		jtextNote.setBorder(BorderFactory.createLineBorder(new Color(0,0,0)));
+		note.add(sampleModel(label), BorderLayout.NORTH);
+		note.add(jtextNote, BorderLayout.CENTER);
+		jtextNote.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
 		note.setPreferredSize(new Dimension(100, 200));
 		note.setBorder(new EmptyBorder(0, 5, 5, 5));
 		return note;
 	}
+
 	public static JRadioButton customRadio(String name) {
 		JRadioButton rd = new JRadioButton(name);
-		
+
 		return rd;
+	}
+	public static String getValueStringInJTextField(Object object) {
+		JTextField textField = (JTextField) object;
+		return textField.getText();
+	}
+	public static double getValueDoubleỊntextField(Object object) {
+		JTextField textField = (JTextField) object;
+		return Double.parseDouble(textField.getText());
+			
+	}
+	public static int getValueIntỊntextField(Object object) {
+		JTextField textField = (JTextField) object;
+		return Integer.parseInt(textField.getText());		
+	}
+	public static String getValueInComboBox(JComboBox combo) {
+		JComboBox cb = combo;
+		return cb.getSelectedItem().toString();
+	}
+	public static LocalDate getDateJDateChoor(Object object) {
+		JDateChooser date = (JDateChooser) object;
+		return date.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	}
+	public void setText() {
+		
 	}
 }

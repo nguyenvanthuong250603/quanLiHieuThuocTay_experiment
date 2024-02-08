@@ -1,5 +1,6 @@
+﻿CREATE DATABASE QLHTT
 USE QLHTT
-
+DROP DATABASE QLHTT
 GO
 CREATE TABLE NhanVien (
     MaNV NVARCHAR(50) not null PRIMARY KEY,
@@ -11,7 +12,7 @@ CREATE TABLE NhanVien (
     ChucVu NVARCHAR(50),
     NgayVaoLam DATE
 );
-go
+GO
 CREATE TABLE TaiKhoan (
     TenTaiKhoan NVARCHAR(50) NOT NULL PRIMARY KEY,
     MatKhau NVARCHAR(255),
@@ -27,36 +28,27 @@ CREATE TABLE Thuoc(
 	DonVi NVARCHAR(50),
 	LoaiThuoc NVARCHAR(50),
 	DoTuoi NVARCHAR(50),
-	NhaSanXuat NVARCHAR(50),
+	NhaSanXuat NVARCHAR(255),
 	NgaySanXuat DATE,
 	NgayHetHan DATE,
 	HinhAnh NVARCHAR(255),
-);
-GO
-CREATE TABLE ChiTiet_Thuoc(
-	MaThuoc NVARCHAR(50) NOT NULL,
+	ThanhPhan NVARCHAR(255),
 	ChiDinh NVARCHAR(255),
 	LieuDung NVARCHAR(255),
 	BaoQuan NVARCHAR(255),
-	DiaChiNSX NVARCHAR(255),
-	MoTa NVARCHAR(255),
-	FOREIGN KEY (MaThuoc) REFERENCES Thuoc(Mathuoc)
+	MoTa NVARCHAR(255)
+	FOREIGN KEY (NhaSanXuat)  REFERENCES NhaSanXuat(TenNSX)
 );
-GO
-ALTER TABLE ChiTiet_Thuoc ADD PRIMARY KEY (MaThuoc)
+
 GO 
 CREATE TABLE KhachHang(
-	MaKH NVARCHAR(50),
+	MaKH NVARCHAR(50) NOT NULL PRIMARY KEY,
 	TenKH NVARCHAR(255),
 	DoTuoi NVARCHAR(50),
 	GioiTinh BIT,
 	SDT varchar(11)
 );
-GO
-ALTER TABLE KhachHang
-ALTER COLUMN MaKH NVARCHAR(50) NOT NULL;
-GO
-ALTER TABLE KhachHang ADD PRIMARY KEY (MaKH);
+
 GO
 CREATE TABLE HoaDon(
 	MaHD NVARCHAR(50) NOT NULL PRIMARY KEY,
@@ -64,9 +56,31 @@ CREATE TABLE HoaDon(
 	MaKH NVARCHAR(50),
 	NgayTao date,
 	MaTHuoc NVARCHAR(50),
+	
 	LuuY NVARCHAR(255),
 	TongTien float,
 	FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
 	FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH),
 	FOREIGN KEY (MaThuoc) REFERENCES Thuoc(MaThuoc)
 );
+GO
+CREATE TABLE NhaSanXuat(
+	TenNSX NVARCHAR(255) NOT NULL PRIMARY KEY,
+	DiaChiNSX NVARCHAR(255)
+);
+GO 
+SELECT Thuoc.MaThuoc , Thuoc.TenThuoc,Thuoc.SoLuong,Thuoc.Gia,Thuoc.NhaSanXuat,Thuoc.NgaySanXuat,Thuoc.NgayHetHan FROM Thuoc INNER JOIN NhaSanXuat ON Thuoc.NhaSanXuat = NhaSanXuat.TenNSX  WHERE Thuoc.LoaiThuoc = 'Kháng sinh'
+
+ GO 
+INSERT INTO Thuoc VALUES ('TH005',N'Bảo thanh 3',20,10000,N'Hộp 1 vĩ x 5 viên nén',N'Kháng sinh',N'Mọi lứa tuổi','CTY SX2','2024-01-30','2025-01-30','ha2','thanhphan2','thanhphan2','thanhphan2','thanhphan2','thanhphan2');
+
+GO
+
+
+GO
+INSERT INTO NhaSanXuat VALUES (N'CTY SX1',N'40 Nguyễn Huệ , Quận 1 ,HCM')
+INSERT INTO NhaSanXuat VALUES (N'CTY SX2',N'13 Nam Văn , Gò Vấp,HCM')
+--INSERT INTO  
+GO
+
+ 
