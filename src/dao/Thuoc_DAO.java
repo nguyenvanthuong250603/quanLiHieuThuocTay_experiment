@@ -128,8 +128,16 @@ public class Thuoc_DAO {
 		Connection con = accessDataBase();
 		PreparedStatement p = null;
 		try {	
-	
-		      String sql = "SELECT * FROM Thuoc INNER JOIN NhaSanXuat ON Thuoc.NhaSanXuat = NhaSanXuat.TenNSX WHERE Thuoc.NhaSanXuat = ? AND Thuoc.LoaiThuoc = ?";
+				
+		      String sql = "SELECT * FROM Thuoc WHERE Thuoc.NhaSanXuat = ? AND Thuoc.LoaiThuoc = ?";
+//		      if(!NSX.equals("")&&loaiThuoc.equals("")) {
+//		    	  sql += "SELECT *FROM Thuoc WHERE Thuoc.NhaSanXuat = ?";
+//		      }else if(NSX.equals("")&&!loaiThuoc.equals("")) {
+//		    	  sql += "SELECT *FROM Thuoc WHERE Thuoc.loaiThuoc = ?";
+//		      }else {
+//		    	  sql+="SELECT * FROM Thuoc WHERE Thuoc.NhaSanXuat = ? AND Thuoc.LoaiThuoc = ?";
+//		      }
+		      
 		        p = con.prepareStatement(sql);
 		        
 		        // Đặt giá trị cho các tham số

@@ -135,8 +135,8 @@ public class quanLyThuoc_UI {
 		box1.add(t);
 		box1.add(t2);
 
-		String[] optionNsx = { "CTY SX1", "CTY SX2" };
-		String[] optionLoaiThuoc = { "Thuốc giảm đau, hạ sốt ", "Thuốc đặc trị", "Kháng sinh", "Thuốc tiêu hóa",
+		String[] optionNsx = { "","CTY SX1", "CTY SX2" };
+		String[] optionLoaiThuoc = { "","Thuốc giảm đau, hạ sốt ", "Thuốc đặc trị", "Kháng sinh", "Thuốc tiêu hóa",
 				"Thuốc an thần", "Vitamin", "Thuốc sát khuẩn , khử trùng", "Thuốc chống dị ứng", "Thuốc chống viêm",
 				"Thuốc tim mạch", "Dịch truyền", "Thực phẩm chức năng" };
 		
@@ -367,7 +367,7 @@ public class quanLyThuoc_UI {
 					thuoc.getLoaiThuoc(), nsx.getTenNSX(), thuoc.getNgaySanXuat() + "", "" + thuoc.getNgaySanXuat() };
 			model.addRow(row);
 		}
-		table.setModel(model);
+
 		table.addMouseListener(new MouseListener() {
 
 			@Override
@@ -423,6 +423,7 @@ public class quanLyThuoc_UI {
 
 			}
 		});
+		table.setModel(model);
 	}
 
 	public void themThuoc() {
@@ -527,20 +528,24 @@ public class quanLyThuoc_UI {
 		jTextAreaMoTa.setText("");
 	}
 	public void timNangCao() {
+
 		String tenNSX = getValueInComboBox(cbNSXTim);
 		String loaithuoc = getValueInComboBox(cbLoaiThuocTim);
+		if(!tenNSX.equals("")||!loaithuoc.equals("")) {
+
 		ArrayList<Thuoc> list_ThuocTim = list_Thuoc.timThuoc(tenNSX, loaithuoc);
 		
 		model.setRowCount(0);
 		for (Thuoc thuoc : list_ThuocTim) {
-			String[] row = { thuoc.getMaThuoc(), thuoc.getTenThuoc(), thuoc.getSoLuong() + "", thuoc.getGia() + "", thuoc.getDonVi(), thuoc.getLoaiThuoc(), thuoc.getTenNhaSanXuat().getTenNSX(),
+			
+			String[] row = { thuoc.getMaThuoc(), thuoc.getTenThuoc(), thuoc.getSoLuong() + "", thuoc.getGia() + "",  thuoc.getLoaiThuoc(), thuoc.getTenNhaSanXuat().getTenNSX(),
 					thuoc.getNgaySanXuat() + "", thuoc.getNgayHetHan() + "" };
 				
 			model.addRow(row);
 		}
-		
 		table.setModel(model);
 		
+	}
 	}
 
 }
