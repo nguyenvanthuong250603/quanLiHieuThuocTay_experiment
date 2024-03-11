@@ -8,20 +8,16 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.JobAttributes;
-import java.awt.Toolkit;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.security.PublicKey;
+
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -34,9 +30,11 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import dao.NhanVien_DAO;
 import dao.TaiKhoan_DAO;
+import entity.NhanVien;
 import entity.taiKhoan;
-
+import static experiment_UI.brief.*;
 import static experiment_UI.Generate_All.*;
 public class taiKhoan_UI  extends JFrame{
 	private JTextField maNhanVienJtextField;
@@ -46,7 +44,9 @@ public class taiKhoan_UI  extends JFrame{
 	private boolean isHovering = false;
 	JFrame framee = new JFrame();
 	private TaiKhoan_DAO dstk = new TaiKhoan_DAO();
+
 	public taiKhoan_UI() {
+		
 		framee.setTitle("Test Gui ");
 		framee.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		framee.add(backGround());
@@ -106,7 +106,7 @@ public class taiKhoan_UI  extends JFrame{
 		box1.add(maNhanVienJtextField = new JTextField());
 		maNhanVienJtextField.setPreferredSize(new Dimension(300, 40));
 		center.setBackground(new Color(0, 0,0, 0));
-		maNhanVienJtextField.setText("admin");
+		maNhanVienJtextField.setText("NV001");
 		
 		JPanel box2 = new JPanel();
 		box2.setBackground(new Color(0, 0,0, 0));
@@ -150,11 +150,13 @@ public class taiKhoan_UI  extends JFrame{
 //				}
 				ArrayList<taiKhoan> ds = dstk.getTaiKhoan();
 				for (taiKhoan tk : ds) {
-					System.out.println(tk.getMaNV());
+					System.out.println(tk.getMaNV().getMaNV());
 					if(tk.getMaNV().getMaNV().equals(maNhanVienJtextField.getText())&&tk.getMatKhau().equals(passwordField.getText())) {
 						framee.dispose();
 						JFrame frame  = new JFrame();
-						default_UI_2 run = new default_UI_2(frame);
+						default_UI_2 run = new default_UI_2(frame,tk.getMaNV().getMaNV());
+						
+						
 					}
 					else {
 						JOptionPane.showMessageDialog(this, "tai khoan sai");

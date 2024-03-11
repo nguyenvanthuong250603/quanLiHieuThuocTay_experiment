@@ -41,14 +41,17 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.IconifyAction;
 
+import dao.NhanVien_DAO;
+import entity.NhanVien;
+
 public class default_UI_2 {
 	private JPanel sidebar;
 	private JPanel container;
 	private CardLayout cardLayout;
 	private AbstractButton selectedButton = null;
 	private JFrame jFrame;
-
-	public default_UI_2(JFrame jFrame) {
+	private NhanVien_DAO nv_Dao= new NhanVien_DAO(); 
+	public default_UI_2(JFrame jFrame,String MaNV) {
 		this.jFrame = jFrame;
 		jFrame.setTitle("Hiệu Thuốc Ánh Dương");
 		jFrame.setExtendedState(jFrame.MAXIMIZED_BOTH);
@@ -59,7 +62,7 @@ public class default_UI_2 {
 		jFrame.setIconImage(iconImage);
 		jFrame.setLocationRelativeTo(null);
 
-		JScrollPane sidebar = new JScrollPane(west());
+		JScrollPane sidebar = new JScrollPane(west(MaNV));
 		sidebar.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		sidebar.setPreferredSize(new Dimension((int) sidebar.getPreferredSize().getWidth(),
 				(int) sidebar.getPreferredSize().getHeight()));
@@ -76,7 +79,7 @@ public class default_UI_2 {
 		container.add(createNhapThuoc(),NT);
 		jFrame.add(sidebar, BorderLayout.WEST);
 		jFrame.add(container, BorderLayout.CENTER);
-//		jFrame.setResizable(false);
+		jFrame.setResizable(false);
 		jFrame.setVisible(true);
 	}
 
@@ -188,11 +191,11 @@ public class default_UI_2 {
 		return compoment;
 	}
 
-	public JPanel west() {
+	public JPanel west(String MaNV) {
 		JPanel westt = new JPanel();
 		Box boxx = Box.createVerticalBox();
 		westt.setBackground(new Color(0, 132, 255));
-		boxx.add(brand());
+		boxx.add(brand(MaNV));
 
 		boxx.add(createCompoment("gift\\thuoc.png", "Bán thuốc", "gift\\thuoc.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Thuốc", "gift\\hoadon.png", true));
@@ -208,8 +211,8 @@ public class default_UI_2 {
 		return westt;
 	}
 
-	public JPanel brand() {
-		JPanel compomet = new JPanel();
+	public JPanel brand(String MaNV) {
+		JPanel compomet = new JPanel(new BorderLayout());
 		ImageIcon iconn = new ImageIcon("gift\\storee.png");
 		JLabel text = new JLabel(iconn);
 		text.setText("Cửa Hàng");
@@ -218,7 +221,12 @@ public class default_UI_2 {
 		text.setIconTextGap(20);
 		compomet.setBorder(new EmptyBorder(20, 20, 10, 20));
 		compomet.setBackground(new Color(0, 132, 255));
-		compomet.add(text);
+		compomet.add(text,BorderLayout.NORTH);
+		
+		NhanVien nv = nv_Dao.getNhanVienFindByID(MaNV);
+		JLabel x = new JLabel(nv.getChucVu() + ":"+ nv.getHoTen());
+		
+		compomet.add(x,BorderLayout.AFTER_LAST_LINE);
 		return compomet;
 	}
 

@@ -3,6 +3,10 @@ package entity;
 import java.time.LocalDate;
 
 public class NhanVien {
+	public NhanVien() {
+	
+	}
+	
 	private String maNV,hoTen;
 	private boolean gioiTinh;
 	private LocalDate ngaySinh;
