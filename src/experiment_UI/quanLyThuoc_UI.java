@@ -49,13 +49,13 @@ import static experiment_UI.Generate_All.*;
 
 public class quanLyThuoc_UI {
 	private JLabel labelImage;
-	private JTextField jTextMaThuoc, jTextTenThuoc, jTextGiaThuoc, jTextSoLuong, jTextNgaySx, jTextNgayHetHan,
+	private JTextField jTextMaThuoc,  jTextGiaThuoc, jTextSoLuong, jTextNgaySx, jTextNgayHetHan,
 			jTextDonVi;
 	private JComboBox cbNSX, cbLoaiThuoc, cbTuoiSD,cbNSXTim, cbLoaiThuocTim;
 	private JCheckBox cb;
 	private JDateChooser JdateNgaySanXuat, JdateNgayHetHan;
 	private Object[][] object_inf, object_detail;
-	private JTextArea jTextAreaMoTa;
+	private JTextArea jTextTenThuoc,jTextAreaMoTa;
 	private JTable table;
 	private DefaultTableModel model;
 	private Thuoc_DAO list_Thuoc = new Thuoc_DAO();
@@ -76,7 +76,6 @@ public class quanLyThuoc_UI {
 		managerment.setLayout(new BorderLayout());
 		String[] column = { "Mã thuốc", "Tên thuốc ", "Số lượng", "Giá", "Loại thuốc", "Nhà sản xuất", "Ngày sản xuất",
 				"Ngày hết Hạn", };
-
 		model = new DefaultTableModel(column, 0);
 		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
 		cellRenderer.setBackground(Color.YELLOW);
@@ -199,15 +198,12 @@ public class quanLyThuoc_UI {
 
 //		ma sp
 		jTextMaThuoc = new JTextField();
-		JLabel labelMaThuoc = new JLabel("Mã thuốc");
 		infRight_top.add(createNameAndTextField(jTextMaThuoc, "Mã thuốc"), BorderLayout.NORTH);
 //Ten thuoc
 		JPanel box2 = new JPanel(new BorderLayout());
-		JLabel areText = sampleModel("Tên thuốc");
-		box2.add(areText, BorderLayout.NORTH);
-		jTextTenThuoc = new JTextField(10);
-
-		box2.add(jTextTenThuoc, BorderLayout.CENTER);
+	
+		jTextTenThuoc = new JTextArea();
+		box2.add(createTextArea("Tên thuốc", jTextTenThuoc));
 
 		infRight_top.add(box2, BorderLayout.CENTER);
 

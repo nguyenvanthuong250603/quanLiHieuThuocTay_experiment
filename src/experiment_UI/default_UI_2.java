@@ -209,14 +209,14 @@ public class default_UI_2 {
 	}
 
 	public JPanel brand() {
-		JPanel compomet = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel compomet = new JPanel();
 		ImageIcon iconn = new ImageIcon("gift\\storee.png");
 		JLabel text = new JLabel(iconn);
 		text.setText("Cửa Hàng");
 		text.setFont(new Font("Arial", Font.BOLD, 30));
 		text.setForeground(Color.WHITE);
 		text.setIconTextGap(20);
-		compomet.setBorder(new EmptyBorder(40, 20, 10, 20));
+		compomet.setBorder(new EmptyBorder(20, 20, 10, 20));
 		compomet.setBackground(new Color(0, 132, 255));
 		compomet.add(text);
 		return compomet;

@@ -177,6 +177,7 @@ public class doiThuoc_UI {
 			if(nameButton.equals("Thêm thuốc")) {
 				timThuoc.getTimThuoc();
 			}
+			
 		});
 		return btn;
 	}

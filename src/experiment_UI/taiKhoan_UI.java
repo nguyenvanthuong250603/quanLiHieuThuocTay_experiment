@@ -18,6 +18,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.security.PublicKey;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -27,10 +28,15 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import dao.TaiKhoan_DAO;
+import entity.taiKhoan;
+
 import static experiment_UI.Generate_All.*;
 public class taiKhoan_UI  extends JFrame{
 	private JTextField maNhanVienJtextField;
@@ -38,16 +44,17 @@ public class taiKhoan_UI  extends JFrame{
 	private JLabel titleJLabel;
 	private JCheckBox hienMatKhau;
 	private boolean isHovering = false;
+	JFrame framee = new JFrame();
+	private TaiKhoan_DAO dstk = new TaiKhoan_DAO();
 	public taiKhoan_UI() {
-		setTitle("Test Gui ");
-		setExtendedState(JFrame.MAXIMIZED_BOTH);
-	
-		add(backGround());
+		framee.setTitle("Test Gui ");
+		framee.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		framee.add(backGround());
 		forcusListen();
 		checkJcheckbox();
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
-		setVisible(true);
+		framee.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		framee.setLocationRelativeTo(null);
+		framee.setVisible(true);
 	}
 	public static void main(String[] args) {
 		new taiKhoan_UI();
@@ -133,11 +140,27 @@ public class taiKhoan_UI  extends JFrame{
 		btn.addActionListener((e)->{
 			if (nameButton.equals("Đăng nhập")) {
 				
-				if(maNhanVienJtextField.getText().equals("admin")&&passwordField.getText().equals("123")) {
-					this.disable();
-					JFrame frame  = new JFrame();
-					default_UI_2 run = new default_UI_2(frame);
+//				if(maNhanVienJtextField.getText().equals("admin")&&passwordField.getText().equals("123")) {
+//					framee.dispose();
+//					
+//					
+//					JFrame frame  = new JFrame();
+//					default_UI_2 run = new default_UI_2(frame);
+//				
+//				}
+				ArrayList<taiKhoan> ds = dstk.getTaiKhoan();
+				for (taiKhoan tk : ds) {
+					System.out.println(tk.getMaNV());
+					if(tk.getMaNV().getMaNV().equals(maNhanVienJtextField.getText())&&tk.getMatKhau().equals(passwordField.getText())) {
+						framee.dispose();
+						JFrame frame  = new JFrame();
+						default_UI_2 run = new default_UI_2(frame);
+					}
+					else {
+						JOptionPane.showMessageDialog(this, "tai khoan sai");
+					}
 				}
+			
 			}
 			
 		});

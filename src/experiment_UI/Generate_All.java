@@ -106,7 +106,7 @@ public class Generate_All {
 		note.add(jtextNote, BorderLayout.CENTER);
 		jtextNote.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
 		note.setPreferredSize(new Dimension(100, 200));
-		note.setBorder(new EmptyBorder(0, 5, 5, 5));
+		
 		return note;
 	}
 

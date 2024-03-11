@@ -18,6 +18,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -142,9 +143,11 @@ public class timThuoc_UI {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize( new Dimension(120,40));
 		btn.addActionListener(e -> {
-		
-		
-			System.out.println(nameButton);
+			if(nameButton.equals("Thoát")) {
+				frame.dispose();
+			}
+			
+			
 		});
 		return btn;
 	}

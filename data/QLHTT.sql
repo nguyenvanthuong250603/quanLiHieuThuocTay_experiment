@@ -1,13 +1,13 @@
 ﻿CREATE DATABASE QLHTT
 USE QLHTT
-DROP DATABASE QLHTT
+
 GO
 CREATE TABLE NhanVien (
     MaNV NVARCHAR(50) not null PRIMARY KEY,
     HoTen NVARCHAR(255),
     GioiTinh BIT,
     NgaySinh DATE,
-    sdt VARCHAR(15),
+    sdt VARCHAR(10),
     cccd VARCHAR(20),
     ChucVu NVARCHAR(50),
     NgayVaoLam DATE
@@ -15,8 +15,8 @@ CREATE TABLE NhanVien (
 GO
 CREATE TABLE TaiKhoan (
  
+    MaNV NVARCHAR(50) NOT NULL PRIMARY KEY,
     MatKhau NVARCHAR(255),
-    MaNV NVARCHAR(50),
     FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV)
 );
 GO
@@ -76,11 +76,14 @@ INSERT INTO Thuoc VALUES ('TH005',N'Bảo thanh 3',20,10000,N'Hộp 1 vĩ x 5 vi
 
 GO
 
-
 GO
 INSERT INTO NhaSanXuat VALUES (N'CTY SX1',N'40 Nguyễn Huệ , Quận 1 ,HCM')
 INSERT INTO NhaSanXuat VALUES (N'CTY SX2',N'13 Nam Văn , Gò Vấp,HCM')
 --INSERT INTO  
 GO
-
+INSERT INTO NhanVien VALUES ('NV001',N'Nguyễn Văn Thương',1,'2003-06-25','0794571318','067203000247',N'Quản lí','2024-03-10')
+GO
+INSERT INTO taiKhoan VALUES ('NV001','123')
+GO
+SELECT *FROM taiKhoan
  

@@ -74,6 +74,11 @@ public class NhanVien {
 	
 		this.maNV = maNV;
 	}
+	@Override
+	public String toString() {
+		return "NhanVien [maNV=" + maNV + ", hoTen=" + hoTen + ", gioiTinh=" + gioiTinh + ", ngaySinh=" + ngaySinh
+				+ ", sdt=" + sdt + ", cccd=" + cccd + ", chucVu=" + chucVu + ", ngayVaoLam=" + ngayVaoLam + "]";
+	}
 	
 	
 	
