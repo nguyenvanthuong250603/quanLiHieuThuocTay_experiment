@@ -162,5 +162,28 @@ public class Thuoc_DAO {
 		
 		return list_Thuoc;
 	}
-
+	public Thuoc getThuocByID(String maThuoc) {
+		Thuoc th = new Thuoc();
+		Connection con = accessDataBase();
+		PreparedStatement p = null;
+		try {
+			p = con.prepareStatement("SELECT *FROM Thuoc WHERE MaThuoc = ?");
+			p.setString(1, maThuoc);
+			ResultSet rs = p.executeQuery();
+			while (rs.next()) {
+				Date date = rs.getDate("NgaySanXuat");
+				Date dateNhh = rs.getDate("NgayHetHan");
+				LocalDate localDateNsx = date.toLocalDate();
+				LocalDate localDateNhh = dateNhh.toLocalDate();
+				th= new Thuoc(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getString(5),
+						rs.getString(6), rs.getString(7), new NhaSanXuat(rs.getString(8)), localDateNsx, localDateNhh,
+						rs.getString(11), rs.getString(12), rs.getString(13), rs.getString(14), rs.getString(15),
+						rs.getString(16));
+				
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return th;
+	}
 }

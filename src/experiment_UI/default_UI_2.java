@@ -72,10 +72,10 @@ public class default_UI_2 {
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
 
+		container.add(createDoiThuoc(), DT);
+		container.add(createBanThuoc(), BT);
 		container.add(createQuanLyThuoc(), T);
 		container.add(createQuanLyNhapThuoc(),QLDNT);
-		container.add(createBanThuoc(), BT);
-		container.add(createDoiThuoc(), DT);
 		container.add(createNhapThuoc(),NT);
 		jFrame.add(sidebar, BorderLayout.WEST);
 		jFrame.add(container, BorderLayout.CENTER);
@@ -219,12 +219,14 @@ public class default_UI_2 {
 		text.setFont(new Font("Arial", Font.BOLD, 30));
 		text.setForeground(Color.WHITE);
 		text.setIconTextGap(20);
-		compomet.setBorder(new EmptyBorder(20, 20, 10, 20));
+		compomet.setBorder(new EmptyBorder(20, 0, 10, 20));
 		compomet.setBackground(new Color(0, 132, 255));
 		compomet.add(text,BorderLayout.NORTH);
 		
 		NhanVien nv = nv_Dao.getNhanVienFindByID(MaNV);
 		JLabel x = new JLabel(nv.getChucVu() + ":"+ nv.getHoTen());
+		x.setFont(new Font("Arial", Font.BOLD, 18));
+		x.setBorder(new EmptyBorder(10, 10, 10, 0));
 		
 		compomet.add(x,BorderLayout.AFTER_LAST_LINE);
 		return compomet;

@@ -6,6 +6,9 @@ import java.util.Objects;
 public class Thuoc {
 
 
+	public Thuoc() {
+		super();
+	}
 	private String maThuoc,tenThuoc;
 	private int soLuong;
 	private double gia;

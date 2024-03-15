@@ -30,7 +30,8 @@ public class doiThuoc_UI {
 	private Object[] object_status;
 	private ButtonGroup group;
 	private JLabel labelMoney;
-	private JTextArea jTextAreaNote , jtetJTextAreReason;
+	private JTextArea jTextAreaNote ;
+	private JTextField jtetJTextAreReason;
 	private timThuoc_UI timThuoc = new timThuoc_UI();
 	public JPanel getDoiThuoc() {
 		JPanel doithuoc = new JPanel(new BorderLayout());
@@ -89,7 +90,7 @@ public class doiThuoc_UI {
 			btn = buttonInPageExChange(object[i], object[i + 1]);
 			footer.add(btn);
 		}
-		btn.setPreferredSize(new Dimension(180, 40));
+		
 		return footer;
 
 	}
@@ -100,7 +101,7 @@ public class doiThuoc_UI {
 //		sell.setLayout(new BoxLayout(sell, BoxLayout.Y_AXIS));
 		sell.add(inf_custommer(),BorderLayout.NORTH);
 		sell.add(inf_sell(),BorderLayout.CENTER);
-		sell.add(footer_sell(),BorderLayout.SOUTH);
+		
 //		sell.add(boxx);
 		return sell;
 	}
@@ -119,7 +120,7 @@ public class doiThuoc_UI {
 
 	}
 	public JPanel inf_sell() {
-		JPanel sell = new JPanel();
+		JPanel sell = new JPanel(new BorderLayout());
 		createTitle(sell, "Thông tin hóa đơn");
 		Box box = Box.createVerticalBox();
 //		sell.setLayout(new BoxLayout(sell, BoxLayout.Y_AXIS));
@@ -134,7 +135,7 @@ public class doiThuoc_UI {
 		JPanel status = new JPanel(new BorderLayout());
 		status.add(sampleModel("Tình trạng"),BorderLayout.WEST);
 		JPanel div = new JPanel(new GridLayout(1, 3)); 
-		Object[] trageStatus = {customRadio("Đã bán"),customRadio("Hoàn trả"),customRadio("Đổi mới")};
+		Object[] trageStatus = {customRadio("Hoàn trả"),customRadio("Đổi thuốc"),customRadio("Kê lại đơn")};
 		group = new ButtonGroup();
 		for (Object object : trageStatus) {
 			div.add((JRadioButton)object);
@@ -144,38 +145,69 @@ public class doiThuoc_UI {
 		status.add(div,BorderLayout.CENTER);
 	
 		box.add(status);
+		box.add(changeDrug());
 		JPanel JpenlMoney = new JPanel(new BorderLayout());
 		JpenlMoney.add(labelMoney = sampleModel("Tổng tiền : "),BorderLayout.WEST);
 		box.add(JpenlMoney);
-		jtetJTextAreReason = new JTextArea();
+		jtetJTextAreReason = new JTextField();
 
-		box.add(createTextArea("Lý do", jtetJTextAreReason));
-		
-		
-		sell.add(box);
+		box.add(createNameAndTextField(jtetJTextAreReason, "Lý do"));
+			
+		sell.add(box,BorderLayout.CENTER);
+		sell.add(footer_sell(),BorderLayout.SOUTH);
  		return sell;
 	}
 	public JPanel footer_sell() {
 		
-		JPanel footer = new JPanel();
+		JPanel footer = new JPanel(new BorderLayout());
 		JButton btn = null;
-		String[] object = { "Xóa", "gift\\trash-bin.png", "Thanh toán", "gift\\excel-file.png" };
+		JPanel topButton = new JPanel();
+		String[] object = { "Xóa trắng", "gift\\trash-bin.png", "Đổi thuốc", "gift\\excel-file.png" };
 		for (int i = 0; i < object.length; i += 2) {
 			 btn = buttonInPageExChange(object[i], object[i + 1]);
-			footer.add(btn);
+			topButton.add(btn);
 		}
-		btn.setPreferredSize(new Dimension(180, 40));
+		footer.add(topButton,BorderLayout.CENTER);
+		footer.add(buttonInPageExChange("Tạo hóa đơn","gift\\excel-file.png"  ),BorderLayout.SOUTH);
+		
 		return footer;
 	
 }
 	
-	
+	public JPanel changeDrug() {
+		JPanel 	input = new JPanel(new BorderLayout());
+		
+		String[] column = { "Mã thuốc", "Tên thuốc ", "Số lượng", "Giá", "Loại thuốc", "Nhà sản xuất", "Ngày sản xuất",
+				"Ngày hết Hạn", };
+
+		String[][] row = {
+				{ "SP01", "Bảo thanh", "" + 20, "" + 10000, "Thực phẩm chức năng", "Công Ty Nam Cao", "31/01/2024",
+						"30/04/2024" },
+
+				{ "", "", "", "", "", "", "", "" } };
+		DefaultTableModel model = new DefaultTableModel(row, column);
+		JTable table = new JTable(model);
+		
+			
+		
+		table.setShowGrid(false);
+		table.setShowVerticalLines(false);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
+		JScrollPane scoll = new JScrollPane(table,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		input.add(scoll, BorderLayout.CENTER);
+		return input;
+		
+	}
 	public JButton buttonInPageExChange(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
-
+		btn.setPreferredSize(new Dimension(180, 40));
 		btn.addActionListener(e -> {
 			if(nameButton.equals("Thêm thuốc")) {
 				timThuoc.getTimThuoc();
+			}
+			else {
+				System.out.println(nameButton);
 			}
 			
 		});

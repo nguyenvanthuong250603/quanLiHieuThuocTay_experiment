@@ -1,6 +1,7 @@
 package experiment_UI;
 
 import javax.print.attribute.TextSyntax;
+import javax.sql.rowset.RowSetWarning;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -17,10 +18,18 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.plaf.BorderUIResource.BevelBorderUIResource;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.IconifyAction;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import javax.swing.text.JTextComponent;
 
+import dao.NhanVien_DAO;
+import dao.Thuoc_DAO;
+import entity.NhanVien;
+import entity.Thuoc;
 import experiment_UI.Generate_All.CustomTableCellRenderer;
 
 import static experiment_UI.Generate_All.*;
@@ -42,6 +51,10 @@ public class banThuoc_UI {
 	private JButton btnTimKH;
 	private JTextField jtextMaKH;
 	private JTextArea jtextNote;
+	private JTextField textMaThuocFind;
+	private DefaultTableModel model;
+	private JTable table;
+	private Thuoc_DAO th_DAO = new Thuoc_DAO();
 
 	public JPanel getBanThuoc() {
 		JPanel sellManagement = new JPanel(new BorderLayout());
@@ -68,8 +81,8 @@ public class banThuoc_UI {
 		for (int i = 0; i < object_custommer.length; i++) {
 			if (object_custommer[i][1] instanceof JTextField) {
 				((JTextField) object_custommer[i][1]).setEditable(value);
-			}else {
-				((JComboBox)object_custommer[i][1]).setEnabled(value);
+			} else {
+				((JComboBox) object_custommer[i][1]).setEnabled(value);
 			}
 
 		}
@@ -86,27 +99,21 @@ public class banThuoc_UI {
 	public JPanel findID() {
 		JPanel f = new JPanel();
 		f.setLayout(new BorderLayout());
-		JTextField text = new JTextField();
-		f.add(text, BorderLayout.CENTER);
-		f.setBorder(new EmptyBorder(5, 0, 5, 0));
-		JButton timkiemMaThuocHoacTen = buttonInPageSell("Tìm kiếm", "");
-		f.add(timkiemMaThuocHoacTen, BorderLayout.EAST);
+		textMaThuocFind = new JTextField();
+		f.add(textMaThuocFind, BorderLayout.CENTER);
+		f.setBorder(new EmptyBorder(5, 5, 5, 0));
+		JButton timkiemMaThuoc = buttonInPageSell("Tìm kiếm", "");
+		f.add(timkiemMaThuoc, BorderLayout.EAST);
 		return f;
 	}
 
 	public JPanel table_information() {
 		JPanel managerment = new JPanel();
 		managerment.setLayout(new BorderLayout());
-		String[] column = { "Mã thuốc", "Tên thuốc ", "Số lượng", "Giá", "Loại thuốc", "Nhà sản xuất", "Ngày sản xuất",
-				"Ngày hết Hạn", };
+		String[] column = { "Mã thuốc", "Tên thuốc ", "Đơn vị", "Số lượng", "Giá", "Thành tiền" };
 
-		String[][] row = {
-				{ "SP01", "Bảo thanh", "" + 20, "" + 10000, "Thực phẩm chức năng", "Công Ty Nam Cao", "31/01/2024",
-						"30/04/2024" },
-
-				{ "", "", "", "", "", "", "", "" } };
-		DefaultTableModel model = new DefaultTableModel(row, column);
-		JTable table = new JTable(model);
+		model = new DefaultTableModel(column, 0);
+		table = new JTable(model);
 		table.setShowGrid(false);
 		table.setShowVerticalLines(false);
 		table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
@@ -202,7 +209,11 @@ public class banThuoc_UI {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(120, 40));
 		btn.addActionListener(e -> {
-			System.err.println(nameButton);
+			if (nameButton.equals("Tìm kiếm")) {
+
+				timThuoc();
+
+			}
 		});
 
 		return btn;
@@ -249,5 +260,55 @@ public class banThuoc_UI {
 		return footer;
 
 	}
+
+	public void timThuoc() {
+		String maThuoc = textMaThuocFind.getText();
+		Thuoc th = th_DAO.getThuocByID(maThuoc);
+
+		double thanhTien = th.getSoLuong() * th.getGia();
+		String[] row = { th.getMaThuoc(), th.getTenThuoc(), th.getDonVi(), "", th.getGia() + "", "" + thanhTien };
+		model.addRow(row);
+		int soLuongColumnIndex = 3;
+
+		int lastRowIndex = model.getRowCount() - 1;
+		table.requestFocus();
+		table.changeSelection(lastRowIndex, soLuongColumnIndex, false, false);
+		table.editCellAt(lastRowIndex, soLuongColumnIndex);
+		Component editor = table.getEditorComponent();
+		if (editor != null && editor instanceof JTextComponent) {
+			((JTextComponent) editor).selectAll();
+		}
+	}
+	
+	public void forcusListenTable() {
+		FocusListener calculation = new FocusListener() {
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				try {
+					
+					Integer	getSoLuong	=  Integer.parseInt(table.getValueAt(0, 3).toString());
+					Double getGia =Double.parseDouble(table.getValueAt(0, 4).toString());
+					double tinhTien = getSoLuong * getGia;
+					table.setValueAt(tinhTien, 0, 5);
+					table.
+					
+
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+			}
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		};
+		table.addFocusListener(calculation);
+
+	}
+	
+	
 
 }
