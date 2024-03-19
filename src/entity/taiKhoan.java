@@ -1,6 +1,6 @@
 package entity;
 
-public class taiKhoan {
+public class TaiKhoan {
 	private NhanVien maNV;
 	private String matKhau;
 	
@@ -18,7 +18,7 @@ public class taiKhoan {
 	public void setMaNV(NhanVien maNV) {
 		this.maNV = maNV;
 	}
-	public taiKhoan(NhanVien maNV, String matKhau) {
+	public TaiKhoan(NhanVien maNV, String matKhau) {
 		
 		this.maNV = maNV;
 		this.matKhau = matKhau;

@@ -1,6 +1,6 @@
 package experiment_UI;
 
-public class brief {
+public class Brief {
 
 	public final static String T = "Thuốc";
 	public final static String HD = "Hóa đơn";

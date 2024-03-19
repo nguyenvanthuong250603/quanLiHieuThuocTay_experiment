@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
 
 import experiment_UI.Generate_All.CustomTableCellRenderer;
 
-public class nhapThuoc_UI {
+public class NhapThuoc_UI {
 	private JComboBox cbLoaiThuoc;
 	private JComboBox cbNSX;
 	private JCheckBox cb;

@@ -8,9 +8,8 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import com.microsoft.sqlserver.jdbc.SQLServerResource_zh_CN;
 
-import static connectDataBase.connectionData.*;
+import static connectDataBase.ConnectionData.*;
 
 import entity.NhaSanXuat;
 import entity.Thuoc;

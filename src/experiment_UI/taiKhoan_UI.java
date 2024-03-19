@@ -33,10 +33,10 @@ import javax.swing.border.EmptyBorder;
 import dao.NhanVien_DAO;
 import dao.TaiKhoan_DAO;
 import entity.NhanVien;
-import entity.taiKhoan;
-import static experiment_UI.brief.*;
+import entity.TaiKhoan;
+import static experiment_UI.Brief.*;
 import static experiment_UI.Generate_All.*;
-public class taiKhoan_UI  extends JFrame{
+public class TaiKhoan_UI  extends JFrame{
 	private JTextField maNhanVienJtextField;
 	private JPasswordField passwordField;
 	private JLabel titleJLabel;
@@ -45,10 +45,10 @@ public class taiKhoan_UI  extends JFrame{
 	JFrame framee = new JFrame();
 	private TaiKhoan_DAO dstk = new TaiKhoan_DAO();
 
-	public taiKhoan_UI() {
+	public TaiKhoan_UI() {
 		
 		framee.setTitle("Test Gui ");
-		framee.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		framee.setSize(new Dimension(900, 650));
 		framee.add(backGround());
 		forcusListen();
 		checkJcheckbox();
@@ -57,7 +57,7 @@ public class taiKhoan_UI  extends JFrame{
 		framee.setVisible(true);
 	}
 	public static void main(String[] args) {
-		new taiKhoan_UI();
+		new TaiKhoan_UI();
 	}
 	public JPanel backGround() {
 		JPanel panel = new JPanel(new GridBagLayout()) {
@@ -72,14 +72,11 @@ public class taiKhoan_UI  extends JFrame{
 
 		JPanel t = new JPanel(new BorderLayout());
 		t.setBackground(new Color(0, 0,0, 128));
-		t.setPreferredSize(new Dimension(500, 250));
+		t.setPreferredSize(new Dimension(400, 250));
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.insets = new Insets(0, 0, 180, 0); 
-		
-		
-		
+		gbc.insets = new Insets(0, 0, 95, 0); 
 		
 		inputAcc(t);
 		
@@ -148,13 +145,13 @@ public class taiKhoan_UI  extends JFrame{
 //					default_UI_2 run = new default_UI_2(frame);
 //				
 //				}
-				ArrayList<taiKhoan> ds = dstk.getTaiKhoan();
-				for (taiKhoan tk : ds) {
-					System.out.println(tk.getMaNV().getMaNV());
+				ArrayList<TaiKhoan> ds = dstk.getTaiKhoan();
+				for (TaiKhoan tk : ds) {
+					
 					if(tk.getMaNV().getMaNV().equals(maNhanVienJtextField.getText())&&tk.getMatKhau().equals(passwordField.getText())) {
 						framee.dispose();
 						JFrame frame  = new JFrame();
-						default_UI_2 run = new default_UI_2(frame,tk.getMaNV().getMaNV());
+						Default_UI run = new Default_UI(frame,tk.getMaNV().getMaNV());
 						
 						
 					}

@@ -1,8 +1,6 @@
 package experiment_UI;
 
-import static experiment_UI.Generate_All.createJcombobox;
-import static experiment_UI.Generate_All.createTitle;
-import static experiment_UI.Generate_All.sampleModel;
+import static experiment_UI.Generate_All.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -11,7 +9,9 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
+import javax.sql.rowset.RowSetWarning;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -26,14 +26,20 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import dao.Thuoc_DAO;
+import entity.NhaSanXuat;
+import entity.Thuoc;
+
 import static experiment_UI.Generate_All.*;
 
-public class timThuoc_UI {
+public class TimThuoc_UI {
 	private JComboBox cbLoaiThuoc;
 	private JComboBox cbNSX;
 	private JFrame frame;
 	private JCheckBox cb;
-
+	private DefaultTableModel model;
+	private JTable table;
+	private Thuoc_DAO list_Thuoc= new Thuoc_DAO();
 	public void getTimThuoc() {
 		frame = new JFrame();
 		frame.setTitle("Tìm kiếm thuốc");
@@ -42,15 +48,16 @@ public class timThuoc_UI {
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(frame.DISPOSE_ON_CLOSE);
 		frame.setVisible(true);
+		hienBangTableThuoc();
 		frame.setResizable(false);
-		
+
 	}
 
 	public JPanel diaLog() {
 		JPanel control = new JPanel(new BorderLayout());
 		JLabel title = new JLabel("TÌM KIẾM THUỐC");
 		title.setHorizontalAlignment(JLabel.CENTER);
-		title.setFont(new Font("Arail",Font.BOLD,30) );
+		title.setFont(new Font("Arail", Font.BOLD, 30));
 		title.setForeground(Color.BLUE);
 		control.add(title, BorderLayout.NORTH);
 		control.add(searchAndfilter(), BorderLayout.CENTER);
@@ -123,13 +130,9 @@ public class timThuoc_UI {
 		String[] column = { "Mã thuốc", "Tên thuốc ", "Số lượng", "Giá", "Loại thuốc", "Nhà sản xuất", "Ngày sản xuất",
 				"Ngày hết Hạn", };
 
-		String[][] row = {
-				{ "SP01", "Bảo thanh", "" + 20, "" + 10000, "Thực phẩm chức năng", "Công Ty Nam Cao", "31/01/2024",
-						"30/04/2024" },
-
-				{ "", "", "", "", "", "", "", "" } };
-		DefaultTableModel model = new DefaultTableModel(row, column);
-		JTable table = new JTable(model);
+		
+		model = new DefaultTableModel(column, 0);
+		table = new JTable(model);
 		table.setShowGrid(false);
 		table.setShowVerticalLines(false);
 		table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
@@ -141,13 +144,14 @@ public class timThuoc_UI {
 
 	public JButton buttonInPageSearch(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
-		btn.setPreferredSize( new Dimension(120,40));
+		btn.setPreferredSize(new Dimension(120, 40));
 		btn.addActionListener(e -> {
-			if(nameButton.equals("Thoát")) {
+			if (nameButton.equals("Thoát")) {
 				frame.dispose();
+			} else if (nameButton.equals("Chọn")) {
+				
 			}
-			
-			
+
 		});
 		return btn;
 	}
@@ -156,7 +160,7 @@ public class timThuoc_UI {
 		JPanel footer = new JPanel();
 
 		String[] object = { "", "gift\\reset.png", "Chọn", "gift\\check.png", "Thoát", "gift\\exit.png" };
-	
+
 		for (int i = 0; i < object.length; i += 2) {
 			JButton btn = buttonInPageSearch(object[i], object[i + 1]);
 			footer.add(btn);
@@ -164,4 +168,27 @@ public class timThuoc_UI {
 
 		return footer;
 	}
+
+	public void getThuocInTimThuoc(JTable tablee,DefaultTableModel modell) {
+		int index = table.getSelectedRow();
+		String[] row = { table.getValueAt(index, 0).toString(), table.getValueAt(index, 0).toString(),
+				table.getValueAt(index, 1).toString(), table.getValueAt(index, 2).toString(),
+				table.getValueAt(index, 3).toString(),table.getValueAt(index, 4).toString(),table.getValueAt(index, 5).toString() };
+		modell.addRow(row);
+		tablee.setModel(modell);
+		
+	}
+	public void hienBangTableThuoc() {
+
+		ArrayList<Thuoc> list_thuoc = list_Thuoc.getThuocDataBase();
+
+		for (Thuoc thuoc : list_thuoc) {
+			NhaSanXuat nsx = thuoc.getTenNhaSanXuat();
+			String[] row = { thuoc.getMaThuoc(), thuoc.getTenThuoc(), thuoc.getSoLuong() + "", thuoc.getGia() + "",
+					thuoc.getLoaiThuoc(), nsx.getTenNSX(), thuoc.getNgaySanXuat() + "", "" + thuoc.getNgaySanXuat() };
+			model.addRow(row);
+		}
+		table.setModel(model);
+		}
+
 }

@@ -47,7 +47,7 @@ import entity.Thuoc;
 
 import static experiment_UI.Generate_All.*;
 
-public class quanLyThuoc_UI {
+public class QuanLyThuoc_UI {
 	private JLabel labelImage;
 	private JTextField jTextMaThuoc,  jTextGiaThuoc, jTextSoLuong, jTextNgaySx, jTextNgayHetHan,
 			jTextDonVi;

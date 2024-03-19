@@ -1,48 +1,47 @@
 package experiment_UI;
 
-import javax.print.attribute.TextSyntax;
-import javax.sql.rowset.RowSetWarning;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
+
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JRadioButtonMenuItem;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.plaf.BorderUIResource.BevelBorderUIResource;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.IconifyAction;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
-import javax.swing.text.JTextComponent;
 
-import dao.NhanVien_DAO;
+import javax.swing.table.DefaultTableModel;
+
+import javax.swing.text.JTextComponent;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import javax.swing.text.Document;
+
 import dao.Thuoc_DAO;
-import entity.NhanVien;
+
 import entity.Thuoc;
 import experiment_UI.Generate_All.CustomTableCellRenderer;
 
 import static experiment_UI.Generate_All.*;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
+
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.util.Iterator;
 
-public class banThuoc_UI {
+public class BanThuoc_UI {
 
 	private JCheckBox cb;
 	private Object[][] object_custommer, object_sell;
@@ -214,6 +213,11 @@ public class banThuoc_UI {
 				timThuoc();
 
 			}
+			if (nameButton.equals("Xóa")) {
+
+				
+				
+			}
 		});
 
 		return btn;
@@ -261,54 +265,79 @@ public class banThuoc_UI {
 
 	}
 
-	public void timThuoc() {
+	public  void timThuoc() {
 		String maThuoc = textMaThuocFind.getText();
-		Thuoc th = th_DAO.getThuocByID(maThuoc);
 
-		double thanhTien = th.getSoLuong() * th.getGia();
-		String[] row = { th.getMaThuoc(), th.getTenThuoc(), th.getDonVi(), "", th.getGia() + "", "" + thanhTien };
-		model.addRow(row);
+		if (regex()) {
+			Thuoc th = th_DAO.getThuocByID(maThuoc);
+
+			String[] row = { th.getMaThuoc(), th.getTenThuoc(), th.getDonVi(), "", th.getGia() + "", "" };
+			model.addRow(row);
+			int soLuongColumnIndex = 3;
+
+			int lastRowIndex = model.getRowCount() - 1;
+			System.out.println(lastRowIndex);
+			table.requestFocus();
+			table.changeSelection(lastRowIndex, soLuongColumnIndex, false, false);
+			table.editCellAt(lastRowIndex, soLuongColumnIndex);
+			Component editor = table.getEditorComponent();
+			if (editor != null && editor instanceof JTextComponent) {
+				((JTextComponent) editor).selectAll();
+			}
+			Document doc = ((JTextComponent) editor).getDocument();
+			doc.addDocumentListener(new DocumentListener() {
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					updateTotalPrice();
+				}
+
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					updateTotalPrice();
+				}
+
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					// Plain text components do not fire these events
+				}
+
+			});
+			model.addTableModelListener(new TableModelListener() {
+				@Override
+				public void tableChanged(TableModelEvent e) {
+					if (e.getType() == TableModelEvent.UPDATE && e.getColumn() == soLuongColumnIndex) {
+						updateTotalPrice();
+					}
+				}
+			});
+		}
+
+	}
+
+	private void updateTotalPrice() {
 		int soLuongColumnIndex = 3;
 
 		int lastRowIndex = model.getRowCount() - 1;
-		table.requestFocus();
-		table.changeSelection(lastRowIndex, soLuongColumnIndex, false, false);
-		table.editCellAt(lastRowIndex, soLuongColumnIndex);
-		Component editor = table.getEditorComponent();
-		if (editor != null && editor instanceof JTextComponent) {
-			((JTextComponent) editor).selectAll();
+
+		int soLuong = 0;
+		double gia = 0;
+		try {
+			soLuong = Integer.parseInt(table.getValueAt(lastRowIndex, soLuongColumnIndex).toString());
+			gia = Double.parseDouble(table.getValueAt(lastRowIndex, 4).toString());
+		} catch (NumberFormatException ex) {
+
 		}
+
+		double thanhTien = soLuong * gia;
+		table.setValueAt(thanhTien, lastRowIndex, 5);
 	}
-	
-	public void forcusListenTable() {
-		FocusListener calculation = new FocusListener() {
 
-			@Override
-			public void focusLost(FocusEvent e) {
-				try {
-					
-					Integer	getSoLuong	=  Integer.parseInt(table.getValueAt(0, 3).toString());
-					Double getGia =Double.parseDouble(table.getValueAt(0, 4).toString());
-					double tinhTien = getSoLuong * getGia;
-					table.setValueAt(tinhTien, 0, 5);
-					table.
-					
-
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-			}
-
-			@Override
-			public void focusGained(FocusEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-		};
-		table.addFocusListener(calculation);
-
+	private boolean regex() {
+		if (textMaThuocFind.getText().equals("")) {
+			JOptionPane.showMessageDialog(table, "Mã thuốc không được để rỗng");
+			return false;
+		}
+		return true;
 	}
-	
-	
 
 }

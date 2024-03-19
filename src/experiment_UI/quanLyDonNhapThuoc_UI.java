@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
 
 import experiment_UI.Generate_All.CustomTableCellRenderer;
 
-public class quanLyDonNhapThuoc_UI {
+public class QuanLyDonNhapThuoc_UI {
 	private JComboBox cbLoaiThuoc;
 	private JComboBox cbNSX;
 	private JCheckBox cb;

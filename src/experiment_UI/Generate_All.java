@@ -136,7 +136,7 @@ public class Generate_All {
 		JDateChooser date = (JDateChooser) object;
 		return date.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
-	public void setText() {
-		
+	public static String getString(String x) {
+		return  x;
 	}
 }

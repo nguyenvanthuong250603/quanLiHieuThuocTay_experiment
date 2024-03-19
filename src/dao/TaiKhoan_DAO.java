@@ -6,18 +6,18 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import entity.NhanVien;
-import entity.taiKhoan;
+import entity.TaiKhoan;
 
 public class TaiKhoan_DAO {
-	public ArrayList<taiKhoan> getTaiKhoan(){
-		ArrayList<taiKhoan> ltk = new ArrayList<taiKhoan>();
-		Connection con = connectDataBase.connectionData.accessDataBase();
+	public ArrayList<TaiKhoan> getTaiKhoan(){
+		ArrayList<TaiKhoan> ltk = new ArrayList<TaiKhoan>();
+		Connection con = connectDataBase.ConnectionData.accessDataBase();
 		try {
 			Statement s = con.createStatement();
 			ResultSet rs =s.executeQuery("SELECT *FROM taiKhoan");
 			while (rs.next()) {
 			NhanVien nv = new NhanVien(rs.getString(1));
-			taiKhoan tk = new taiKhoan(nv, rs.getString(2));
+			TaiKhoan tk = new TaiKhoan(nv, rs.getString(2));
 			ltk.add(tk);
 			}
 		} catch (Exception e) {

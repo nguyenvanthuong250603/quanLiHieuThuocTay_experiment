@@ -25,14 +25,14 @@ import experiment_UI.Generate_All.CustomTableCellRenderer;
 
 import static experiment_UI.Generate_All.*;
 
-public class doiThuoc_UI {
+public class DoiThuoc_UI {
 	private Object[][] object_customer,object_sell;
 	private Object[] object_status;
 	private ButtonGroup group;
 	private JLabel labelMoney;
 	private JTextArea jTextAreaNote ;
 	private JTextField jtetJTextAreReason;
-	private timThuoc_UI timThuoc = new timThuoc_UI();
+	private TimThuoc_UI timThuoc = new TimThuoc_UI();
 	public JPanel getDoiThuoc() {
 		JPanel doithuoc = new JPanel(new BorderLayout());
 		doithuoc.add(table_Exchange(), BorderLayout.CENTER);
@@ -213,4 +213,5 @@ public class doiThuoc_UI {
 		});
 		return btn;
 	}
+
 }

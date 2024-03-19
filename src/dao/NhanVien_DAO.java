@@ -13,7 +13,7 @@ import entity.NhanVien;
 public class NhanVien_DAO {
 	public ArrayList<NhanVien> getNhanVien() {
 		ArrayList<NhanVien> lnv = new ArrayList<NhanVien>();
-		Connection con = connectDataBase.connectionData.accessDataBase();
+		Connection con = connectDataBase.ConnectionData.accessDataBase();
 		try {
 			Statement s = con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT *FROM NhanVien");
@@ -26,7 +26,7 @@ public class NhanVien_DAO {
 				LocalDate nvl = dateNVL.toLocalDate();
 				NhanVien nv = new NhanVien(rs.getString(1), rs.getString(2), gender, ns, rs.getString(5),
 						rs.getString(6), rs.getString(7), nvl);
-				System.out.println("hi");
+			
 				lnv.add(nv);
 			}
 		} catch (Exception e) {
@@ -38,7 +38,7 @@ public class NhanVien_DAO {
 
 	public NhanVien getNhanVienFindByID(String maNV) {
 		NhanVien nv = new NhanVien();
-		Connection con = connectDataBase.connectionData.accessDataBase();
+		Connection con = connectDataBase.ConnectionData.accessDataBase();
 		PreparedStatement p = null;
 		try {
 			p =	con.prepareStatement("SELECT *FROM NhanVien WHERE MaNV= ?");

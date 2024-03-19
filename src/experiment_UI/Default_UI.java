@@ -1,9 +1,6 @@
 package experiment_UI;
 
-import static experiment_UI.brief.T;
-import static experiment_UI.brief.HD;
-import static experiment_UI.brief.BT;
-import static experiment_UI.brief.*;
+import static experiment_UI.Brief.*;
 import java.awt.Adjustable;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -44,14 +41,14 @@ import javax.swing.plaf.basic.BasicInternalFrameTitlePane.IconifyAction;
 import dao.NhanVien_DAO;
 import entity.NhanVien;
 
-public class default_UI_2 {
+public class Default_UI {
 	private JPanel sidebar;
 	private JPanel container;
 	private CardLayout cardLayout;
 	private AbstractButton selectedButton = null;
 	private JFrame jFrame;
 	private NhanVien_DAO nv_Dao= new NhanVien_DAO(); 
-	public default_UI_2(JFrame jFrame,String MaNV) {
+	public Default_UI(JFrame jFrame,String MaNV) {
 		this.jFrame = jFrame;
 		jFrame.setTitle("Hiệu Thuốc Ánh Dương");
 		jFrame.setExtendedState(jFrame.MAXIMIZED_BOTH);
@@ -72,8 +69,8 @@ public class default_UI_2 {
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
 
-		container.add(createDoiThuoc(), DT);
 		container.add(createBanThuoc(), BT);
+		container.add(createDoiThuoc(), DT);
 		container.add(createQuanLyThuoc(), T);
 		container.add(createQuanLyNhapThuoc(),QLDNT);
 		container.add(createNhapThuoc(),NT);
@@ -233,25 +230,25 @@ public class default_UI_2 {
 	}
 
 	private JPanel createQuanLyThuoc() {
-		quanLyThuoc_UI quanLyThuocUI = new quanLyThuoc_UI();
+		QuanLyThuoc_UI quanLyThuocUI = new QuanLyThuoc_UI();
 		return quanLyThuocUI.getQuanLiThuoc();
 	}
 
 	private JPanel createBanThuoc() {
-		banThuoc_UI banThuocUI = new banThuoc_UI();
+		BanThuoc_UI banThuocUI = new BanThuoc_UI();
 		return banThuocUI.getBanThuoc();
 	}
 
 	private JPanel createDoiThuoc() {
-		doiThuoc_UI doiThuoc = new doiThuoc_UI();
+		DoiThuoc_UI doiThuoc = new DoiThuoc_UI();
 		return doiThuoc.getDoiThuoc();
 	}
 	private JPanel createNhapThuoc() {
-		nhapThuoc_UI nhapThuoc = new  nhapThuoc_UI();
+		NhapThuoc_UI nhapThuoc = new  NhapThuoc_UI();
 		return nhapThuoc.getNhapThuoc();
 	}
 	private JPanel createQuanLyNhapThuoc() {
-		quanLyDonNhapThuoc_UI QLDNT = new quanLyDonNhapThuoc_UI();
+		QuanLyDonNhapThuoc_UI QLDNT = new QuanLyDonNhapThuoc_UI();
 		return QLDNT.getQuanLyDonNhapThuoc();
 	}
 }

@@ -1,6 +1,6 @@
 package dao;
 
-import static connectDataBase.connectionData.accessDataBase;
+import static connectDataBase.ConnectionData.accessDataBase;
 
 import java.sql.Connection;
 
