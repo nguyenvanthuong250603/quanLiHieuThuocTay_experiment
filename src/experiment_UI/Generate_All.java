@@ -54,8 +54,8 @@ public class Generate_All {
 		JLabel lb = new JLabel(string);
 		lb.setFont(new Font("Arial", Font.BOLD, 15));
 		lb.setHorizontalTextPosition(JLabel.LEFT);
-		lb.setPreferredSize(new Dimension(113, 30));
-		lb.setBorder(new EmptyBorder(5, 0, 5, 0));
+		lb.setPreferredSize(new Dimension(100, 30));
+//		lb.setBorder(new EmptyBorder(5, 0, 5, 0));
 		return lb;
 
 	}

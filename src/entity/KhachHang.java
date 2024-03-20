@@ -3,12 +3,7 @@ package entity;
 public class KhachHang {
 	private String maKH,tenKH,doTuoi;
 	private boolean gioiTinh;
-	private String sDT;
-	@Override
-	public String toString() {
-		return "KhachHang [maKH=" + maKH + ", tenKH=" + tenKH + ", doTuoi=" + doTuoi + ", gioiTinh=" + gioiTinh
-				+ ", sDT=" + sDT + "]";
-	}
+	private String sDT,diaCHi;
 	public String getMaKH() {
 		return maKH;
 	}
@@ -39,14 +34,29 @@ public class KhachHang {
 	public void setsDT(String sDT) {
 		this.sDT = sDT;
 	}
-	public KhachHang(String maKH, String tenKH, String doTuoi, boolean gioiTinh, String sDT) {
+	public String getDiaCHi() {
+		return diaCHi;
+	}
+	public void setDiaCHi(String diaCHi) {
+		this.diaCHi = diaCHi;
+	}
+	@Override
+	public String toString() {
+		return "KhachHang [maKH=" + maKH + ", tenKH=" + tenKH + ", doTuoi=" + doTuoi + ", gioiTinh=" + gioiTinh
+				+ ", sDT=" + sDT + ", diaCHi=" + diaCHi + "]";
+	}
+	public KhachHang(String maKH, String tenKH, String doTuoi, boolean gioiTinh, String sDT, String diaCHi) {
 		super();
 		this.maKH = maKH;
 		this.tenKH = tenKH;
 		this.doTuoi = doTuoi;
 		this.gioiTinh = gioiTinh;
 		this.sDT = sDT;
+		this.diaCHi = diaCHi;
 	}
-	
+	public KhachHang() {
+		super();
+	}
+
 	
 }

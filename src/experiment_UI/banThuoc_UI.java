@@ -54,6 +54,7 @@ public class BanThuoc_UI {
 	private DefaultTableModel model;
 	private JTable table;
 	private Thuoc_DAO th_DAO = new Thuoc_DAO();
+	private TimKhach_UI timKhach;
 
 	public JPanel getBanThuoc() {
 		JPanel sellManagement = new JPanel(new BorderLayout());
@@ -215,8 +216,10 @@ public class BanThuoc_UI {
 			}
 			if (nameButton.equals("Xóa")) {
 
-				
-				
+			}
+			if (nameButton.equals("Tìm")) {
+				timKhach.getTimKhach(jtextMaKH, (JTextField) object_custommer[0][1], (JComboBox) object_custommer[1][1],
+						(JComboBox) object_custommer[2][1], (JTextField) object_custommer[3][1]);
 			}
 		});
 
@@ -265,7 +268,7 @@ public class BanThuoc_UI {
 
 	}
 
-	public  void timThuoc() {
+	public void timThuoc() {
 		String maThuoc = textMaThuocFind.getText();
 
 		if (regex()) {

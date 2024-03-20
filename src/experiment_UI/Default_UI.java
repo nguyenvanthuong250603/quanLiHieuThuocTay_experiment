@@ -68,7 +68,8 @@ public class Default_UI {
 		container = new JPanel();
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
-
+		
+		container.add(createKhachHang(),KH);
 		container.add(createBanThuoc(), BT);
 		container.add(createDoiThuoc(), DT);
 		container.add(createQuanLyThuoc(), T);
@@ -174,6 +175,9 @@ public class Default_UI {
 					cardLayout.show(container, QLDNT);
 					break;
 				}
+				case KH : {
+					cardLayout.show(container, KH);
+				}
 				default:
 					throw new IllegalArgumentException("Unexpected value: " + nameButton);
 				}
@@ -250,5 +254,9 @@ public class Default_UI {
 	private JPanel createQuanLyNhapThuoc() {
 		QuanLyDonNhapThuoc_UI QLDNT = new QuanLyDonNhapThuoc_UI();
 		return QLDNT.getQuanLyDonNhapThuoc();
+	}
+	private JPanel createKhachHang() {
+		KhachHang_UI KH = new KhachHang_UI();
+		return KH.getKhachHang();
 	}
 }
