@@ -1,4 +1,5 @@
 ﻿CREATE DATABASE QLHTT
+GO
 USE QLHTT
 
 GO
@@ -20,18 +21,25 @@ CREATE TABLE TaiKhoan (
     FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV)
 );
 GO
+
+CREATE TABLE NhaSanXuat(
+	TenNSX NVARCHAR(255) NOT NULL PRIMARY KEY,
+	DiaChiNSX NVARCHAR(255)
+);
+GO
 CREATE TABLE Thuoc(
 	MaThuoc NVARCHAR(50) NOT NULL PRIMARY KEY,
 	TenThuoc NVARCHAR(255),
 	SoLuong INT,
-	Gia FLOAT ,
-	DonVi NVARCHAR(50),
+	Gia FLOAT ,	
 	LoaiThuoc NVARCHAR(50),
-	DoTuoi NVARCHAR(50),
 	NhaSanXuat NVARCHAR(255),
 	NgaySanXuat DATE,
 	NgayHetHan DATE,
 	HinhAnh NVARCHAR(255),
+	DonVi NVARCHAR(50),
+	DangBaoChe NVARCHAR(50),
+	DoTuoi NVARCHAR(50),
 	ThanhPhan NVARCHAR(255),
 	ChiDinh NVARCHAR(255),
 	LieuDung NVARCHAR(255),
@@ -63,22 +71,17 @@ CREATE TABLE HoaDon(
 	FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH),
 	FOREIGN KEY (MaThuoc) REFERENCES Thuoc(MaThuoc)
 );
-GO
-CREATE TABLE NhaSanXuat(
-	TenNSX NVARCHAR(255) NOT NULL PRIMARY KEY,
-	DiaChiNSX NVARCHAR(255)
-);
-GO 
-SELECT Thuoc.MaThuoc , Thuoc.TenThuoc,Thuoc.SoLuong,Thuoc.Gia,Thuoc.NhaSanXuat,Thuoc.NgaySanXuat,Thuoc.NgayHetHan FROM Thuoc INNER JOIN NhaSanXuat ON Thuoc.NhaSanXuat = NhaSanXuat.TenNSX  WHERE Thuoc.LoaiThuoc = 'Kháng sinh'
-
- GO 
-INSERT INTO Thuoc VALUES ('TH005',N'Bảo thanh 3',20,10000,N'Hộp 1 vĩ x 5 viên nén',N'Kháng sinh',N'Mọi lứa tuổi','CTY SX2','2024-01-30','2025-01-30','ha2','thanhphan2','thanhphan2','thanhphan2','thanhphan2','thanhphan2');
-
-GO
 
 GO
 INSERT INTO NhaSanXuat VALUES (N'CTY SX1',N'40 Nguyễn Huệ , Quận 1 ,HCM')
 INSERT INTO NhaSanXuat VALUES (N'CTY SX2',N'13 Nam Văn , Gò Vấp,HCM')
+GO 
+
+INSERT INTO Thuoc VALUES ('TH005',N'Bảo thanh 3',20,10000,N'Kháng sinh','CTY SX2','2024-01-30','2025-01-30','ha2',N'Hộp 1 vĩ x 5 viên nén',N'Dạng viên nén',N'Mọi lứa tuổi','thanhphan2','thanhphan2','thanhphan2','thanhphan2','thanhphan2');
+
+GO
+
+
 --INSERT INTO  
 GO
 INSERT INTO NhanVien VALUES ('NV001',N'Nguyễn Văn Thương',1,'2003-06-25','0794571318','067203000247',N'Quản lí','2024-03-10')

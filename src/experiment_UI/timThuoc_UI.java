@@ -37,10 +37,10 @@ public class TimThuoc_UI {
 	private JComboBox cbNSX;
 	private JFrame frame;
 	private JCheckBox cb;
-	private DefaultTableModel model;
-	private JTable table;
+	private DefaultTableModel model,modelGetThuoc;
+	private JTable table,tableGetThuoc;
 	private Thuoc_DAO list_Thuoc= new Thuoc_DAO();
-	public void getTimThuoc() {
+	public void getTimThuoc(DefaultTableModel modell,JTable tablee) {
 		frame = new JFrame();
 		frame.setTitle("Tìm kiếm thuốc");
 		frame.add(diaLog());
@@ -50,7 +50,8 @@ public class TimThuoc_UI {
 		frame.setVisible(true);
 		hienBangTableThuoc();
 		frame.setResizable(false);
-
+		this.modelGetThuoc = modell;
+		this.tableGetThuoc = tablee;
 	}
 
 	public JPanel diaLog() {
@@ -149,7 +150,7 @@ public class TimThuoc_UI {
 			if (nameButton.equals("Thoát")) {
 				frame.dispose();
 			} else if (nameButton.equals("Chọn")) {
-				
+				serviceGetThuoc();
 			}
 
 		});
@@ -169,15 +170,7 @@ public class TimThuoc_UI {
 		return footer;
 	}
 
-	public void getThuocInTimThuoc(JTable tablee,DefaultTableModel modell) {
-		int index = table.getSelectedRow();
-		String[] row = { table.getValueAt(index, 0).toString(), table.getValueAt(index, 0).toString(),
-				table.getValueAt(index, 1).toString(), table.getValueAt(index, 2).toString(),
-				table.getValueAt(index, 3).toString(),table.getValueAt(index, 4).toString(),table.getValueAt(index, 5).toString() };
-		modell.addRow(row);
-		tablee.setModel(modell);
-		
-	}
+	
 	public void hienBangTableThuoc() {
 
 		ArrayList<Thuoc> list_thuoc = list_Thuoc.getThuocDataBase();
@@ -190,5 +183,14 @@ public class TimThuoc_UI {
 		}
 		table.setModel(model);
 		}
+	public void serviceGetThuoc() {
+		int index = table.getSelectedRow();
+		String[] row = { table.getValueAt(index, 0).toString(),
+				table.getValueAt(index, 1).toString(), table.getValueAt(index, 2).toString(),
+				table.getValueAt(index, 3).toString(),table.getValueAt(index, 4).toString(),table.getValueAt(index, 5).toString() };
+		modelGetThuoc.addRow(row);
+		tableGetThuoc.setModel(modelGetThuoc);
+		frame.dispose();
+	}
 
 }

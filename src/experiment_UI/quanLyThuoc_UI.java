@@ -49,13 +49,12 @@ import static experiment_UI.Generate_All.*;
 
 public class QuanLyThuoc_UI {
 	private JLabel labelImage;
-	private JTextField jTextMaThuoc,  jTextGiaThuoc, jTextSoLuong, jTextNgaySx, jTextNgayHetHan,
-			jTextDonVi;
-	private JComboBox cbNSX, cbLoaiThuoc, cbTuoiSD,cbNSXTim, cbLoaiThuocTim;
+	private JTextField jTextMaThuoc, jTextGiaThuoc, jTextSoLuong, jTextNgaySx, jTextNgayHetHan, jTextDonVi;
+	private JComboBox cbNSX, cbLoaiThuoc, cbTuoiSD, cbNSXTim, cbLoaiThuocTim;
 	private JCheckBox cb;
 	private JDateChooser JdateNgaySanXuat, JdateNgayHetHan;
 	private Object[][] object_inf, object_detail;
-	private JTextArea jTextTenThuoc,jTextAreaMoTa;
+	private JTextArea jTextTenThuoc, jTextAreaMoTa;
 	private JTable table;
 	private DefaultTableModel model;
 	private Thuoc_DAO list_Thuoc = new Thuoc_DAO();
@@ -134,12 +133,12 @@ public class QuanLyThuoc_UI {
 		box1.add(t);
 		box1.add(t2);
 
-		String[] optionNsx = { "","CTY SX1", "CTY SX2" };
-		String[] optionLoaiThuoc = { "","Thuốc giảm đau, hạ sốt ", "Thuốc đặc trị", "Kháng sinh", "Thuốc tiêu hóa",
+		String[] optionNsx = { "", "CTY SX1", "CTY SX2" };
+		String[] optionLoaiThuoc = { "", "Thuốc giảm đau, hạ sốt ", "Thuốc đặc trị", "Kháng sinh", "Thuốc tiêu hóa",
 				"Thuốc an thần", "Vitamin", "Thuốc sát khuẩn , khử trùng", "Thuốc chống dị ứng", "Thuốc chống viêm",
 				"Thuốc tim mạch", "Dịch truyền", "Thực phẩm chức năng" };
-		
-		cbNSXTim= new JComboBox(optionNsx);
+
+		cbNSXTim = new JComboBox(optionNsx);
 		box1.add(createJcombobox("Nhà sản xuất", cbNSXTim));
 
 		cbLoaiThuocTim = new JComboBox(optionLoaiThuoc);
@@ -201,7 +200,7 @@ public class QuanLyThuoc_UI {
 		infRight_top.add(createNameAndTextField(jTextMaThuoc, "Mã thuốc"), BorderLayout.NORTH);
 //Ten thuoc
 		JPanel box2 = new JPanel(new BorderLayout());
-	
+
 		jTextTenThuoc = new JTextArea();
 		box2.add(createTextArea("Tên thuốc", jTextTenThuoc));
 
@@ -217,11 +216,11 @@ public class QuanLyThuoc_UI {
 		String[] optionLoaiThuoc = { "Thuốc giảm đau, hạ sốt ", "Thuốc đặc trị", "Kháng sinh", "Thuốc tiêu hóa",
 				"Thuốc an thần", "Vitamin", "Thuốc sát khuẩn , khử trùng", "Thuốc chống dị ứng", "Thuốc chống viêm",
 				"Thuốc tim mạch", "Dịch truyền", "Thực phẩm chức năng" };
-		String[] optionDoTuoi = { "Mọi lứa tuổi", "Từ 1-23 tháng", "Từ 2-11 tuổi", "Từ 12 tuổi trở lên" };
+
 		Object[][] trage = { { "Số lượng", new JTextField() }, { "Giá", new JTextField() },
-				{ "Đơn vị", new JTextField() }, { "Loại thuốc", cbLoaiThuoc = new JComboBox(optionLoaiThuoc) },
-				{ "Độ tuổi", cbTuoiSD = new JComboBox(optionDoTuoi) }, { "NSX", cbNSX = new JComboBox(optionNsx) },
-				{ "Ngày SX", new JDateChooser() }, { "Ngày Hết Hạn", new JDateChooser() } };
+				{ "Loại thuốc", cbLoaiThuoc = new JComboBox(optionLoaiThuoc) },
+				{ "NSX", cbNSX = new JComboBox(optionNsx) }, { "Ngày SX", new JDateChooser() },
+				{ "Ngày Hết Hạn", new JDateChooser() } };
 		object_inf = trage;
 		for (Object[] objects : object_inf) {
 			if (objects[1] instanceof Component) {
@@ -249,12 +248,17 @@ public class QuanLyThuoc_UI {
 		createTitle(detail_big, "Chi tiết thông tin");
 		JPanel detail_compoment = new JPanel();
 		detail_compoment.setLayout(new BoxLayout(detail_compoment, BoxLayout.Y_AXIS));
-
-		Object[][] trage = { { "Thành phần", new JTextField() }, { "Chỉ định", new JTextField() },
-				{ "Liều dùng", new JTextField() }, { "Bảo quản", new JTextField() } };
+		String[] optionDoTuoi = { "Mọi lứa tuổi", "Từ 1-23 tháng", "Từ 2-11 tuổi", "Từ 12 tuổi trở lên" };
+		Object[][] trage = { { "Đơn vị ", new JTextField() }, { "Dạng bào chế ", new JTextField() },
+				{ "Độ tuổi", cbTuoiSD = new JComboBox(optionDoTuoi) }, { "Thành phần", new JTextField() },
+				{ "Chỉ định", new JTextField() }, { "Liều dùng", new JTextField() }, { "Bảo quản", new JTextField() } };
 		object_detail = trage;
 		for (Object[] objects : trage) {
-			detail_compoment.add(createNameAndTextField((JTextField) objects[1], objects[0].toString()));
+			if (objects[1] instanceof JTextField) {
+				detail_compoment.add(createNameAndTextField((JTextField) objects[1], objects[0].toString()));
+			} else {
+				detail_compoment.add(createJcombobox(objects[0].toString(), (JComboBox) objects[1]));
+			}
 		}
 		;
 		jTextAreaMoTa = new JTextArea();
@@ -331,18 +335,15 @@ public class QuanLyThuoc_UI {
 				} else if (nameBtn.equals("Xóa trắng")) {
 
 					xoaTrang();
-				}
-				else if (nameBtn.equals("")) {
+				} else if (nameBtn.equals("")) {
 //					String gia = ((JTextField)object_inf[1][1]).getText();
 					model.setRowCount(0);
 					hienBangTableThuoc();
 
-				}
-				else if (nameBtn.equals("Lọc")) {
+				} else if (nameBtn.equals("Lọc")) {
 
 					timNangCao();
-				}
-				else {
+				} else {
 
 					System.out.println(nameBtn);
 				}
@@ -400,19 +401,23 @@ public class QuanLyThuoc_UI {
 						jTextTenThuoc.setText(thuoc.getTenThuoc());
 						((JTextField) object_inf[0][1]).setText(thuoc.getSoLuong() + "");
 						((JTextField) object_inf[1][1]).setText(thuoc.getGia() + "");
-						((JTextField) object_inf[2][1]).setText(thuoc.getDonVi());
+
 						cbLoaiThuoc.setSelectedItem(thuoc.getLoaiThuoc());
-						cbTuoiSD.setSelectedItem(thuoc.getDoTuoi());
+
 						cbNSX.setSelectedItem(thuoc.getTenNhaSanXuat().getTenNSX());
-						((JDateChooser) object_inf[6][1]).setDate(java.sql.Date.valueOf(thuoc.getNgaySanXuat()));
-						((JDateChooser) object_inf[7][1]).setDate(java.sql.Date.valueOf(thuoc.getNgayHetHan()));
+						((JDateChooser) object_inf[4][1]).setDate(java.sql.Date.valueOf(thuoc.getNgaySanXuat()));
+						((JDateChooser) object_inf[5][1]).setDate(java.sql.Date.valueOf(thuoc.getNgayHetHan()));
 						String pathFile = thuoc.getHinhAnh();
 						File file = new File(pathFile);
 						displayImage(file);
-						((JTextField) object_detail[0][1]).setText(thuoc.getThanhPhan());
-						((JTextField) object_detail[1][1]).setText(thuoc.getChiDinh());
-						((JTextField) object_detail[2][1]).setText(thuoc.getLieuDung());
-						((JTextField) object_detail[3][1]).setText(thuoc.getBaoQuan());
+						((JTextField) object_detail[0][1]).setText(thuoc.getDonVi());
+						((JTextField) object_detail[1][1]).setText(thuoc.getDangBaoChe());
+						cbTuoiSD.setSelectedItem(thuoc.getDoTuoi());
+					
+						((JTextField) object_detail[3][1]).setText(thuoc.getThanhPhan());
+						((JTextField) object_detail[4][1]).setText(thuoc.getChiDinh());
+						((JTextField) object_detail[5][1]).setText(thuoc.getLieuDung());
+						((JTextField) object_detail[6][1]).setText(thuoc.getBaoQuan());
 						jTextAreaMoTa.setText(thuoc.getMoTa());
 					}
 				}
@@ -428,22 +433,23 @@ public class QuanLyThuoc_UI {
 		String ten = jTextTenThuoc.getText();
 		int soLuong = getValueIntỊntextField(object_inf[0][1]);
 		double gia = getValueDoubleỊntextField(object_inf[1][1]);
-		String donVi = getValueStringInJTextField(object_inf[2][1]);
 		String loaiThuoc = getValueInComboBox(cbLoaiThuoc);
-		String doTuoi = getValueInComboBox(cbTuoiSD);
 		String nsx = getValueInComboBox(cbNSX);
-		LocalDate ngaySanXuat = getDateJDateChoor(object_inf[6][1]);
-		LocalDate ngayHetHan = getDateJDateChoor(object_inf[7][1]);
+		LocalDate ngaySanXuat = getDateJDateChoor(object_inf[4][1]);
+		LocalDate ngayHetHan = getDateJDateChoor(object_inf[5][1]);
 //		chitiet
-		String thanhPhan = getValueStringInJTextField(object_detail[0][1]);
-		String chiDinh = getValueStringInJTextField(object_detail[1][1]);
-		String lieuDung = getValueStringInJTextField(object_detail[2][1]);
-		String baoQuan = getValueStringInJTextField(object_detail[3][1]);
+		String donVi = getValueStringInJTextField(object_detail[0][1]);
+		String dangBaoChe = getValueStringInJTextField(object_detail[1][1]);
+		String doTuoi = getValueInComboBox(cbLoaiThuoc);
+		String thanhPhan = getValueStringInJTextField(object_detail[3][1]);
+		String chiDinh = getValueStringInJTextField(object_detail[4][1]);
+		String lieuDung = getValueStringInJTextField(object_detail[5][1]);
+		String baoQuan = getValueStringInJTextField(object_detail[6][1]);
 		String moTa = jTextAreaMoTa.getText();
 
 		NhaSanXuat nhaSanXuat = new NhaSanXuat(nsx);
-		Thuoc thuoc = new Thuoc(ma, ten, soLuong, gia, donVi, loaiThuoc, doTuoi, nhaSanXuat, ngaySanXuat, ngayHetHan,
-				pathImageShow, thanhPhan, chiDinh, lieuDung, baoQuan, moTa);
+		Thuoc thuoc = new Thuoc(ma, ten, soLuong, gia, loaiThuoc, nhaSanXuat, ngaySanXuat, ngayHetHan, pathImageShow,
+				donVi, dangBaoChe, doTuoi, thanhPhan, chiDinh, lieuDung, baoQuan, moTa);
 
 		if (list_Thuoc.themThuoc(thuoc)) {
 			String[] row = { ma, ten, soLuong + "", gia + "", donVi, loaiThuoc, nhaSanXuat.getTenNSX(),
@@ -460,22 +466,23 @@ public class QuanLyThuoc_UI {
 		String ten = jTextTenThuoc.getText();
 		int soLuong = getValueIntỊntextField(object_inf[0][1]);
 		double gia = getValueDoubleỊntextField(object_inf[1][1]);
-		String donVi = getValueStringInJTextField(object_inf[2][1]);
 		String loaiThuoc = getValueInComboBox(cbLoaiThuoc);
-		String doTuoi = getValueInComboBox(cbTuoiSD);
 		String nsx = getValueInComboBox(cbNSX);
 		LocalDate ngaySanXuat = getDateJDateChoor(object_inf[6][1]);
 		LocalDate ngayHetHan = getDateJDateChoor(object_inf[7][1]);
 //		chitiet
-		String thanhPhan = getValueStringInJTextField(object_detail[0][1]);
-		String chiDinh = getValueStringInJTextField(object_detail[1][1]);
-		String lieuDung = getValueStringInJTextField(object_detail[2][1]);
-		String baoQuan = getValueStringInJTextField(object_detail[3][1]);
+		String donVi = getValueStringInJTextField(object_detail[0][1]);
+		String dangBaoChe = getValueStringInJTextField(object_detail[1][1]);
+		String doTuoi = getValueInComboBox(cbLoaiThuoc);
+		String thanhPhan = getValueStringInJTextField(object_detail[1][1]);
+		String chiDinh = getValueStringInJTextField(object_detail[2][1]);
+		String lieuDung = getValueStringInJTextField(object_detail[3][1]);
+		String baoQuan = getValueStringInJTextField(object_detail[4][1]);
 		String moTa = jTextAreaMoTa.getText();
 
 		NhaSanXuat nhaSanXuat = new NhaSanXuat(nsx);
-		Thuoc thuoc = new Thuoc(ma, ten, soLuong, gia, donVi, loaiThuoc, doTuoi, nhaSanXuat, ngaySanXuat, ngayHetHan,
-				pathImageShow, thanhPhan, chiDinh, lieuDung, baoQuan, moTa);
+		Thuoc thuoc = new Thuoc(ma, ten, soLuong, gia, loaiThuoc, nhaSanXuat, ngaySanXuat, ngayHetHan, pathImageShow,
+				donVi, dangBaoChe, doTuoi, thanhPhan, chiDinh, lieuDung, baoQuan, moTa);
 
 		int index = table.getSelectedRow();
 		String maThuoc = table.getValueAt(index, 0).toString();
@@ -508,40 +515,46 @@ public class QuanLyThuoc_UI {
 		jTextTenThuoc.setText("");
 		((JTextField) object_inf[0][1]).setText("");
 		((JTextField) object_inf[1][1]).setText("");
-		((JTextField) object_inf[2][1]).setText("");
+	
+		
 		cbLoaiThuoc.setSelectedIndex(0);
-		cbTuoiSD.setSelectedIndex(0);
+
 		cbNSX.setSelectedIndex(0);
-		((JDateChooser) object_inf[6][1]).setDate(null);
-		((JDateChooser) object_inf[7][1]).setDate(null);
+		((JDateChooser) object_inf[4][1]).setDate(null);
+		((JDateChooser) object_inf[5][1]).setDate(null);
 		String pathFile = "";
 		File file = new File(pathFile);
 		displayImage(file);
 		((JTextField) object_detail[0][1]).setText("");
 		((JTextField) object_detail[1][1]).setText("");
-		((JTextField) object_detail[2][1]).setText("");
+		cbTuoiSD.setSelectedIndex(0);
 		((JTextField) object_detail[3][1]).setText("");
+		((JTextField) object_detail[4][1]).setText("");
+		((JTextField) object_detail[5][1]).setText("");
+		((JTextField) object_detail[6][1]).setText("");
 		jTextAreaMoTa.setText("");
 	}
+
 	public void timNangCao() {
 
 		String tenNSX = getValueInComboBox(cbNSXTim);
 		String loaithuoc = getValueInComboBox(cbLoaiThuocTim);
-		if(!tenNSX.equals("")||!loaithuoc.equals("")) {
+		if (!tenNSX.equals("") || !loaithuoc.equals("")) {
 
-		ArrayList<Thuoc> list_ThuocTim = list_Thuoc.timThuoc(tenNSX, loaithuoc);
-		
-		model.setRowCount(0);
-		for (Thuoc thuoc : list_ThuocTim) {
-			
-			String[] row = { thuoc.getMaThuoc(), thuoc.getTenThuoc(), thuoc.getSoLuong() + "", thuoc.getGia() + "",  thuoc.getLoaiThuoc(), thuoc.getTenNhaSanXuat().getTenNSX(),
-					thuoc.getNgaySanXuat() + "", thuoc.getNgayHetHan() + "" };
-				
-			model.addRow(row);
+			ArrayList<Thuoc> list_ThuocTim = list_Thuoc.timThuoc(tenNSX, loaithuoc);
+
+			model.setRowCount(0);
+			for (Thuoc thuoc : list_ThuocTim) {
+
+				String[] row = { thuoc.getMaThuoc(), thuoc.getTenThuoc(), thuoc.getSoLuong() + "", thuoc.getGia() + "",
+						thuoc.getLoaiThuoc(), thuoc.getTenNhaSanXuat().getTenNSX(), thuoc.getNgaySanXuat() + "",
+						thuoc.getNgayHetHan() + "" };
+
+				model.addRow(row);
+			}
+			table.setModel(model);
+
 		}
-		table.setModel(model);
-		
-	}
 	}
 
 }
