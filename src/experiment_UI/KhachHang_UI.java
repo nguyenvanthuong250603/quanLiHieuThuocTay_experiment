@@ -11,11 +11,15 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.toedter.calendar.JDateChooser;
+
+
 import experiment_UI.Generate_All.CustomTableCellRenderer;
 
 import static experiment_UI.Generate_All.*;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.nio.channels.NonWritableChannelException;
@@ -25,11 +29,13 @@ public class KhachHang_UI {
 	private JComboBox cbDoTuoi, cbGioiTinh;
 	private DefaultTableModel model;
 	private JTable table;
+	private JTextField jtextTuoi;
 
 	public JPanel getKhachHang() {
 		JPanel getKH = new JPanel(new BorderLayout());
 		getKH.add(getNorth(), BorderLayout.NORTH);
 		getKH.add(getContent(),BorderLayout.CENTER);
+		hienTableKhachHang(table, model,objects_custommer);
 		return getKH;
 	}
 
@@ -38,9 +44,9 @@ public class KhachHang_UI {
 		north.setBorder(new EmptyBorder(30, 80, 30, 80));
 
 		north.setLayout(new BoxLayout(north, BoxLayout.X_AXIS));
-		String[] doTuoi = { "Từ 1-23 tháng tuổi", "Từ 2-11 tuổi", "Từ 12-18 tuổi", "Từ 18 tuổi trở lên" };
+		
 		String[] gioiTinh = { "Nam", "Nữ" };
-		Object[][] trage = { { "Số điện thoại", new JTextField() }, { "Độ tuổi", cbDoTuoi = new JComboBox(doTuoi) },
+		Object[][] trage = { { "Số điện thoại", new JTextField() }, { "Ngày sinh", jtextTuoi = new JTextField() },
 				{ "Giới tính ", cbGioiTinh = new JComboBox(gioiTinh) } };
 		objects_North = trage;
 		for (Object[] objects : trage) {
@@ -98,15 +104,20 @@ public class KhachHang_UI {
 		JPanel inf = new JPanel();
 		createTitle(inf, "Thông tin khách hàng");
 		inf.setLayout(new BoxLayout(inf, BoxLayout.Y_AXIS));
-		String[] doTuoi = { "Từ 1-23 tháng tuổi", "Từ 2-11 tuổi", "Từ 12-18 tuổi", "Từ 18 tuổi trở lên" };
+
 		String[] gioiTinh = { "Nam", "Nữ" };
-		Object[][] trage = { { "Mã khách hàng", new JTextField() }, { "Tên khách hàng", new JTextField() },
-				{ "Độ tuổi", cbDoTuoi = new JComboBox(doTuoi) }, { "Giới tính", cbDoTuoi = new JComboBox(gioiTinh), },
+		Object[][] trage = { { "Mã khách hàng", new JTextField() }, { "Tên khách hàng", new JTextField() },{"Ngày sinh",new JDateChooser()},
+				{ "Tuổi", new JTextField() }, { "Giới tính", cbDoTuoi = new JComboBox(gioiTinh), },
 				{ "Số điện thoại", new JTextField() }, { "Địa chỉ", new JTextField() } };
 		objects_custommer = trage;
 		for (Object[] objects : trage) {
-			if (objects[1] instanceof JTextField) {
-				inf.add(createNameAndTextField((JTextField) objects[1], objects[0].toString()));
+			if (objects[1] instanceof Component) {
+				JPanel t = new JPanel(new BorderLayout());
+				t.add(sampleModel(objects[0].toString()), BorderLayout.WEST);
+				t.setBorder(new EmptyBorder(5, 0, 5, 0));
+				t.add((Component) objects[1], BorderLayout.CENTER);
+				inf.add(t);
+				
 			} else {
 				inf.add(createJcombobox(objects[0].toString(), (JComboBox) objects[1]));
 
@@ -138,4 +149,5 @@ public class KhachHang_UI {
 		});
 		return btn;
 	}
+	
 }

@@ -3,6 +3,10 @@ package entity;
 import java.time.LocalDate;
 
 public class NhanVien {
+	public NhanVien(String maNV) {
+		super();
+		this.maNV = maNV;
+	}
 	public NhanVien() {
 	
 	}
@@ -10,8 +14,10 @@ public class NhanVien {
 	private String maNV,hoTen;
 	private boolean gioiTinh;
 	private LocalDate ngaySinh;
+	private int tuoi;
 	private String sdt;
 	private String cccd;
+	private String diaChi;
 	private String chucVu;
 	private LocalDate ngayVaoLam;
 	public String getMaNV() {
@@ -38,6 +44,12 @@ public class NhanVien {
 	public void setNgaySinh(LocalDate ngaySinh) {
 		this.ngaySinh = ngaySinh;
 	}
+	public int getTuoi() {
+		return tuoi;
+	}
+	public void setTuoi(int tuoi) {
+		this.tuoi = tuoi;
+	}
 	public String getSdt() {
 		return sdt;
 	}
@@ -49,6 +61,12 @@ public class NhanVien {
 	}
 	public void setCccd(String cccd) {
 		this.cccd = cccd;
+	}
+	public String getDiaChi() {
+		return diaChi;
+	}
+	public void setDiaChi(String diaChi) {
+		this.diaChi = diaChi;
 	}
 	public String getChucVu() {
 		return chucVu;
@@ -62,27 +80,27 @@ public class NhanVien {
 	public void setNgayVaoLam(LocalDate ngayVaoLam) {
 		this.ngayVaoLam = ngayVaoLam;
 	}
-	public NhanVien(String maNV, String hoTen, boolean gioiTinh, LocalDate ngaySinh, String sdt, String cccd,
-			String chucVu, LocalDate ngayVaoLam) {
+	@Override
+	public String toString() {
+		return "NhanVien [maNV=" + maNV + ", hoTen=" + hoTen + ", gioiTinh=" + gioiTinh + ", ngaySinh=" + ngaySinh
+				+ ", tuoi=" + tuoi + ", sdt=" + sdt + ", cccd=" + cccd + ", diaChi=" + diaChi + ", chucVu=" + chucVu
+				+ ", ngayVaoLam=" + ngayVaoLam + "]";
+	}
+	public NhanVien(String maNV, String hoTen, boolean gioiTinh, LocalDate ngaySinh, int tuoi, String sdt, String cccd,
+			String diaChi, String chucVu, LocalDate ngayVaoLam) {
 		super();
 		this.maNV = maNV;
 		this.hoTen = hoTen;
 		this.gioiTinh = gioiTinh;
 		this.ngaySinh = ngaySinh;
+		this.tuoi = tuoi;
 		this.sdt = sdt;
 		this.cccd = cccd;
+		this.diaChi = diaChi;
 		this.chucVu = chucVu;
 		this.ngayVaoLam = ngayVaoLam;
 	}
-	public NhanVien(String maNV) {
-	
-		this.maNV = maNV;
-	}
-	@Override
-	public String toString() {
-		return "NhanVien [maNV=" + maNV + ", hoTen=" + hoTen + ", gioiTinh=" + gioiTinh + ", ngaySinh=" + ngaySinh
-				+ ", sdt=" + sdt + ", cccd=" + cccd + ", chucVu=" + chucVu + ", ngayVaoLam=" + ngayVaoLam + "]";
-	}
+
 	
 	
 	

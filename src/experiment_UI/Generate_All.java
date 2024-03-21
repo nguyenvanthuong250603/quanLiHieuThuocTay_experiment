@@ -5,8 +5,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
@@ -25,10 +28,15 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
+import dao.KhachHang_DAO;
+import entity.KhachHang;
+
 public class Generate_All {
+	private static KhachHang_DAO khang = new KhachHang_DAO();
 	public static JButton createJbutton(String nameButton, String pathIcon) {
 		JButton btn = new JButton(nameButton);
 		ImageIcon icon = new ImageIcon(pathIcon);
@@ -138,5 +146,65 @@ public class Generate_All {
 	}
 	public static String getString(String x) {
 		return  x;
+	}
+	public static void hienTableKhachHang(JTable table,DefaultTableModel model,Object[][] objects) {
+		
+		ArrayList<KhachHang> lkh = khang.getListKhachHang();
+		for (KhachHang khachHang : lkh) {
+			String[] row = {khachHang.getMaKH(),khachHang.getTenKH(),khachHang.getsDT(),khachHang.getDiaCHi()};
+			model.addRow(row);
+			
+		}
+		table.setModel(model);
+		table.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int index = table.getSelectedRow();
+				String maKh = table.getValueAt(index, 0).toString();
+				for (KhachHang khachHang : lkh) {
+					String gender = transGender(khachHang.isGioiTinh());
+					if(khachHang.getMaKH().equals(maKh)) {
+						((JTextField) objects[0][1]).setText(khachHang.getMaKH());
+						((JTextField) objects[1][1]).setText(khachHang.getTenKH());
+						((JDateChooser) objects[2][1]).setDate(java.sql.Date.valueOf(khachHang.getNgaySinh()));
+						((JTextField) objects[3][1]).setText(khachHang.getTuoi()+"");
+						((JComboBox) objects[4][1]).setSelectedItem(gender);
+						((JTextField) objects[5][1]).setText(khachHang.getsDT());
+						((JTextField) objects[6][1]).setText(khachHang.getDiaCHi());
+					}
+				}
+			}
+		});
+		
+		
+	}
+	public  static String transGender(boolean gender) {
+		return  gender?  "Nam" :"Nữ" ;  
+		
 	}
 }

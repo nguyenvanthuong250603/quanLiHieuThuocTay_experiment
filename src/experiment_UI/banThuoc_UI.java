@@ -54,7 +54,7 @@ public class BanThuoc_UI {
 	private DefaultTableModel model;
 	private JTable table;
 	private Thuoc_DAO th_DAO = new Thuoc_DAO();
-	private TimKhach_UI timKhach;
+	private TimKhach_UI timKhach = new TimKhach_UI();
 
 	public JPanel getBanThuoc() {
 		JPanel sellManagement = new JPanel(new BorderLayout());
@@ -153,9 +153,9 @@ public class BanThuoc_UI {
 		btnTimKH.setPreferredSize(new Dimension(80, 30));
 		t.add(btnTimKH, BorderLayout.AFTER_LINE_ENDS);
 		input.add(t);
-		String[] doTuoi = { "Từ 1-23 tháng tuổi", "Từ 2-11 tuổi", "Từ 12-18 tuổi", "Từ 18 tuổi trở lên" };
+	
 		String[] gt = { "Nam", "Nữ" };
-		Object[][] trage = { { "Tên KH", new JTextField() }, { "Tuổi", optionDoTuoi = new JComboBox(doTuoi) },
+		Object[][] trage = { { "Tên KH", new JTextField() }, { "Tuổi", new JTextField() },
 				{ "Giới tính", optionGender = new JComboBox(gt) }, { "SDT", new JTextField() } };
 		object_custommer = trage;
 		for (Object[] objects : object_custommer) {
@@ -205,26 +205,6 @@ public class BanThuoc_UI {
 		return money;
 	}
 
-	public JButton buttonInPageSell(String nameButton, String pathIcon) {
-		JButton btn = createJbutton(nameButton, pathIcon);
-		btn.setPreferredSize(new Dimension(120, 40));
-		btn.addActionListener(e -> {
-			if (nameButton.equals("Tìm kiếm")) {
-
-				timThuoc();
-
-			}
-			if (nameButton.equals("Xóa")) {
-
-			}
-			if (nameButton.equals("Tìm")) {
-				timKhach.getTimKhach(jtextMaKH, (JTextField) object_custommer[0][1], (JComboBox) object_custommer[1][1],
-						(JComboBox) object_custommer[2][1], (JTextField) object_custommer[3][1]);
-			}
-		});
-
-		return btn;
-	}
 
 	public void forcusListen() {
 		FocusListener calculation = new FocusListener() {
@@ -273,7 +253,7 @@ public class BanThuoc_UI {
 
 		if (regex()) {
 			Thuoc th = th_DAO.getThuocByID(maThuoc);
-
+			if(th.getMaThuoc()!=null) {
 			String[] row = { th.getMaThuoc(), th.getTenThuoc(), th.getDonVi(), "", th.getGia() + "", "" };
 			model.addRow(row);
 			int soLuongColumnIndex = 3;
@@ -313,8 +293,10 @@ public class BanThuoc_UI {
 					}
 				}
 			});
+			}else {
+				JOptionPane.showMessageDialog(findID(), "không tìm thấy mã thuốc trong hệ thống");
+			}
 		}
-
 	}
 
 	private void updateTotalPrice() {
@@ -341,6 +323,27 @@ public class BanThuoc_UI {
 			return false;
 		}
 		return true;
+	}
+	public JButton buttonInPageSell(String nameButton, String pathIcon) {
+		JButton btn = createJbutton(nameButton, pathIcon);
+		btn.setPreferredSize(new Dimension(120, 40));
+		btn.addActionListener(e -> {
+			if (nameButton.equals("Tìm kiếm")) {
+
+				timThuoc();
+
+			}
+			if (nameButton.equals("Xóa")) {
+
+			}
+			if (nameButton.equals("Tìm")) {
+				timKhach.getTimKhach(jtextMaKH, (JTextField) object_custommer[0][1], (JTextField) object_custommer[1][1],
+						(JComboBox) object_custommer[2][1], (JTextField) object_custommer[3][1]);
+				
+			}
+		});
+
+		return btn;
 	}
 
 }

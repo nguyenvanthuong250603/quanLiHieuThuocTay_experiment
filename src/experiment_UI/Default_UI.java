@@ -177,6 +177,7 @@ public class Default_UI {
 				}
 				case KH : {
 					cardLayout.show(container, KH);
+					break;
 				}
 				default:
 					throw new IllegalArgumentException("Unexpected value: " + nameButton);

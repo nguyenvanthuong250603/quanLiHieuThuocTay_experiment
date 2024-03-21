@@ -361,7 +361,7 @@ public class QuanLyThuoc_UI {
 		for (Thuoc thuoc : list_thuoc) {
 			NhaSanXuat nsx = thuoc.getTenNhaSanXuat();
 			String[] row = { thuoc.getMaThuoc(), thuoc.getTenThuoc(), thuoc.getSoLuong() + "", thuoc.getGia() + "",
-					thuoc.getLoaiThuoc(), nsx.getTenNSX(), thuoc.getNgaySanXuat() + "", "" + thuoc.getNgaySanXuat() };
+					thuoc.getLoaiThuoc(), nsx.getTenNSX(), thuoc.getNgaySanXuat() + "", "" + thuoc.getNgayHetHan() };
 			model.addRow(row);
 		}
 
