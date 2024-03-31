@@ -69,10 +69,11 @@ public class Default_UI {
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
 		
+		container.add(createNhanVien(),NV);
 		container.add(createKhachHang(),KH);
 		container.add(createBanThuoc(), BT);
-		container.add(createDoiThuoc(), DT);
 		container.add(createQuanLyThuoc(), T);
+		container.add(createDoiThuoc(), DT);
 		container.add(createQuanLyNhapThuoc(),QLDNT);
 		container.add(createNhapThuoc(),NT);
 		jFrame.add(sidebar, BorderLayout.WEST);
@@ -179,6 +180,10 @@ public class Default_UI {
 					cardLayout.show(container, KH);
 					break;
 				}
+				case NV : {
+					cardLayout.show(container, NV);
+					break;
+				}
 				default:
 					throw new IllegalArgumentException("Unexpected value: " + nameButton);
 				}
@@ -205,7 +210,6 @@ public class Default_UI {
 		boxx.add(createCompoment("gift\\down.png", "Hóa đơn", "gift\\hoadon.png", false));
 		boxx.add(createCompoment("gift\\upload.png", "Khách hàng", "gift\\hoadon.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Nhân viên", "gift\\hoadon.png", true));
-
 		boxx.add(createCompoment("gift\\thuoc.png", "Thống kê", "gift\\drug.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Kiểm toán", "gift\\hoadon.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Đăng xuất", "gift\\hoadon.png", true));
@@ -227,8 +231,9 @@ public class Default_UI {
 		
 		NhanVien nv = nv_Dao.getNhanVienFindByID(MaNV);
 		JLabel x = new JLabel(nv.getChucVu() + ":"+ nv.getHoTen());
-		x.setFont(new Font("Arial", Font.BOLD, 18));
+		x.setFont(new Font("Arial", Font.BOLD, 16));
 		x.setBorder(new EmptyBorder(10, 10, 10, 0));
+		
 		
 		compomet.add(x,BorderLayout.AFTER_LAST_LINE);
 		return compomet;
@@ -259,5 +264,9 @@ public class Default_UI {
 	private JPanel createKhachHang() {
 		KhachHang_UI KH = new KhachHang_UI();
 		return KH.getKhachHang();
+	}
+	private JPanel createNhanVien() {
+		NhanVien_UI NV = new NhanVien_UI();
+		return  NV.getNhanVien();
 	}
 }

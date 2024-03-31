@@ -30,7 +30,16 @@ public class NhanVien_DAO {
 				lnv.add(nv);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return lnv;
@@ -56,10 +65,19 @@ public class NhanVien_DAO {
 				}
 
 			} catch (Exception e) {
-				// TODO: handle exception
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			// TODO: handle exception
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return nv;
 	}

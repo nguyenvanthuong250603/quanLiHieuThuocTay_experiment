@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -25,6 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -55,19 +57,33 @@ public class Generate_All {
 		boderDecor.setTitleColor(new Color(0, 132, 255));
 		boderDecor.setTitleFont(new Font("Arial", Font.ITALIC, 20));
 		t.setBorder(boderDecor);
+
+
 	}
 
 	public static JLabel sampleModel(String string) {
-
+		
 		JLabel lb = new JLabel(string);
 		lb.setFont(new Font("Arial", Font.BOLD, 15));
+		
 		lb.setHorizontalTextPosition(JLabel.LEFT);
 		lb.setPreferredSize(new Dimension(100, 30));
 //		lb.setBorder(new EmptyBorder(5, 0, 5, 0));
 		return lb;
 
 	}
+	public static JLabel sampleModel2(String string) {
+		
+		JLabel lb = new JLabel(string);
+		lb.setFont(new Font("Arial", Font.BOLD, 15));
+		
+		lb.setHorizontalTextPosition(JLabel.LEFT);
+		lb.setPreferredSize(new Dimension(150, 30));
+//		lb.setBorder(new EmptyBorder(5, 0, 5, 0));
+		return lb;
 
+	}
+	
 	public static JPanel createNameAndTextField(JTextField jtext, String nameLabel) {
 
 		JPanel div = new JPanel(new BorderLayout());
@@ -76,7 +92,15 @@ public class Generate_All {
 		div.setBorder(new EmptyBorder(5, 0, 5, 0));
 		return div;
 	}
+	public static JPanel createNameAndTextField2(JTextField jtext, String nameLabel) {
 
+		JPanel div = new JPanel(new BorderLayout());
+		div.add(sampleModel2(nameLabel), BorderLayout.WEST);
+		div.add(jtext, BorderLayout.CENTER);
+		div.setBorder(new EmptyBorder(5, 30, 5, 30));
+		return div;
+	}
+	
 	public static class CustomTableCellRenderer extends DefaultTableCellRenderer {
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
@@ -102,11 +126,20 @@ public class Generate_All {
 		JPanel t3 = new JPanel(new BorderLayout());
 		t3.add(sampleModel(labelString), BorderLayout.WEST);
 		t3.add(cb, BorderLayout.CENTER);
+		cb.setPreferredSize(new Dimension(100, 30));
 		t3.setBorder(new EmptyBorder(5, 0, 5, 0));
 		return t3;
 
 	}
+	public static JPanel createJcombobox2(String labelString, JComboBox cb) {
+		JPanel t3 = new JPanel(new BorderLayout());
+		t3.add(sampleModel2(labelString), BorderLayout.WEST);
+		t3.add(cb, BorderLayout.CENTER);
+		cb.setPreferredSize(new Dimension(100, 30));
+		t3.setBorder(new EmptyBorder(5, 30, 5, 30));
+		return t3;
 
+	}
 	public static JPanel createTextArea(String label, JTextArea jtextNote) {
 
 		JPanel note = new JPanel(new BorderLayout());
@@ -206,5 +239,16 @@ public class Generate_All {
 	public  static String transGender(boolean gender) {
 		return  gender?  "Nam" :"Nữ" ;  
 		
+	}
+	public static void createTiTlePage(JPanel t,String label) {
+		JLabel title = new JLabel(label);
+		title.setHorizontalAlignment(JLabel.CENTER);
+		title.setFont(new Font("Arial", Font.BOLD, 28));
+		title.setBorder(new EmptyBorder(20, 0, 20, 0));
+		t.add(title,BorderLayout.BEFORE_FIRST_LINE);
+	}
+	public static String formatTime(LocalDate time) {
+		DateTimeFormatter x = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		return x.format(time);	
 	}
 }

@@ -36,7 +36,7 @@ public class NhaSanXuat {
 	}
 
 	public NhaSanXuat(String tenNSX) {
-		super();
+	
 		this.tenNSX = tenNSX;
 	}
 

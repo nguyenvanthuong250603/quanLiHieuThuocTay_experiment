@@ -13,6 +13,7 @@ CREATE TABLE NhanVien (
     cccd VARCHAR(20),
 	DiaChi NVARCHAR(255),
     ChucVu NVARCHAR(50),
+	
     NgayVaoLam DATE
 );
 GO
@@ -66,11 +67,18 @@ CREATE TABLE HoaDon(
 	MaHD NVARCHAR(50) NOT NULL PRIMARY KEY,
 	MaNV NVARCHAR(50),
 	MaKH NVARCHAR(50),
+	TenKH NVARCHAR(255),
 	NgayTao DATE,
+	DiaChi NVARCHAR(255),
+	PhuongThucThanhToan NVARCHAR(255),
 	MaTHuoc NVARCHAR(50),
-	
-	LuuY NVARCHAR(255),
+	DonVi NVARCHAR(255),
+	SoLuong INT,
+	DonGia FLOAT,
+	ThanhTien FLOAT,
+	TinhTrang NVARCHAR(255),
 	TongTien FLOAT,
+	
 	FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
 	FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH),
 	FOREIGN KEY (MaThuoc) REFERENCES Thuoc(MaThuoc)
@@ -81,10 +89,11 @@ INSERT INTO NhaSanXuat VALUES (N'CTY SX1',N'40 Nguyễn Huệ , Quận 1 ,HCM')
 INSERT INTO NhaSanXuat VALUES (N'CTY SX2',N'13 Nam Văn , Gò Vấp,HCM')
 GO 
 
-INSERT INTO Thuoc VALUES ('TH005',N'Bảo thanh 3',20,10000,N'Kháng sinh','CTY SX2','2024-01-30','2025-01-30','ha2',N'Hộp 1 vĩ x 5 viên nén',N'Dạng viên nén',N'Mọi lứa tuổi','thanhphan2','thanhphan2','thanhphan2','thanhphan2','thanhphan2');
+INSERT INTO Thuoc VALUES ('TH005',N'Bảo thanh 3',20,10000,N'Kháng sinh','CTY SX2','2024-01-30','2025-01-30','C:\Users\ADMIN\Downloads\ech.jpg',N'Hộp 1 vĩ x 5 viên nén',N'Dạng viên nén',N'Mọi lứa tuổi','thanhphan2','thanhphan2','thanhphan2','thanhphan2','thanhphan2');
+INSERT INTO Thuoc VALUES ('TH001',N'Bảo thanh 3',20,10000,N'Thuốc sát khuẩn , khử trùng','CTY SX1','2024-01-30','2025-01-30','C:\Users\ADMIN\Downloads\TRAI-NGHIEM-CUOC-SONG-DINH-CU-O-ANH-1.jpg',N'Hộp 1 vĩ x 5 viên nén',N'Dạng viên nén',N'Từ 2-11 tuổi','thanhphan2','thanhphan2','thanhphan2','thanhphan2','thanhphan2');
 
 GO
-SELECT *FROM KhachHang
+SELECT *FROM HoaDon
 GO
 INSERT INTO NhanVien VALUES ('NV001',N'Nguyễn Văn Thương',1,'2003-06-25',20,'0794571318','067203000247',N'ĐĂK NÔNG',N'Quản lý','2024-03-20');
 
@@ -93,5 +102,5 @@ INSERT INTO TaiKhoan VALUES('NV001','123')
 GO  
 INSERT INTO KhachHang VALUES('KH001',N'Nguyễn Văn Nam','2024-03-19','20',1,'01213562326','Đăk lăk')
 INSERT INTO KhachHang VALUES('KH002',N'Nguyễn Thị Đào','2024-03-19','20',0,'01213562326','Đăk lăk')
---INSERT INTO  
+
 

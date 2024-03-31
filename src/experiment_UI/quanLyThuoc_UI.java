@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.Image;
 
@@ -14,7 +14,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -50,7 +53,7 @@ import static experiment_UI.Generate_All.*;
 public class QuanLyThuoc_UI {
 	private JLabel labelImage;
 	private JTextField jTextMaThuoc, jTextGiaThuoc, jTextSoLuong, jTextNgaySx, jTextNgayHetHan, jTextDonVi;
-	private JComboBox cbNSX, cbLoaiThuoc, cbTuoiSD, cbNSXTim, cbLoaiThuocTim;
+	private JComboBox cbNSX, cbLoaiThuoc, cbTuoiSD, cbNSXTim, cbLoaiThuocTim,cbTinhTrang;
 	private JCheckBox cb;
 	private JDateChooser JdateNgaySanXuat, JdateNgayHetHan;
 	private Object[][] object_inf, object_detail;
@@ -117,6 +120,7 @@ public class QuanLyThuoc_UI {
 		JPanel box = new JPanel(new BorderLayout());
 
 		JPanel box1 = new JPanel();
+		box1.setBorder(new EmptyBorder(0, 0, 0, 10));
 		box1.setLayout(new GridLayout(2, 2, 10, 10));
 
 		JPanel t = new JPanel();
@@ -127,8 +131,9 @@ public class QuanLyThuoc_UI {
 
 		JPanel t2 = new JPanel();
 		t2.setLayout(new BoxLayout(t2, BoxLayout.X_AXIS));
-		t2.add(cb = new JCheckBox());
-		t2.add(sampleModel("sản phẩm hết hàng"));
+		String[] optionTinhTrang = {"","sản phẩm hết hạn","sản phẩm sắp hết hạn","sản phẩm hết hàng","sản phẩm sắp hết","sản phẩm còn hạn"};
+		
+		t2.add(createJcombobox("Tình trạng", new JComboBox(optionTinhTrang)));
 
 		box1.add(t);
 		box1.add(t2);
@@ -168,15 +173,18 @@ public class QuanLyThuoc_UI {
 	// bảng 2 tạo thông tin
 	public JPanel inputProduct() {
 		JPanel inputManager = new JPanel(new GridLayout(2, 1));
-
+		
 		inputManager.add(inputInformation());
 		inputManager.add(detailInformation());
+		
+		
 		return inputManager;
 	}
 
 //bảng 2 tạo thông tin _ nửa trên
 	public JPanel inputInformation() {
 		JPanel total = new JPanel(new BorderLayout());
+
 		JPanel inf = new JPanel(new BorderLayout());
 		createTitle(total, "Thông tin thuốc");
 //		top chứa phần hình ảnh và phần kế bên
@@ -185,7 +193,7 @@ public class QuanLyThuoc_UI {
 		JPanel boxImage = new JPanel(new BorderLayout());
 
 		labelImage = new JLabel();
-		labelImage.setPreferredSize(new Dimension(200, 150));
+		labelImage.setPreferredSize(new Dimension(230, 150));
 		boxImage.add(labelImage, BorderLayout.CENTER);
 
 		JButton inputImage = buttonInPage("Chọn hình ảnh", "");
@@ -245,6 +253,7 @@ public class QuanLyThuoc_UI {
 // phần 2 nữa dưới
 	public JPanel detailInformation() {
 		JPanel detail_big = new JPanel(new BorderLayout());
+		
 		createTitle(detail_big, "Chi tiết thông tin");
 		JPanel detail_compoment = new JPanel();
 		detail_compoment.setLayout(new BoxLayout(detail_compoment, BoxLayout.Y_AXIS));
@@ -336,8 +345,8 @@ public class QuanLyThuoc_UI {
 
 					xoaTrang();
 				} else if (nameBtn.equals("")) {
-//					String gia = ((JTextField)object_inf[1][1]).getText();
 					model.setRowCount(0);
+					xoaTrang();
 					hienBangTableThuoc();
 
 				} else if (nameBtn.equals("Lọc")) {
@@ -357,11 +366,12 @@ public class QuanLyThuoc_UI {
 	public void hienBangTableThuoc() {
 
 		ArrayList<Thuoc> list_thuoc = list_Thuoc.getThuocDataBase();
-
+		
 		for (Thuoc thuoc : list_thuoc) {
 			NhaSanXuat nsx = thuoc.getTenNhaSanXuat();
+			
 			String[] row = { thuoc.getMaThuoc(), thuoc.getTenThuoc(), thuoc.getSoLuong() + "", thuoc.getGia() + "",
-					thuoc.getLoaiThuoc(), nsx.getTenNSX(), thuoc.getNgaySanXuat() + "", "" + thuoc.getNgayHetHan() };
+					thuoc.getLoaiThuoc(), nsx.getTenNSX(), formatTime(thuoc.getNgaySanXuat()) , formatTime(thuoc.getNgayHetHan()) };
 			model.addRow(row);
 		}
 
@@ -465,19 +475,20 @@ public class QuanLyThuoc_UI {
 		String ma = jTextMaThuoc.getText();
 		String ten = jTextTenThuoc.getText();
 		int soLuong = getValueIntỊntextField(object_inf[0][1]);
+		System.out.println();
 		double gia = getValueDoubleỊntextField(object_inf[1][1]);
 		String loaiThuoc = getValueInComboBox(cbLoaiThuoc);
 		String nsx = getValueInComboBox(cbNSX);
-		LocalDate ngaySanXuat = getDateJDateChoor(object_inf[6][1]);
-		LocalDate ngayHetHan = getDateJDateChoor(object_inf[7][1]);
+		LocalDate ngaySanXuat = getDateJDateChoor(object_inf[4][1]);
+		LocalDate ngayHetHan = getDateJDateChoor(object_inf[5][1]);
 //		chitiet
 		String donVi = getValueStringInJTextField(object_detail[0][1]);
 		String dangBaoChe = getValueStringInJTextField(object_detail[1][1]);
-		String doTuoi = getValueInComboBox(cbLoaiThuoc);
-		String thanhPhan = getValueStringInJTextField(object_detail[1][1]);
-		String chiDinh = getValueStringInJTextField(object_detail[2][1]);
-		String lieuDung = getValueStringInJTextField(object_detail[3][1]);
-		String baoQuan = getValueStringInJTextField(object_detail[4][1]);
+		String doTuoi = getValueInComboBox(cbTuoiSD);
+		String thanhPhan = getValueStringInJTextField(object_detail[3][1]);
+		String chiDinh = getValueStringInJTextField(object_detail[4][1]);
+		String lieuDung = getValueStringInJTextField(object_detail[5][1]);
+		String baoQuan = getValueStringInJTextField(object_detail[6][1]);
 		String moTa = jTextAreaMoTa.getText();
 
 		NhaSanXuat nhaSanXuat = new NhaSanXuat(nsx);

@@ -23,21 +23,29 @@ public class Thuoc_DAO {
 			Statement s = con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT * FROM Thuoc");
 			while (rs.next()) {
-			
-				
+
 				LocalDate localDateNsx = chageTimeSQL(rs.getDate("NgaySanXuat"));
 				LocalDate localDateNhh = chageTimeSQL(rs.getDate("NgayHetHan"));
 				Thuoc thuoc = new Thuoc(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getString(5),
-						 new NhaSanXuat(rs.getString(6)), localDateNsx, localDateNhh,
-						rs.getString(9),rs.getString(10), rs.getString(11),rs.getString(12), rs.getString(13), rs.getString(14), rs.getString(15), rs.getString(16),
-						rs.getString(17));
+						new NhaSanXuat(rs.getString(6)), localDateNsx, localDateNhh, rs.getString(9), rs.getString(10),
+						rs.getString(11), rs.getString(12), rs.getString(13), rs.getString(14), rs.getString(15),
+						rs.getString(16), rs.getString(17));
 				list_Thuoc.add(thuoc);
 
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		return list_Thuoc;
 	}
 
@@ -53,14 +61,14 @@ public class Thuoc_DAO {
 			return false;
 		} else {
 			try {
-				p = con.prepareStatement("INSERT INTO Thuoc VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?	)");
+				p = con.prepareStatement("INSERT INTO Thuoc VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 				p.setString(1, thuoc.getMaThuoc());
 				p.setString(2, thuoc.getTenThuoc());
 				p.setInt(3, thuoc.getSoLuong());
 				p.setDouble(4, thuoc.getGia());
-			
+
 				p.setString(5, thuoc.getLoaiThuoc());
-		
+
 				p.setString(6, nsx.getTenNSX());
 				p.setDate(7, java.sql.Date.valueOf(thuoc.getNgaySanXuat()));
 				p.setDate(8, java.sql.Date.valueOf(thuoc.getNgayHetHan()));
@@ -77,6 +85,15 @@ public class Thuoc_DAO {
 
 			} catch (Exception e) {
 				e.printStackTrace();
+			}
+			finally {
+				try {
+					if (con != null) {
+						con.close();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			return true;
 		}
@@ -96,14 +113,16 @@ public class Thuoc_DAO {
 		} else {
 			try {
 				p = con.prepareStatement(
-						"UPDATE Thuoc SET TenThuoc = ? ,SoLuong = ?,Gia = ?,DonVi=?,LoaiThuoc=?,DoTuoi=?,NhaSanXuat=?,NgaySanXuat=?,NgayHetHan=?,HinhAnh=?,ThanhPhan=?,ChiDinh=?,LieuDung=?,BaoQuan=?,MoTa=? WHERE MaThuoc = ?");
+						"UPDATE Thuoc SET TenThuoc = ? ,SoLuong = ?,Gia = ?,LoaiThuoc=?,NhaSanXuat=?,"
+						+ "NgaySanXuat=?,NgayHetHan=?,HinhAnh=?,"
+						+ "DonVi = ?,DangBaoChe =  ?,DoTuoi =?,ThanhPhan=?,ChiDinh=?,LieuDung=?,BaoQuan=?,MoTa=? WHERE MaThuoc = ?");
 
 				p.setString(1, thuoc.getTenThuoc());
 				p.setInt(2, thuoc.getSoLuong());
 				p.setDouble(3, thuoc.getGia());
-				
+
 				p.setString(4, thuoc.getLoaiThuoc());
-			
+
 				p.setString(5, nsx.getTenNSX());
 				p.setDate(6, java.sql.Date.valueOf(thuoc.getNgaySanXuat()));
 				p.setDate(7, java.sql.Date.valueOf(thuoc.getNgayHetHan()));
@@ -111,7 +130,7 @@ public class Thuoc_DAO {
 				p.setString(9, thuoc.getDonVi());
 				p.setString(10, thuoc.getDangBaoChe());
 				p.setString(11, thuoc.getDoTuoi());
-				
+
 				p.setString(12, thuoc.getThanhPhan());
 				p.setString(13, thuoc.getChiDinh());
 				p.setString(14, thuoc.getLieuDung());
@@ -119,9 +138,18 @@ public class Thuoc_DAO {
 				p.setString(16, thuoc.getMoTa());
 				p.setString(17, thuoc.getMaThuoc());
 				p.executeUpdate();
-
-			} catch (Exception e) {
+				System.out.println(p.executeUpdate());
+			}catch (Exception e) {
 				e.printStackTrace();
+			}
+			finally {
+				try {
+					if (con != null) {
+						con.close();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			return true;
 		}
@@ -156,11 +184,10 @@ public class Thuoc_DAO {
 				LocalDate localDateNsx = date.toLocalDate();
 				LocalDate localDateNhh = dateNhh.toLocalDate();
 				Thuoc thuoc = new Thuoc(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getString(5),
-						 new NhaSanXuat(rs.getString(8)), localDateNsx, localDateNhh,rs.getString(9),rs.getString(10),
+						new NhaSanXuat(rs.getString(8)), localDateNsx, localDateNhh, rs.getString(9), rs.getString(10),
 						rs.getString(11), rs.getString(12), rs.getString(13), rs.getString(14), rs.getString(15),
-						rs.getString(16),rs.getString(17));
+						rs.getString(16), rs.getString(17));
 
-			
 				list_Thuoc.add(thuoc);
 			}
 		} catch (Exception e) {
@@ -184,13 +211,22 @@ public class Thuoc_DAO {
 				LocalDate localDateNsx = date.toLocalDate();
 				LocalDate localDateNhh = dateNhh.toLocalDate();
 				th = new Thuoc(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getString(5),
-						 new NhaSanXuat(rs.getString(8)), localDateNsx, localDateNhh,rs.getString(9),rs.getString(10),
+						new NhaSanXuat(rs.getString(8)), localDateNsx, localDateNhh, rs.getString(9), rs.getString(10),
 						rs.getString(11), rs.getString(12), rs.getString(13), rs.getString(14), rs.getString(15),
-						rs.getString(16),rs.getString(17));
+						rs.getString(16), rs.getString(17));
 
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return th;
 	}

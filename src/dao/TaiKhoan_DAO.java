@@ -21,8 +21,17 @@ public class TaiKhoan_DAO {
 			ltk.add(tk);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
-		}	
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		return ltk;
 	}
 }

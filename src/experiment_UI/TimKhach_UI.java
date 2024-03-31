@@ -44,7 +44,7 @@ public class TimKhach_UI {
 	public void getTimKhach(JTextField maKH, JTextField tenKH, JTextField tuoiKH, JComboBox gioiTinhKH,
 			JTextField sdtKH) {
 		frame = new JFrame();
-		frame.setTitle("Tìm kiếm thuốc");
+		frame.setTitle("Tìm Kiếm Khách Hàng");
 		
 		frame.setSize(1100, 800);
 		frame.setLocationRelativeTo(null);
@@ -119,6 +119,7 @@ public class TimKhach_UI {
 	}
 
 	public JPanel getCenter() {
+		
 		JPanel managerment = new JPanel();
 		createTitle(managerment, "Danh sách khách hàng");
 		managerment.setLayout(new BorderLayout());

@@ -9,4 +9,5 @@ public class Brief {
 	public final static String NT ="Nhập thuốc";
 	public final static String QLDNT ="QL Nhập thuốc";
 	public final static String KH = "Khách hàng";
+	public final static String NV = "Nhân viên";
 }

@@ -26,6 +26,15 @@ public class NhaSanXuat_DAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		return list_nhaSanXuat;
 	}
 }

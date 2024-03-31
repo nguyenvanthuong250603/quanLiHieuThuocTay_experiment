@@ -3,6 +3,7 @@ package connectDataBase;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class ConnectionData {
 	public static Connection accessDataBase() {
@@ -15,7 +16,7 @@ public class ConnectionData {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	
+		
 		return con;
 		
 	}

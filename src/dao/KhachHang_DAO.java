@@ -30,9 +30,17 @@ public class KhachHang_DAO {
 				lkh.add(kh);
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
-
+		finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		return lkh;
 	}
 
@@ -55,10 +63,19 @@ public class KhachHang_DAO {
 						rs.getString(6), rs.getString(7));
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 	} catch (Exception e) {
-		// TODO: handle exception
+		e.printStackTrace();
+	}
+	finally {
+		try {
+			if (con != null) {
+				con.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 		return kh;
 	}

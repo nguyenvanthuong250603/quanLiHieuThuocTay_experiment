@@ -33,15 +33,17 @@ public class KhachHang_UI {
 
 	public JPanel getKhachHang() {
 		JPanel getKH = new JPanel(new BorderLayout());
-		getKH.add(getNorth(), BorderLayout.NORTH);
+		createTiTlePage(getKH, "QUẢN LÍ KHÁCH HÀNG");
 		getKH.add(getContent(),BorderLayout.CENTER);
+		getKH.add(getEast(),BorderLayout.EAST);
 		hienTableKhachHang(table, model,objects_custommer);
 		return getKH;
+		
 	}
-
-	public JPanel getNorth() {
+	
+	public JPanel getSearch() {
 		JPanel north = new JPanel();
-		north.setBorder(new EmptyBorder(30, 80, 30, 80));
+//		north.setBorder(new EmptyBorder(30, 80, 30, 80));
 
 		north.setLayout(new BoxLayout(north, BoxLayout.X_AXIS));
 		
@@ -71,8 +73,8 @@ public class KhachHang_UI {
 
 	public JPanel getContent() {
 		JPanel content = new JPanel(new BorderLayout());
+		content.add(getSearch(), BorderLayout.NORTH);
 		content.add(getCenter(), BorderLayout.CENTER);
-		content.add(getEast(), BorderLayout.EAST);
 		return content;
 	}
 
