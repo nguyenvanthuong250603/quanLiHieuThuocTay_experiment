@@ -43,10 +43,12 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BanThuoc_UI {
 
-	private JCheckBox cb;
+	private JCheckBox cb,cbDTL;
 	private Object[][] object_custommer, object_sell;
 	private JComboBox optionGender, optionPTTT, optionDoTuoi;
 	private JLabel labelTotal, ll;
@@ -89,7 +91,10 @@ public class BanThuoc_UI {
 		for (int i = 0; i < object_custommer.length; i++) {
 			if (object_custommer[i][1] instanceof JTextField) {
 				((JTextField) object_custommer[i][1]).setEditable(value);
-			} else {
+			}else if (object_custommer[i][1] instanceof JLabel) {
+				((JLabel) object_custommer[i][1]).setEnabled(value);
+			}  
+			else {
 				((JComboBox) object_custommer[i][1]).setEnabled(value);
 			}
 
@@ -144,7 +149,7 @@ public class BanThuoc_UI {
 
 	public JPanel inf_custommer() {
 		JPanel inf = new JPanel(new BorderLayout());
-		
+	
 //	west
 
 		createTitle(inf, "Thông tin khách hàng ");
@@ -168,16 +173,22 @@ public class BanThuoc_UI {
 
 		String[] gt = { "Nam", "Nữ" };
 		Object[][] trage = { { "Tên KH", new JTextField() }, { "Tuổi", new JTextField() },
-				{ "Giới tính", optionGender = new JComboBox(gt) }, { "SDT", new JTextField() } };
+				{ "Giới tính", optionGender = new JComboBox(gt) }, { "SDT", new JTextField() },{"Điểm tích lũy", new JLabel()} };
 		object_custommer = trage;
 		for (Object[] objects : object_custommer) {
-			if (!(objects[1] instanceof JComboBox)) {
-				input.add(createNameAndTextField2((JTextField) objects[1], objects[0].toString()));
+			if (objects[1] instanceof Component) {
+				JPanel th= new JPanel(new BorderLayout());
+				th.add(sampleModel2(objects[0].toString()), BorderLayout.WEST);
+				th.setBorder(new EmptyBorder(5, 30, 5, 30));
+				th.add((Component) objects[1], BorderLayout.CENTER);
+				input.add(th);				
 			} else {
-				input.add(createJcombobox2(objects[0].toString(), (JComboBox) objects[1]));
+				input.add(createJcombobox(objects[0].toString(), (JComboBox) objects[1]));
+
 			}
 		}
-		
+		JPanel DTL = new JPanel();
+
 		inf.add(check, BorderLayout.NORTH);
 		inf.add(input, BorderLayout.CENTER);
 		return inf;
@@ -270,11 +281,15 @@ public class BanThuoc_UI {
 
 		if (regex()) {
 			Thuoc th = th_DAO.getThuocByID(maThuoc);
+			
+			int soLuong = Integer.parseInt(table.getValueAt(table.getSelectedRow(), 3).toString());
+			if(soLuong!=0) {
+			
 			if (th.getMaThuoc() != null) {
 				String[] row = { th.getMaThuoc(), th.getTenThuoc(), th.getDonVi(), "", th.getGia() + "", "" };
 				model.addRow(row);
 				int soLuongColumnIndex = 3;
-
+				
 				int lastRowIndex = model.getRowCount() - 1;
 				
 				table.requestFocus();
@@ -312,6 +327,9 @@ public class BanThuoc_UI {
 				});
 			} else {
 				JOptionPane.showMessageDialog(findID(), "không tìm thấy mã thuốc trong hệ thống");
+			}
+			}else {
+				JOptionPane.showMessageDialog(findID(), "chưa nhập số lượng");
 			}
 		}
 	}
@@ -358,7 +376,7 @@ public class BanThuoc_UI {
 			if (nameButton.equals("Tìm")) {
 				timKhach.getTimKhach(jtextMaKH, (JTextField) object_custommer[0][1],
 						(JTextField) object_custommer[1][1], (JComboBox) object_custommer[2][1],
-						(JTextField) object_custommer[3][1]);
+						(JTextField) object_custommer[3][1],(JLabel) object_custommer[4][1]);
 
 			}
 		});

@@ -37,12 +37,13 @@ public class TimKhach_UI {
 	private JTextField Jtext_maKH, Jtext_tenKH, jText_sdtKH,jText_tuoiKH;
 	private JComboBox  cbGioiTinhKH;
 	private Object[][] objects_North, objects_custommer;
-	private JComboBox cbTuoi	,cbGioiTinh;
+	private JComboBox cbTuoi,cbGioiTinh;
+	private JLabel labelDiemTichLuy;
 	private DefaultTableModel model;
 	private JTable table;
 	private KhachHang_DAO lKhachHang_DAO = new KhachHang_DAO();
 	public void getTimKhach(JTextField maKH, JTextField tenKH, JTextField tuoiKH, JComboBox gioiTinhKH,
-			JTextField sdtKH) {
+			JTextField sdtKH,JLabel labelDiem) {
 		frame = new JFrame();
 		frame.setTitle("Tìm Kiếm Khách Hàng");
 		
@@ -59,7 +60,7 @@ public class TimKhach_UI {
 		this.jText_tuoiKH = tuoiKH;
 		this.cbGioiTinhKH = gioiTinhKH;
 		this.jText_sdtKH = sdtKH;
-
+		this.labelDiemTichLuy = labelDiem; 
 	}
 
 	public JPanel layOut() {
@@ -123,7 +124,7 @@ public class TimKhach_UI {
 		JPanel managerment = new JPanel();
 		createTitle(managerment, "Danh sách khách hàng");
 		managerment.setLayout(new BorderLayout());
-		String[] column = { "Mã khách hàng", "Tên khách hàng ", "Số điện thoại", "Địa chỉ" };
+		String[] column = { "Mã khách hàng", "Tên khách hàng ", "Điểm tích lũy","Số điện thoại", "Địa chỉ" };
 		model = new DefaultTableModel(column, 0);
 		table = new JTable(model);
 		table.setShowGrid(false);
@@ -151,7 +152,7 @@ public class TimKhach_UI {
 		String[] gioiTinh = { "Nam", "Nữ" };
 		Object[][] trage = { { "Mã khách hàng", new JTextField(20) }, { "Tên khách hàng", new JTextField() },{"Ngày sinh",new JDateChooser()},
 				{ "Tuổi", new JTextField() }, { "Giới tính", cbGioiTinh = new JComboBox(gioiTinh), },
-				{ "Số điện thoại", new JTextField() }, { "Địa chỉ", new JTextField() } };
+				{ "Số điện thoại", new JTextField() }, { "Địa chỉ", new JTextField() },{"Điểm tích lũy",new JLabel()} };
 		objects_custommer = trage;
 		for (Object[] objects : trage) {
 			if (objects[1] instanceof Component) {
@@ -206,6 +207,7 @@ public class TimKhach_UI {
 		jText_tuoiKH.setText(kh.getTuoi()+"");	
 		cbGioiTinhKH.setSelectedItem(transGender(kh.isGioiTinh()));
 		jText_sdtKH.setText(kh.getsDT());
+		labelDiemTichLuy.setText(kh.getDiemThanhVien()+"");
 		frame.dispose();
 	}
 	

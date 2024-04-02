@@ -4,6 +4,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -82,7 +83,7 @@ public class KhachHang_UI {
 		JPanel managerment = new JPanel();
 		createTitle(managerment, "Danh sách khách hàng");
 		managerment.setLayout(new BorderLayout());
-		String[] column = { "Mã khách hàng", "Tên khách hàng ", "Số điện thoại", "Địa chỉ" };
+		String[] column = { "Mã khách hàng", "Tên khách hàng ", "Điểm tích lũy","Số điện thoại", "Địa chỉ" };
 		model = new DefaultTableModel(column, 0);
 		table = new JTable(model);
 		table.setShowGrid(false);
@@ -110,12 +111,12 @@ public class KhachHang_UI {
 		String[] gioiTinh = { "Nam", "Nữ" };
 		Object[][] trage = { { "Mã khách hàng", new JTextField() }, { "Tên khách hàng", new JTextField() },{"Ngày sinh",new JDateChooser()},
 				{ "Tuổi", new JTextField() }, { "Giới tính", cbDoTuoi = new JComboBox(gioiTinh), },
-				{ "Số điện thoại", new JTextField() }, { "Địa chỉ", new JTextField() } };
+				{ "Số điện thoại", new JTextField() }, { "Địa chỉ", new JTextField() },{"Điểm tích lũy",new JLabel()} };
 		objects_custommer = trage;
-		for (Object[] objects : trage) {
+		for (Object[] objects : objects_custommer) {
 			if (objects[1] instanceof Component) {
 				JPanel t = new JPanel(new BorderLayout());
-				t.add(sampleModel(objects[0].toString()), BorderLayout.WEST);
+				t.add(sampleModel2(objects[0].toString()), BorderLayout.WEST);
 				t.setBorder(new EmptyBorder(5, 0, 5, 0));
 				t.add((Component) objects[1], BorderLayout.CENTER);
 				inf.add(t);

@@ -8,9 +8,19 @@ public class KhachHang {
 	private int tuoi;
 	private boolean gioiTinh;
 	private String sDT,diaCHi;
+	private double diemThanhVien;
+	public double getDiemThanhVien() {
+		return diemThanhVien;
+	}
+
+	public void setDiemThanhVien(double diemThanhVien) {
+		this.diemThanhVien = diemThanhVien;
+	}
+
+
 
 	public KhachHang(String maKH, String tenKH, LocalDate ngaySinh, int tuoi, boolean gioiTinh, String sDT,
-			String diaCHi) {
+			String diaCHi, double diemThanhVien) {
 		super();
 		this.maKH = maKH;
 		this.tenKH = tenKH;
@@ -19,6 +29,7 @@ public class KhachHang {
 		this.gioiTinh = gioiTinh;
 		this.sDT = sDT;
 		this.diaCHi = diaCHi;
+		this.diemThanhVien = diemThanhVien;
 	}
 
 	public String getMaKH() {

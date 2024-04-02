@@ -184,7 +184,7 @@ public class Generate_All {
 		
 		ArrayList<KhachHang> lkh = khang.getListKhachHang();
 		for (KhachHang khachHang : lkh) {
-			String[] row = {khachHang.getMaKH(),khachHang.getTenKH(),khachHang.getsDT(),khachHang.getDiaCHi()};
+			String[] row = {khachHang.getMaKH(),khachHang.getTenKH(),khachHang.getDiemThanhVien()+"",khachHang.getsDT(),khachHang.getDiaCHi()};
 			model.addRow(row);
 			
 		}
@@ -229,6 +229,7 @@ public class Generate_All {
 						((JComboBox) objects[4][1]).setSelectedItem(gender);
 						((JTextField) objects[5][1]).setText(khachHang.getsDT());
 						((JTextField) objects[6][1]).setText(khachHang.getDiaCHi());
+						((JLabel) objects[7][1]).setText(khachHang.getDiemThanhVien()+"");
 					}
 				}
 			}

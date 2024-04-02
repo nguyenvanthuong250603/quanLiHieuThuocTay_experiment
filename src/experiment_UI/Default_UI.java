@@ -74,8 +74,8 @@ public class Default_UI {
 		container.add(createBanThuoc(), BT);
 		container.add(createQuanLyThuoc(), T);
 		container.add(createDoiThuoc(), DT);
-		container.add(createQuanLyNhapThuoc(),QLDNT);
-		container.add(createNhapThuoc(),NT);
+		container.add(createQuanLyNhapThuoc(),TDNT);
+		container.add(createNhapThuoc(),HDNT);
 		jFrame.add(sidebar, BorderLayout.WEST);
 		jFrame.add(container, BorderLayout.CENTER);
 		jFrame.setResizable(false);
@@ -139,14 +139,13 @@ public class Default_UI {
 
 						JPanel r = new JPanel();
 						r.setLayout(new BoxLayout(r, BoxLayout.Y_AXIS));
-						JPanel v = createCompoment("gift\\upload.png", "Nhập thuốc", "gift\\hoadon.png", true);
-						JPanel o = createCompoment("gift\\upload.png", "QL Đơn bán", "gift\\hoadon.png", true);
-						JPanel z = createCompoment("gift\\upload.png", "QL Nhập thuốc", "gift\\hoadon.png", true);
+						JPanel v = createCompoment("gift\\upload.png", "Tạo đơn nhập thuốc", "gift\\hoadon.png", true);
+						JPanel o = createCompoment("gift\\upload.png", "Hóa đơn bán thuốc", "gift\\hoadon.png", true);
+						JPanel z = createCompoment("gift\\upload.png", "Hóa đơn nhập thuốc", "gift\\hoadon.png", true);
 						Object[] xx = { v, o, z };
 						for (Object s : xx) {
 							r.add((Component) s);
 						}
-
 						compoment.add(r, BorderLayout.AFTER_LAST_LINE);
 
 					} else {
@@ -168,12 +167,12 @@ public class Default_UI {
 					cardLayout.show(container, DT);
 					break;
 				}
-				case NT:{
-					cardLayout.show(container, NT);
+				case TDNT:{
+					cardLayout.show(container, TDNT);
 					break;
 				}
-				case QLDNT:{
-					cardLayout.show(container, QLDNT);
+				case HDNT:{
+					cardLayout.show(container, HDNT);
 					break;
 				}
 				case KH : {

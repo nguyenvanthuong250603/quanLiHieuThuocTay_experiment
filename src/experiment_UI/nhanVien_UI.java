@@ -49,9 +49,11 @@ public class NhanVien_UI {
 		north.setLayout(new GridLayout(1, 3,20,20));
 		
 		String[] gender = {"Nam","Nữ"};
+		String[] gender2 = {"Nam","Nữ"};
+		
 		
 		Object[][] trage = { { new JTextField(29), "Mã nhân viên" }, { new JTextField(), "Tên nhân viên" },
-				{ optionGender = new JComboBox(gender), "Giới tính" }, { new JDateChooser(), "Ngày sinh" }, { new JTextField(), "Tuổi" },
+				{new JComboBox(gender2), "Giới tính" }, { new JDateChooser(), "Ngày sinh" }, { new JTextField(), "Tuổi" },
 				};
 		inf_personnel_left = trage;
 		JPanel left = new JPanel();
@@ -135,7 +137,7 @@ public class NhanVien_UI {
 		JPanel se = new JPanel();
 		createTitle(se, "Tìm kiếm nhân viên");
 		se.add(createJcombobox("Trạng thái", new JComboBox()));
-		se.add(createJcombobox("Chức vụ", optionGender));
+		se.add(createJcombobox("Chức vụ", new JComboBox()));
 		se.add(createButtonInPagePesonnel("Lọc", ""));
 		JPanel input = new JPanel();
 		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));

@@ -25,7 +25,7 @@ public class KhachHang_DAO {
 				LocalDate localDate_NgaySinh = chageTimeSQL(rs.getDate("NgaySinh"));
 
 				KhachHang kh = new KhachHang(rs.getString(1), rs.getString(2), localDate_NgaySinh, rs.getInt(4), gender,
-						rs.getString(6), rs.getString(7));
+						rs.getString(6), rs.getString(7),rs.getDouble(8));
 
 				lkh.add(kh);
 			}
@@ -60,7 +60,7 @@ public class KhachHang_DAO {
 				Boolean gender = rs.getInt(5) == 1 ? true : false;
 				LocalDate localDate_NgaySinh = chageTimeSQL(rs.getDate("NgaySinh"));
 				kh = new KhachHang(rs.getString(1), rs.getString(2), localDate_NgaySinh, rs.getInt(4), gender,
-						rs.getString(6), rs.getString(7));
+						rs.getString(6), rs.getString(7),rs.getDouble(8));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
