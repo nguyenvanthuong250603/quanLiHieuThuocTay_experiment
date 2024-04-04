@@ -3,24 +3,22 @@ package entity;
 import java.time.LocalDate;
 
 public class KhachHang {
-	private String maKH,tenKH;
+	private String maKH, tenKH;
 	private LocalDate ngaySinh;
 	private int tuoi;
 	private boolean gioiTinh;
-	private String sDT,diaCHi;
-	private double diemThanhVien;
-	public double getDiemThanhVien() {
-		return diemThanhVien;
+	private String sDT, diaCHi;
+	private int diemThanhVien;
+
+	@Override
+	public String toString() {
+		return "KhachHang [maKH=" + maKH + ", tenKH=" + tenKH + ", ngaySinh=" + ngaySinh + ", tuoi=" + tuoi
+				+ ", gioiTinh=" + gioiTinh + ", sDT=" + sDT + ", diaCHi=" + diaCHi + ", diemThanhVien=" + diemThanhVien
+				+ "]";
 	}
-
-	public void setDiemThanhVien(double diemThanhVien) {
-		this.diemThanhVien = diemThanhVien;
-	}
-
-
 
 	public KhachHang(String maKH, String tenKH, LocalDate ngaySinh, int tuoi, boolean gioiTinh, String sDT,
-			String diaCHi, double diemThanhVien) {
+			String diaCHi, int diemThanhVien) {
 		super();
 		this.maKH = maKH;
 		this.tenKH = tenKH;
@@ -29,6 +27,14 @@ public class KhachHang {
 		this.gioiTinh = gioiTinh;
 		this.sDT = sDT;
 		this.diaCHi = diaCHi;
+		this.diemThanhVien = diemThanhVien;
+	}
+
+	public int getDiemThanhVien() {
+		return diemThanhVien;
+	}
+
+	public void setDiemThanhVien(int diemThanhVien) {
 		this.diemThanhVien = diemThanhVien;
 	}
 
@@ -92,5 +98,4 @@ public class KhachHang {
 		super();
 	}
 
-	
 }

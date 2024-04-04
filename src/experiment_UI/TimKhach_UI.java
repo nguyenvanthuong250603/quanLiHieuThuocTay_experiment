@@ -12,6 +12,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.util.Calendar;
+import java.util.Random;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -42,6 +44,8 @@ public class TimKhach_UI {
 	private DefaultTableModel model;
 	private JTable table;
 	private KhachHang_DAO lKhachHang_DAO = new KhachHang_DAO();
+	
+			
 	public void getTimKhach(JTextField maKH, JTextField tenKH, JTextField tuoiKH, JComboBox gioiTinhKH,
 			JTextField sdtKH,JLabel labelDiem) {
 		frame = new JFrame();
@@ -210,6 +214,6 @@ public class TimKhach_UI {
 		labelDiemTichLuy.setText(kh.getDiemThanhVien()+"");
 		frame.dispose();
 	}
-	
+  
 
 }

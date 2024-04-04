@@ -39,6 +39,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.IconifyAction;
 
 import dao.NhanVien_DAO;
+import entity.HoaDon;
 import entity.NhanVien;
 
 public class Default_UI {
@@ -68,10 +69,10 @@ public class Default_UI {
 		container = new JPanel();
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
-		
+		container.add(createHoaDon(),HĐBT);
+		container.add(createBanThuoc(MaNV), BT);
 		container.add(createNhanVien(),NV);
 		container.add(createKhachHang(),KH);
-		container.add(createBanThuoc(), BT);
 		container.add(createQuanLyThuoc(), T);
 		container.add(createDoiThuoc(), DT);
 		container.add(createQuanLyNhapThuoc(),TDNT);
@@ -183,6 +184,10 @@ public class Default_UI {
 					cardLayout.show(container, NV);
 					break;
 				}
+				case HĐBT : {
+					cardLayout.show(container, HĐBT);
+					break;
+				}
 				default:
 					throw new IllegalArgumentException("Unexpected value: " + nameButton);
 				}
@@ -243,9 +248,9 @@ public class Default_UI {
 		return quanLyThuocUI.getQuanLiThuoc();
 	}
 
-	private JPanel createBanThuoc() {
+	private JPanel createBanThuoc(String maNV) {
 		BanThuoc_UI banThuocUI = new BanThuoc_UI();
-		return banThuocUI.getBanThuoc();
+		return banThuocUI.getBanThuoc(maNV);
 	}
 
 	private JPanel createDoiThuoc() {
@@ -267,5 +272,9 @@ public class Default_UI {
 	private JPanel createNhanVien() {
 		NhanVien_UI NV = new NhanVien_UI();
 		return  NV.getNhanVien();
+	}
+	private JPanel createHoaDon() {
+		HoaDonBanThuoc_UI hd = new HoaDonBanThuoc_UI();
+		return  hd.getHoaDon();
 	}
 }

@@ -25,14 +25,13 @@ public class KhachHang_DAO {
 				LocalDate localDate_NgaySinh = chageTimeSQL(rs.getDate("NgaySinh"));
 
 				KhachHang kh = new KhachHang(rs.getString(1), rs.getString(2), localDate_NgaySinh, rs.getInt(4), gender,
-						rs.getString(6), rs.getString(7),rs.getDouble(8));
+						rs.getString(6), rs.getString(7), rs.getInt(8));
 
 				lkh.add(kh);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			try {
 				if (con != null) {
 					con.close();
@@ -46,37 +45,34 @@ public class KhachHang_DAO {
 
 	public KhachHang getKhachHangByID(String maKh) {
 		Connection con = connectDataBase.ConnectionData.accessDataBase();
-		KhachHang kh =new KhachHang();
-		PreparedStatement p =null;
-	try {
-		
-	
-
-			 p = con.prepareStatement("SELECT *FROM KhachHang WHERE MaKH= ?");
-			p.setString(1, maKh);
-			try(ResultSet rs = p.executeQuery()) {
-			
-			while (rs.next()) {
-				Boolean gender = rs.getInt(5) == 1 ? true : false;
-				LocalDate localDate_NgaySinh = chageTimeSQL(rs.getDate("NgaySinh"));
-				kh = new KhachHang(rs.getString(1), rs.getString(2), localDate_NgaySinh, rs.getInt(4), gender,
-						rs.getString(6), rs.getString(7),rs.getDouble(8));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
-	finally {
+		KhachHang kh = new KhachHang();
+		PreparedStatement p = null;
 		try {
-			if (con != null) {
-				con.close();
+
+			p = con.prepareStatement("SELECT *FROM KhachHang WHERE MaKH= ?");
+			p.setString(1, maKh);
+			try (ResultSet rs = p.executeQuery()) {
+
+				while (rs.next()) {
+					Boolean gender = rs.getInt(5) == 1 ? true : false;
+					LocalDate localDate_NgaySinh = chageTimeSQL(rs.getDate("NgaySinh"));
+					kh = new KhachHang(rs.getString(1), rs.getString(2), localDate_NgaySinh, rs.getInt(4), gender,
+							rs.getString(6), rs.getString(7), rs.getInt(8));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-	}
 		return kh;
 	}
 }

@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -89,6 +90,8 @@ public class Generate_All {
 		JPanel div = new JPanel(new BorderLayout());
 		div.add(sampleModel(nameLabel), BorderLayout.WEST);
 		div.add(jtext, BorderLayout.CENTER);
+		jtext.setFont(new Font("Arial", Font.BOLD, 18));
+		
 		div.setBorder(new EmptyBorder(5, 0, 5, 0));
 		return div;
 	}
@@ -251,5 +254,9 @@ public class Generate_All {
 	public static String formatTime(LocalDate time) {
 		DateTimeFormatter x = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		return x.format(time);	
+	}
+	public static String formatValueDouble(double result) {
+		DecimalFormat y = new DecimalFormat("#,##0.000");
+		return y.format(result);	
 	}
 }
