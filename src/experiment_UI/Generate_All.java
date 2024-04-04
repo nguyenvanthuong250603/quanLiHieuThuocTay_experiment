@@ -12,7 +12,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -33,6 +35,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.toedter.calendar.JDateChooser;
 
 import dao.KhachHang_DAO;
@@ -172,16 +175,17 @@ public class Generate_All {
 		JTextField textField = (JTextField) object;
 		return Integer.parseInt(textField.getText());		
 	}
-	public static String getValueInComboBox(JComboBox combo) {
-		JComboBox cb = combo;
+	public static String getValueInComboBox(Object combo) {
+		 JComboBox cb = (JComboBox)combo;
 		return cb.getSelectedItem().toString();
 	}
 	public static LocalDate getDateJDateChoor(Object object) {
 		JDateChooser date = (JDateChooser) object;
 		return date.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
-	public static String getString(String x) {
-		return  x;
+	public static int getValueInlabel(Object object) {
+		JLabel x = (JLabel) object;
+		return Integer.parseInt(x.getText());
 	}
 	public static void hienTableKhachHang(JTable table,DefaultTableModel model,Object[][] objects) {
 		
@@ -225,7 +229,7 @@ public class Generate_All {
 				for (KhachHang khachHang : lkh) {
 					String gender = transGender(khachHang.isGioiTinh());
 					if(khachHang.getMaKH().equals(maKh)) {
-						((JTextField) objects[0][1]).setText(khachHang.getMaKH());
+						((JLabel) objects[0][1]).setText(khachHang.getMaKH());
 						((JTextField) objects[1][1]).setText(khachHang.getTenKH());
 						((JDateChooser) objects[2][1]).setDate(java.sql.Date.valueOf(khachHang.getNgaySinh()));
 						((JTextField) objects[3][1]).setText(khachHang.getTuoi()+"");
@@ -258,5 +262,33 @@ public class Generate_All {
 	public static String formatValueDouble(double result) {
 		DecimalFormat y = new DecimalFormat("#,##0.000");
 		return y.format(result);	
+	}
+	public static boolean transGenderToSQL(String gender) {
+		String x = gender;
+		boolean gt = x.equals( "Nam") ? true:false;
+		return gt;
+	}
+	public static String generateCustomerCode(String ma) {
+		Calendar now = Calendar.getInstance();
+
+		int currentDay = now.get(Calendar.DAY_OF_MONTH);
+		int currentMonth = now.get(Calendar.MONTH) + 1; // Adding 1 to get the correct month
+
+		Random random = new Random();
+		int randomDigits = 1000 + random.nextInt(9000); // Generate 4 random digits
+		String customerCode = "HĐ" + String.format("%02d", currentDay) + String.format("%02d", currentMonth)
+				+ ma.substring(2) + randomDigits;
+		return customerCode;
+	}
+	public static String generateCode(String kh) {
+		Calendar now = Calendar.getInstance();
+
+		int currentDay = now.get(Calendar.DAY_OF_MONTH);
+		int currentMonth = now.get(Calendar.MONTH) + 1; // Adding 1 to get the correct month
+
+		Random random = new Random();
+		int randomDigits = 1000 + random.nextInt(9000); // Generate 4 random digits
+		String customerCode = kh + String.format("%02d", currentDay) + String.format("%02d", currentMonth) + randomDigits;
+		return customerCode;
 	}
 }

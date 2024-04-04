@@ -10,4 +10,9 @@ public class Trage_DAO {
 		
 		return localDate;
 	}
+	public static int chageGenderToSQL(boolean gender) {
+		boolean x = gender;
+		int gt = x == true ? 1 :0;
+		return gt;
+	}
 }

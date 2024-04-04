@@ -69,8 +69,8 @@ public class Default_UI {
 		container = new JPanel();
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
-		container.add(createHoaDon(),HĐBT);
 		container.add(createBanThuoc(MaNV), BT);
+		container.add(createHoaDon(),HĐBT);
 		container.add(createNhanVien(),NV);
 		container.add(createKhachHang(),KH);
 		container.add(createQuanLyThuoc(), T);

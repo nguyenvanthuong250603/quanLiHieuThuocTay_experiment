@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+
 import static dao.Trage_DAO.*;
 import entity.KhachHang;
 
@@ -74,5 +76,36 @@ public class KhachHang_DAO {
 			}
 		}
 		return kh;
+	}
+
+	public boolean themKhachHang(KhachHang kh) {
+		Connection con = connectDataBase.ConnectionData.accessDataBase();
+		PreparedStatement p = null;
+		try {
+			p = con.prepareStatement("INSERT INTO KhachHang VALUES (?,?,?,?,?,?,?,?)");
+			p.setString(1, kh.getMaKH());
+			p.setString(2, kh.getTenKH());
+			p.setDate(3, java.sql.Date.valueOf(kh.getNgaySinh()));
+			p.setInt(4, kh.getTuoi());
+			int gender = chageGenderToSQL(kh.isGioiTinh());
+			p.setInt(5, gender);
+			p.setString(6, kh.getsDT());
+			p.setString(7, kh.getDiaCHi());
+			p.setInt(8, kh.getDiemThanhVien());
+			p.executeUpdate();
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 }
