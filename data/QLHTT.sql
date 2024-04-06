@@ -70,9 +70,10 @@ CREATE TABLE HoaDon(
 	MaNV NVARCHAR(50),
 	MaKH NVARCHAR(50),
 	TenKH NVARCHAR(50),
-	DiaChi NVARCHAR(50),
 	HinhThucThanhToan NVARCHAR(50), 
 	NgayTaoHoaDon DATE,
+	LoaiHoaDon BIT,
+	TinhTrang NVARCHAR(255),
 	TongTien FLOAT,
 	FOREIGN KEY (MaNV) REFERENCES nhanVien(MaNV),
 	FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH)
@@ -80,12 +81,12 @@ CREATE TABLE HoaDon(
 CREATE TABLE ChiTietHoaDon(
 	MaHD NVARCHAR(50) NOT NULL,
 	MaThuoc NVARCHAR(50) NOT NULL,
+	TenThuoc NVARCHAR(255),
 	DonVi NVARCHAR(50),
 	SoLuong INT,
 	DonGIA FLOAT,
 	ThanhTien FLOAT,
 	
-	TinhTrang NVARCHAR(255),
 	 PRIMARY KEY (MaHD, MaThuoc),
     FOREIGN KEY (MaHD) REFERENCES HoaDon(MaHD),
     FOREIGN KEY (MaThuoc) REFERENCES Thuoc(MaThuoc)
@@ -100,9 +101,11 @@ INSERT INTO Thuoc VALUES ('TH005',N'Bảo thanh 3',20,10000,N'Kháng sinh','CTY 
 INSERT INTO Thuoc VALUES ('TH001',N'Bảo thanh 3',20,10000,N'Thuốc sát khuẩn , khử trùng','CTY SX1','2024-01-30','2025-01-30','C:\Users\ADMIN\Downloads\TRAI-NGHIEM-CUOC-SONG-DINH-CU-O-ANH-1.jpg',N'Hộp 1 vĩ x 5 viên nén',N'Dạng viên nén',N'Từ 2-11 tuổi','thanhphan2','thanhphan2','thanhphan2','thanhphan2','thanhphan2');
 INSERT INTO Thuoc VALUES ('TH006',N'Bảo thanh 3',20,10000,N'Thuốc sát khuẩn , khử trùng','CTY SX1','2024-01-30','2025-01-30','C:\Users\ADMIN\Downloads\TRAI-NGHIEM-CUOC-SONG-DINH-CU-O-ANH-1.jpg',N'Hộp 1 vĩ x 5 viên nén',N'Dạng viên nén',N'Từ 2-11 tuổi','thanhphan2','thanhphan2','thanhphan2','thanhphan2','thanhphan2');
 
-GO
-SELECT *FROM KhachHang
-delete KhachHang where MaKH = ''
+GO 
+SELECT *FROM HoaDon 
+
+SELECT *FROM HoaDon WHERE MaHD ='HĐ06040015348'
+SELECT *FROM ChiTietHoaDon
 GO
 INSERT INTO NhanVien VALUES ('NV001',N'Nguyễn Văn Thương',1,'2003-06-25',20,'0794571318','067203000247',N'ĐĂK NÔNG',N'Quản lý','2024-03-20');
 

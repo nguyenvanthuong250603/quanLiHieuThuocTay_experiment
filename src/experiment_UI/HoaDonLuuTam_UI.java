@@ -1,17 +1,12 @@
 package experiment_UI;
 
-import static experiment_UI.Generate_All.createJbutton;
-import static experiment_UI.Generate_All.createJcombobox;
-import static experiment_UI.Generate_All.createNameAndTextField2;
-import static experiment_UI.Generate_All.createTitle;
-import static experiment_UI.Generate_All.generateCode;
-import static experiment_UI.Generate_All.hienTableKhachHang;
-import static experiment_UI.Generate_All.sampleModel;
+import static experiment_UI.Generate_All.*;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -22,21 +17,37 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
+
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AsyncBoxView.ChildLocator;
 
-import com.toedter.calendar.JDateChooser;
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
+import dao.HoaDon_DAO;
+import dao.NhanVien_DAO;
+import entity.ChiTietHoaDon;
+import entity.HoaDon;
+import entity.NhanVien;
+import entity.Thuoc;
 import experiment_UI.Generate_All.CustomTableCellRenderer;
 
 public class HoaDonLuuTam_UI {
-	
-	private Object[][] object_search;
-	private DefaultTableModel model;
+
+
 	private JTable table;
+	private Object[][] object_kh;
+	private JFrame frame;
+
+	private JTable table_product;
+
+	private ArrayList<ChiTietHoaDon> cthdon = new ArrayList<ChiTietHoaDon>();
+
+	private DefaultTableModel model_product;
+
+	private DefaultTableModel model;
+	private JLabel textMaHD; 
 	
-	public void getTimKhach(JTextField maKH, JTextField tenKH, JTextField tuoiKH, JComboBox gioiTinhKH,
-			JTextField sdtKH, JLabel labelDiem) {
+	public void getHoaDonLuuTam(JLabel x,JTable tablee) {
 		frame = new JFrame();
 		frame.setTitle("Tìm Kiếm Khách Hàng");
 
@@ -44,53 +55,26 @@ public class HoaDonLuuTam_UI {
 		frame.setLocationRelativeTo(null);
 
 		frame.setDefaultCloseOperation(frame.DISPOSE_ON_CLOSE);
-		frame.add(layOut());
-		hienTableKhachHang(table, model, objects_custommer);
-		renderTuoi();
-		((JLabel)objects_custommer[0][1]).setText(generateCode("KH"));
-
+		frame.add(north(), BorderLayout.NORTH);
+		frame.add(cenTer(), BorderLayout.CENTER);
+		frame.add(footer(), BorderLayout.SOUTH);
+		hienTableInHoaDon(table, model, table_product,model_product,object_kh);
+		
+		this.textMaHD = x;
+		tablee.setModel(model_product);
 		frame.setVisible(true);
 		frame.setResizable(false);
-		this.Jtext_maKH = maKH;
-		this.Jtext_tenKH = tenKH;
-		this.jText_tuoiKH = tuoiKH;
-		this.cbGioiTinhKH = gioiTinhKH;
-		this.jText_sdtKH = sdtKH;
-		this.labelDiemTichLuy = labelDiem;
+
 	}
+
 	private JPanel north() {
-		JPanel north = new JPanel(new BorderLayout());
+		JPanel north = new JPanel();
 		createTitle(north, "Tìm kiếm và lọc hóa đơn");
-
-		JPanel north_center = new JPanel(new GridLayout(2, 3, 10, 10));
-		Object[][] trage = { { "Mã hóa đơn", new JTextField() }, { "Từ ngày", new JDateChooser() },
-				{ "Đến ngày", new JDateChooser() }, { "Mã KH", new JTextField() }, { "Doanh thu", new JComboBox() },
-				{ "Trạng thái", new JComboBox() }, };
-
-		object_search = trage;
-		for (Object[] objects : object_search) {
-			if (objects[1] instanceof Component) {
-				JPanel t = new JPanel(new BorderLayout());
-				t.add(sampleModel(objects[0].toString()), BorderLayout.WEST);
-				t.setBorder(new EmptyBorder(5, 10, 5, 10));
-				t.add((Component) objects[1], BorderLayout.CENTER);
-
-				north_center.add(t);
-
-			} else {
-
-				north_center.add(createJcombobox(objects[0].toString(), (JComboBox) objects[1]));
-
-			}
-		}
-		north.add(north_center, BorderLayout.CENTER);
-
-		JPanel north_btn = new JPanel(new GridLayout(2, 1, 10, 10));
-
-		north_btn.add(createButtonInHoaDonBanHang("Tìm kiếm", ""));
-		north_btn.add(createButtonInHoaDonBanHang("", "gift\\reset.png"));
-
-		north.add(north_btn, BorderLayout.EAST);
+		north.add(createNameAndTextField(new JTextField(20), "Số điện thoại"));
+		north.add(createButtonInHoaDonLuuTam("Tìm", ""));
+		north.add(createJcombobox("Loại hóa đơn", new JComboBox()));
+		north.add(createButtonInHoaDonLuuTam("Lọc", ""));
+		north.add(createButtonInHoaDonLuuTam("", "gift\\reset.png"));
 		return north;
 	}
 
@@ -106,33 +90,32 @@ public class HoaDonLuuTam_UI {
 		createTitle(managerment, "Danh sách hóa đơn");
 		managerment.setLayout(new BorderLayout());
 		String[] column = { "Mã Hóa Đơn", "Nhân viên", "Mã khách hàng", "Ngày mua", "Tổng tiền" };
-		model = new DefaultTableModel(column, 0);
-		table = new JTable(model);
+		 model = new DefaultTableModel(column, 0);
+		 table = new JTable(model);
 		table.setShowGrid(false);
 		table.setShowVerticalLines(false);
 		table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
 		JScrollPane scoll = new JScrollPane(table);
 		managerment.add(scoll, BorderLayout.CENTER);
-		managerment.add(footer(), BorderLayout.SOUTH);
+
 		return managerment;
 	}
 
 	public JPanel inf_product() {
 		JPanel input = new JPanel(new BorderLayout());
 		createTitle(input, "Danh sách sản phẩm");
-		String[] column = { "Mã thuốc", "Tên thuốc ", "Số lượng", "Số lượng", "Giá", "Thành tiền" };
+		
+		
+		String[] column = { "Mã thuốc", "Tên thuốc ", "Đơn vị", "Số lượng", "Giá", "Thành tiền" };
 
-		String[][] row = { { "SP01", "Bảo thanh", "" + 20, "" + 10000, "" },
+		model_product = new DefaultTableModel(column, 0);
+		table_product = new JTable(model_product);
+		
+		table_product.setShowGrid(false);
+		table_product.setShowVerticalLines(false);
 
-				{ "", "", "", "", "", "" } };
-		DefaultTableModel model = new DefaultTableModel(row, column);
-		JTable table = new JTable(model);
-
-		table.setShowGrid(false);
-		table.setShowVerticalLines(false);
-
-		table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
-		JScrollPane scoll = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		table_product.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
+		JScrollPane scoll = new JScrollPane(table_product, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		input.add(scoll, BorderLayout.CENTER);
 		input.add(getThongTin(), BorderLayout.SOUTH);
@@ -155,19 +138,60 @@ public class HoaDonLuuTam_UI {
 
 	public JPanel footer() {
 		JPanel footer = new JPanel();
-		Object[][] btn = { { "Xuất danh sách", "" }, { "In hóa đơn" ,""} };
+		Object[][] btn = { { "Xóa đơn", "" }, { "Xóa tất cả", "" }, { "Chọn", "" }, { "Thoát", "exit.png" } };
 		for (Object[] objects : btn) {
-			footer.add(createButtonInHoaDonBanHang(objects[0].toString(), objects[1].toString()));
+			footer.add(createButtonInHoaDonLuuTam(objects[0].toString(), objects[1].toString()));
 		}
 		return footer;
 
 	}
 
-	private JButton createButtonInHoaDonBanHang(String nameBtn, String pathIcon) {
+//	public void luuHoaDonTamThoiVaoBang(ArrayList<HoaDon> hd) {
+//		DefaultTableModel model = createModel();
+//		for (int i = 0; i < hd.size(); i++) {
+//			NhanVien nv = lnv.getNhanVienFindByID(hd.get(i).getMaNV().getMaNV().toString());
+//
+//			Object[] row = { hd.get(i).getMaHD(), nv.getHoTen(), hd.get(i).getMaKh().getMaKH(),
+//					formatTime(hd.get(i).getNgayTaoHoaDon()), hd.get(i).getTongTien() };
+//			model.addRow(row);
+//			
+////			model_product
+//			ArrayList<ChiTietHoaDon> cthd = hd.get(i).getListChiTietHoaDon();
+//			
+//			for (int j = 0; j < cthd.size(); j++) {
+//				HoaDon hdon = new HoaDon(cthd.get(i).getMaHD().getMaHD());
+//				Thuoc th = new Thuoc(cthd.get(i).getMaThuoc().getMaThuoc());
+//				String tenThuoc = cthd.get(i).getTenThuoc();
+//				String donVi =cthd.get(i).getDonVi();
+//				int soLuong = cthd.get(i).getSoLuong();
+//				double gia = cthd.get(i).getDonGia();
+//				double thanhTien = cthd.get(i).getThanhTien();
+//	 			ChiTietHoaDon ct = new ChiTietHoaDon(hdon, th, tenThuoc, donVi, soLuong, gia, thanhTien);
+//	 			cthdon.add(ct);
+//			}
+//			
+//
+//		}
+//		table2 = new JTable(model);
+//
+//	}
+
+	
+
+	private JButton createButtonInHoaDonLuuTam(String nameBtn, String pathIcon) {
 		JButton btn = createJbutton(nameBtn, pathIcon);
-		btn.setPreferredSize(new Dimension(180, 35));
+		btn.setPreferredSize(new Dimension(140, 35));
 		btn.addActionListener(e -> {
-			System.out.println(nameBtn);
+			if (nameBtn.equals("Thoát")) {
+			
+				frame.dispose();
+			}
+			else if(nameBtn.equals("Chọn")) {
+				
+				textMaHD.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
+				
+				frame.dispose();
+			}
 		});
 		return btn;
 	}

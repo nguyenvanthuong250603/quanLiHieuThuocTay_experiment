@@ -68,6 +68,7 @@ public class TimKhach_UI {
 		frame.setVisible(true);
 		frame.setResizable(false);
 		this.Jtext_maKH = maKH;
+		
 		this.Jtext_tenKH = tenKH;
 		this.jText_tuoiKH = tuoiKH;
 		this.cbGioiTinhKH = gioiTinhKH;
@@ -257,7 +258,7 @@ public class TimKhach_UI {
 		String tenKh = getValueStringInJTextField(objects_custommer[1][1]);
 		LocalDate ngaySing = getDateJDateChoor(objects_custommer[2][1]);
 		int tuoi = getValueIntỊntextField(objects_custommer[3][1]);
-		String gt = getValueInComboBox(objects_custommer[4][1]);
+		String gt = getValueInComboBox((JComboBox)objects_custommer[4][1]);
 		String sdt = getValueStringInJTextField(objects_custommer[5][1]);
 		String diaChi = getValueStringInJTextField(objects_custommer[6][1]);
 

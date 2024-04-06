@@ -38,10 +38,11 @@ public class HoaDonBanThuoc_UI {
 		JPanel north = new JPanel(new BorderLayout());
 		createTitle(north, "Tìm kiếm và lọc hóa đơn");
 
-		JPanel north_center = new JPanel(new GridLayout(2, 3, 10, 10));
+		JPanel north_center = new JPanel(new GridLayout(2, 4, 10, 10));
 		Object[][] trage = { { "Mã hóa đơn", new JTextField() }, { "Từ ngày", new JDateChooser() },
-				{ "Đến ngày", new JDateChooser() }, { "Mã KH", new JTextField() }, { "Doanh thu", new JComboBox() },
-				{ "Trạng thái", new JComboBox() }, };
+				{ "Đến ngày", new JDateChooser() }, { "Doanh thu", new JComboBox() }, { "Mã KH", new JTextField() },
+				{ "Số điện thoại", new JTextField() }, { "Loại hóa đơn", new JComboBox() },
+				{ "Trạng thái", new JComboBox() } };
 
 		object_search = trage;
 		for (Object[] objects : object_search) {
@@ -131,7 +132,7 @@ public class HoaDonBanThuoc_UI {
 
 	public JPanel footer() {
 		JPanel footer = new JPanel();
-		Object[][] btn = { { "Xuất danh sách", "" }, { "In hóa đơn" ,""} };
+		Object[][] btn = { { "Xuất danh sách", "" }, { "In hóa đơn", "" } };
 		for (Object[] objects : btn) {
 			footer.add(createButtonInHoaDonBanHang(objects[0].toString(), objects[1].toString()));
 		}

@@ -25,7 +25,8 @@ public class NhanVien_DAO {
 				Date dateNVL = rs.getDate("ngayVaoLam");
 				LocalDate nvl = dateNVL.toLocalDate();
 				NhanVien nv = new NhanVien(rs.getString(1), rs.getString(2), gender, ns, rs.getInt(5), rs.getString(6),
-						rs.getString(7), rs.getString(8), rs.getString(8), nvl);
+						rs.getString(7), rs.getString(8), rs.getString(9), nvl);
+				
 
 				lnv.add(nv);
 			}

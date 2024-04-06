@@ -98,4 +98,9 @@ public class KhachHang {
 		super();
 	}
 
+	public KhachHang(String maKH) {
+		super();
+		this.maKH = maKH;
+	}
+
 }

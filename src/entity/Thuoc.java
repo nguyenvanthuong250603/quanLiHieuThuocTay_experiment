@@ -7,7 +7,11 @@ public class Thuoc {
 
 
 	public Thuoc() {
-		super();
+	
+	}
+	public Thuoc(String maThuoc) {
+		
+		this.maThuoc = maThuoc;
 	}
 	private String maThuoc,tenThuoc;
 	private int soLuong;

@@ -321,47 +321,6 @@ public class QuanLyThuoc_UI {
 
 	}
 
-// tạo nút và bắt sự kiện
-	public JButton buttonInPage(String nameBtn, String pathIcon) {
-		JButton btn = createJbutton(nameBtn, pathIcon);
-		btn.setPreferredSize(new Dimension(120, 40));
-
-		btn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (nameBtn.equals("Chọn hình ảnh")) {
-					chooseImage();
-
-				} else if (nameBtn.equals("Thêm")) {
-//					String gia = ((JTextField)object_inf[1][1]).getText();
-
-					themThuoc();
-
-				} else if (nameBtn.equals("Cập nhật")) {
-
-					suaThuoc();
-				} else if (nameBtn.equals("Xóa trắng")) {
-
-					xoaTrang();
-				} else if (nameBtn.equals("")) {
-					model.setRowCount(0);
-					xoaTrang();
-					hienBangTableThuoc();
-
-				} else if (nameBtn.equals("Lọc")) {
-
-					timNangCao();
-				} else {
-
-					System.out.println(nameBtn);
-				}
-
-			}
-		});
-
-		return btn;
-	}
 
 	public void hienBangTableThuoc() {
 
@@ -567,5 +526,47 @@ public class QuanLyThuoc_UI {
 
 		}
 	}
+
+	// tạo nút và bắt sự kiện
+		public JButton buttonInPage(String nameBtn, String pathIcon) {
+			JButton btn = createJbutton(nameBtn, pathIcon);
+			btn.setPreferredSize(new Dimension(120, 40));
+
+			btn.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (nameBtn.equals("Chọn hình ảnh")) {
+						chooseImage();
+
+					} else if (nameBtn.equals("Thêm")) {
+//						String gia = ((JTextField)object_inf[1][1]).getText();
+
+						themThuoc();
+
+					} else if (nameBtn.equals("Cập nhật")) {
+
+						suaThuoc();
+					} else if (nameBtn.equals("Xóa trắng")) {
+
+						xoaTrang();
+					} else if (nameBtn.equals("")) {
+						model.setRowCount(0);
+						xoaTrang();
+						hienBangTableThuoc();
+
+					} else if (nameBtn.equals("Lọc")) {
+
+						timNangCao();
+					} else {
+
+						System.out.println(nameBtn);
+					}
+
+				}
+			});
+
+			return btn;
+		}
 
 }

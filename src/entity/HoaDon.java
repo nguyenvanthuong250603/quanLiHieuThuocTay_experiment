@@ -1,15 +1,27 @@
 package entity;
 
-import java.sql.Date;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class HoaDon {
 	private String maHD;
 	private NhanVien maNV;
-	private KhachHang maKH;
-	private Date ngayTao;
-	private Thuoc maThuoc;
-	private String luuY;
+	public ArrayList<ChiTietHoaDon> getListChiTietHoaDon() {
+		return ListChiTietHoaDon;
+	}
+	public void setListChiTietHoaDon(ArrayList<ChiTietHoaDon> listChiTietHoaDon) {
+		ListChiTietHoaDon = listChiTietHoaDon;
+	}
+	private KhachHang maKh;
+	private String tenKH;
+
+	private String hinhThucThanhToan;
+	private LocalDate ngayTaoHoaDon;
+	private Boolean loaiHoaDon;
+	private String tinhTrang;
 	private double tongTien;
+	private ArrayList<ChiTietHoaDon> ListChiTietHoaDon;
 	public String getMaHD() {
 		return maHD;
 	}
@@ -22,29 +34,30 @@ public class HoaDon {
 	public void setMaNV(NhanVien maNV) {
 		this.maNV = maNV;
 	}
-	public KhachHang getMaKH() {
-		return maKH;
+	public KhachHang getMaKh() {
+		return maKh;
 	}
-	public void setMaKH(KhachHang maKH) {
-		this.maKH = maKH;
+	public void setMaKh(KhachHang maKh) {
+		this.maKh = maKh;
 	}
-	public Date getNgayTao() {
-		return ngayTao;
+	public String getTenKH() {
+		return tenKH;
 	}
-	public void setNgayTao(Date ngayTao) {
-		this.ngayTao = ngayTao;
+	public void setTenKH(String tenKH) {
+		this.tenKH = tenKH;
 	}
-	public Thuoc getMaThuoc() {
-		return maThuoc;
+
+	public String getHinhThucThanhToan() {
+		return hinhThucThanhToan;
 	}
-	public void setMaThuoc(Thuoc maThuoc) {
-		this.maThuoc = maThuoc;
+	public void setHinhThucThanhToan(String hinhThucThanhToan) {
+		this.hinhThucThanhToan = hinhThucThanhToan;
 	}
-	public String getLuuY() {
-		return luuY;
+	public LocalDate getNgayTaoHoaDon() {
+		return ngayTaoHoaDon;
 	}
-	public void setLuuY(String luuY) {
-		this.luuY = luuY;
+	public void setNgayTaoHoaDon(LocalDate ngayTaoHoaDon) {
+		this.ngayTaoHoaDon = ngayTaoHoaDon;
 	}
 	public double getTongTien() {
 		return tongTien;
@@ -52,22 +65,53 @@ public class HoaDon {
 	public void setTongTien(double tongTien) {
 		this.tongTien = tongTien;
 	}
-	@Override
-	public String toString() {
-		return "HoaDon [maHD=" + maHD + ", maNV=" + maNV + ", maKH=" + maKH + ", ngayTao=" + ngayTao + ", maThuoc="
-				+ maThuoc + ", luuY=" + luuY + ", tongTien=" + tongTien + "]";
-	}
-	public HoaDon(String maHD, NhanVien maNV, KhachHang maKH, Date ngayTao, Thuoc maThuoc, String luuY,
-			double tongTien) {
+
+
+	
+
+	public HoaDon(String maHD, NhanVien maNV, KhachHang maKh, String tenKH, String hinhThucThanhToan,
+			LocalDate ngayTaoHoaDon, Boolean loaiHoaDon, String tinhTrang, double tongTien,
+			ArrayList<ChiTietHoaDon> listChiTietHoaDon) {
 		super();
 		this.maHD = maHD;
 		this.maNV = maNV;
-		this.maKH = maKH;
-		this.ngayTao = ngayTao;
-		this.maThuoc = maThuoc;
-		this.luuY = luuY;
+		this.maKh = maKh;
+		this.tenKH = tenKH;
+		this.hinhThucThanhToan = hinhThucThanhToan;
+		this.ngayTaoHoaDon = ngayTaoHoaDon;
+		this.loaiHoaDon = loaiHoaDon;
+		this.tinhTrang = tinhTrang;
 		this.tongTien = tongTien;
+		ListChiTietHoaDon = listChiTietHoaDon;
 	}
+	public Boolean getLoaiHoaDon() {
+		return loaiHoaDon;
+	}
+	public void setLoaiHoaDon(Boolean loaiHoaDon) {
+		this.loaiHoaDon = loaiHoaDon;
+	}
+	@Override
+	public String toString() {
+		return "HoaDon [maHD=" + maHD + ", maNV=" + maNV + ", maKh=" + maKh + ", tenKH=" + tenKH
+				+ ", hinhThucThanhToan=" + hinhThucThanhToan + ", ngayTaoHoaDon=" + ngayTaoHoaDon + ", loaiHoaDon="
+				+ loaiHoaDon + ", tinhTrang=" + tinhTrang + ", tongTien=" + tongTien + ", ListChiTietHoaDon="
+				+ ListChiTietHoaDon + "]";
+	}
+	public String getTinhTrang() {
+		return tinhTrang;
+	}
+	public void setTinhTrang(String tinhTrang) {
+		this.tinhTrang = tinhTrang;
+	}
+	public HoaDon() {
+		
+	}
+	public HoaDon(String maHD) {
+		
+		this.maHD = maHD;
+	}
+	
+	
 	
 	
 }

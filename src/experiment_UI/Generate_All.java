@@ -38,11 +38,22 @@ import javax.swing.table.DefaultTableModel;
 import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.toedter.calendar.JDateChooser;
 
+import dao.ChiTietHoaDon_DAO;
+import dao.HoaDon_DAO;
 import dao.KhachHang_DAO;
+import dao.NhanVien_DAO;
+import entity.ChiTietHoaDon;
+import entity.HoaDon;
 import entity.KhachHang;
+import entity.NhanVien;
 
 public class Generate_All {
 	private static KhachHang_DAO khang = new KhachHang_DAO();
+	private static HoaDon_DAO hDon_DAO = new HoaDon_DAO();
+	private static NhanVien_DAO nvDao = new NhanVien_DAO();
+	private static ChiTietHoaDon_DAO cTietHoaDon_DAO = new ChiTietHoaDon_DAO();
+	private static KhachHang_DAO khDao = new KhachHang_DAO();
+
 	public static JButton createJbutton(String nameButton, String pathIcon) {
 		JButton btn = new JButton(nameButton);
 		ImageIcon icon = new ImageIcon(pathIcon);
@@ -62,42 +73,42 @@ public class Generate_All {
 		boderDecor.setTitleFont(new Font("Arial", Font.ITALIC, 20));
 		t.setBorder(boderDecor);
 
-
 	}
 
 	public static JLabel sampleModel(String string) {
-		
+
 		JLabel lb = new JLabel(string);
 		lb.setFont(new Font("Arial", Font.BOLD, 15));
-		
+
 		lb.setHorizontalTextPosition(JLabel.LEFT);
 		lb.setPreferredSize(new Dimension(100, 30));
 //		lb.setBorder(new EmptyBorder(5, 0, 5, 0));
 		return lb;
 
 	}
+
 	public static JLabel sampleModel2(String string) {
-		
+
 		JLabel lb = new JLabel(string);
 		lb.setFont(new Font("Arial", Font.BOLD, 15));
-		
+
 		lb.setHorizontalTextPosition(JLabel.LEFT);
 		lb.setPreferredSize(new Dimension(150, 30));
 //		lb.setBorder(new EmptyBorder(5, 0, 5, 0));
 		return lb;
 
 	}
-	
+
 	public static JPanel createNameAndTextField(JTextField jtext, String nameLabel) {
 
 		JPanel div = new JPanel(new BorderLayout());
 		div.add(sampleModel(nameLabel), BorderLayout.WEST);
 		div.add(jtext, BorderLayout.CENTER);
-		jtext.setFont(new Font("Arial", Font.BOLD, 18));
-		
+
 		div.setBorder(new EmptyBorder(5, 0, 5, 0));
 		return div;
 	}
+
 	public static JPanel createNameAndTextField2(JTextField jtext, String nameLabel) {
 
 		JPanel div = new JPanel(new BorderLayout());
@@ -106,7 +117,7 @@ public class Generate_All {
 		div.setBorder(new EmptyBorder(5, 30, 5, 30));
 		return div;
 	}
-	
+
 	public static class CustomTableCellRenderer extends DefaultTableCellRenderer {
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
@@ -137,6 +148,7 @@ public class Generate_All {
 		return t3;
 
 	}
+
 	public static JPanel createJcombobox2(String labelString, JComboBox cb) {
 		JPanel t3 = new JPanel(new BorderLayout());
 		t3.add(sampleModel2(labelString), BorderLayout.WEST);
@@ -146,6 +158,7 @@ public class Generate_All {
 		return t3;
 
 	}
+
 	public static JPanel createTextArea(String label, JTextArea jtextNote) {
 
 		JPanel note = new JPanel(new BorderLayout());
@@ -153,7 +166,7 @@ public class Generate_All {
 		note.add(jtextNote, BorderLayout.CENTER);
 		jtextNote.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
 		note.setPreferredSize(new Dimension(100, 200));
-		
+
 		return note;
 	}
 
@@ -162,112 +175,130 @@ public class Generate_All {
 
 		return rd;
 	}
+
 	public static String getValueStringInJTextField(Object object) {
 		JTextField textField = (JTextField) object;
 		return textField.getText();
 	}
+
 	public static double getValueDoubleỊntextField(Object object) {
 		JTextField textField = (JTextField) object;
 		return Double.parseDouble(textField.getText());
-			
+
 	}
+
 	public static int getValueIntỊntextField(Object object) {
 		JTextField textField = (JTextField) object;
-		return Integer.parseInt(textField.getText());		
+		return Integer.parseInt(textField.getText());
 	}
-	public static String getValueInComboBox(Object combo) {
-		 JComboBox cb = (JComboBox)combo;
-		return cb.getSelectedItem().toString();
+
+	public static String getValueInComboBox(JComboBox combo) {
+
+		return combo.getSelectedItem().toString();
 	}
+
 	public static LocalDate getDateJDateChoor(Object object) {
 		JDateChooser date = (JDateChooser) object;
 		return date.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
+
 	public static int getValueInlabel(Object object) {
 		JLabel x = (JLabel) object;
 		return Integer.parseInt(x.getText());
 	}
-	public static void hienTableKhachHang(JTable table,DefaultTableModel model,Object[][] objects) {
-		
+
+	public static String getValueStringInJlabel(Object object) {
+		JLabel x = (JLabel) object;
+		return x.getText();
+	}
+
+	public static void hienTableKhachHang(JTable table, DefaultTableModel model, Object[][] objects) {
+
 		ArrayList<KhachHang> lkh = khang.getListKhachHang();
 		for (KhachHang khachHang : lkh) {
-			String[] row = {khachHang.getMaKH(),khachHang.getTenKH(),khachHang.getDiemThanhVien()+"",khachHang.getsDT(),khachHang.getDiaCHi()};
+			String[] row = { khachHang.getMaKH(), khachHang.getTenKH(), khachHang.getDiemThanhVien() + "",
+					khachHang.getsDT(), khachHang.getDiaCHi() };
 			model.addRow(row);
-			
+
 		}
 		table.setModel(model);
 		table.addMouseListener(new MouseListener() {
-			
+
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void mouseExited(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int index = table.getSelectedRow();
 				String maKh = table.getValueAt(index, 0).toString();
 				for (KhachHang khachHang : lkh) {
 					String gender = transGender(khachHang.isGioiTinh());
-					if(khachHang.getMaKH().equals(maKh)) {
+					if (khachHang.getMaKH().equals(maKh)) {
 						((JLabel) objects[0][1]).setText(khachHang.getMaKH());
 						((JTextField) objects[1][1]).setText(khachHang.getTenKH());
 						((JDateChooser) objects[2][1]).setDate(java.sql.Date.valueOf(khachHang.getNgaySinh()));
-						((JTextField) objects[3][1]).setText(khachHang.getTuoi()+"");
+						((JTextField) objects[3][1]).setText(khachHang.getTuoi() + "");
 						((JComboBox) objects[4][1]).setSelectedItem(gender);
 						((JTextField) objects[5][1]).setText(khachHang.getsDT());
 						((JTextField) objects[6][1]).setText(khachHang.getDiaCHi());
-						((JLabel) objects[7][1]).setText(khachHang.getDiemThanhVien()+"");
+						((JLabel) objects[7][1]).setText(khachHang.getDiemThanhVien() + "");
 					}
 				}
 			}
 		});
-		
-		
+
 	}
-	public  static String transGender(boolean gender) {
-		return  gender?  "Nam" :"Nữ" ;  
-		
+
+	public static String transGender(boolean gender) {
+		return gender ? "Nam" : "Nữ";
+
 	}
-	public static void createTiTlePage(JPanel t,String label) {
+
+	public static void createTiTlePage(JPanel t, String label) {
 		JLabel title = new JLabel(label);
 		title.setHorizontalAlignment(JLabel.CENTER);
 		title.setFont(new Font("Arial", Font.BOLD, 28));
 		title.setBorder(new EmptyBorder(20, 0, 20, 0));
-		t.add(title,BorderLayout.BEFORE_FIRST_LINE);
+		t.add(title, BorderLayout.BEFORE_FIRST_LINE);
 	}
+
 	public static String formatTime(LocalDate time) {
 		DateTimeFormatter x = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		return x.format(time);	
+		return x.format(time);
 	}
+
 	public static String formatValueDouble(double result) {
 		DecimalFormat y = new DecimalFormat("#,##0.000");
-		return y.format(result);	
+		return y.format(result);
 	}
+
 	public static boolean transGenderToSQL(String gender) {
 		String x = gender;
-		boolean gt = x.equals( "Nam") ? true:false;
+		boolean gt = x.equals("Nam") ? true : false;
 		return gt;
 	}
+
 	public static String generateCustomerCode(String ma) {
 		Calendar now = Calendar.getInstance();
 
@@ -280,6 +311,7 @@ public class Generate_All {
 				+ ma.substring(2) + randomDigits;
 		return customerCode;
 	}
+
 	public static String generateCode(String kh) {
 		Calendar now = Calendar.getInstance();
 
@@ -288,7 +320,87 @@ public class Generate_All {
 
 		Random random = new Random();
 		int randomDigits = 1000 + random.nextInt(9000); // Generate 4 random digits
-		String customerCode = kh + String.format("%02d", currentDay) + String.format("%02d", currentMonth) + randomDigits;
+		String customerCode = kh + String.format("%02d", currentDay) + String.format("%02d", currentMonth)
+				+ randomDigits;
 		return customerCode;
+	}
+
+	public static void hienTableInHoaDon(JTable table, DefaultTableModel model, JTable table_product,
+			DefaultTableModel model_product, Object[][] object) {
+
+		ArrayList<HoaDon> hDons = hDon_DAO.getHoaDons();
+		for (HoaDon hoaDon : hDons) {
+			NhanVien nv = getNV(hoaDon.getMaNV().getMaNV());
+			Object[] row = { hoaDon.getMaHD(), nv.getHoTen(), hoaDon.getMaKh().getMaKH(),
+					formatTime(hoaDon.getNgayTaoHoaDon()), hoaDon.getTongTien() };
+			model.addRow(row);
+
+		}
+		table.setModel(model);
+		table.setRowSelectionInterval(0, 0);
+		defaultMouse(model_product, table_product, table.getValueAt(0, 0).toString(), table.getValueAt(0, 2).toString(),
+				object, table);
+
+		table.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				model_product.setRowCount(0);
+				int index = table.getSelectedRow();
+				String maHD = table.getValueAt(index, 0).toString();
+				defaultMouse(model_product, table_product, maHD, table.getValueAt(index, 2).toString(), object, table);
+
+			}
+		});
+
+	}
+
+	private static void defaultMouse(DefaultTableModel model_product, JTable table_product, String maHD, String maKH,
+			Object[][] obj,JTable table) {
+
+		ArrayList<ChiTietHoaDon> lChiTietHoaDons = cTietHoaDon_DAO.getcChiTietHoaDons(maHD);
+		KhachHang kh = getKH(maKH);
+		for (ChiTietHoaDon ct : lChiTietHoaDons) {
+			Object[] row_product = { ct.getMaThuoc().getMaThuoc(), ct.getTenThuoc(), ct.getDonVi(), ct.getSoLuong(),
+					ct.getDonGia(), ct.getThanhTien() };
+			model_product.addRow(row_product);
+
+		}
+		table_product.setModel(model_product);
+		((JTextField) obj[0][1]).setText(kh.getTenKH());
+		((JTextField) obj[1][1]).setText(kh.getsDT());
+		((JTextField) obj[2][1]).setText(table.getValueAt(table.getSelectedRow(), 4).toString());
+	}
+	public static NhanVien getNV(String maNv) {
+		NhanVien nv = nvDao.getNhanVienFindByID(maNv);
+		return nv;
+	}
+	public static KhachHang getKH(String maKH) {
+		KhachHang kh = khang.getKhachHangByID(maKH);
+		return kh;
 	}
 }
