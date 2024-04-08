@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Frame;
+
 import java.awt.GridLayout;
 import java.awt.Image;
 
@@ -13,11 +13,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
+
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
@@ -38,9 +36,11 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
 
 import com.toedter.calendar.JDateChooser;
 
@@ -53,22 +53,25 @@ import static experiment_UI.Generate_All.*;
 public class QuanLyThuoc_UI {
 	private JLabel labelImage;
 	private JTextField jTextMaThuoc, jTextGiaThuoc, jTextSoLuong, jTextNgaySx, jTextNgayHetHan, jTextDonVi;
-	private JComboBox cbNSX, cbLoaiThuoc, cbTuoiSD, cbNSXTim, cbLoaiThuocTim,cbTinhTrang;
+	private JComboBox cbNSX, cbLoaiThuoc, cbTuoiSD, cbNSXTim, cbLoaiThuocTim, cbTinhTrang;
 	private JCheckBox cb;
 	private JDateChooser JdateNgaySanXuat, JdateNgayHetHan;
 	private Object[][] object_inf, object_detail;
 	private JTextArea jTextTenThuoc, jTextAreaMoTa;
 	private JTable table;
 	private DefaultTableModel model;
+	private JTextField textFind ;
 	private Thuoc_DAO list_Thuoc = new Thuoc_DAO();
 
 	String pathImageShow;
 
 	public JPanel getQuanLiThuoc() {
 		JPanel container = new JPanel(new BorderLayout());
+		createTiTlePage(container, "QUẢN LÝ THUỐC");
 		container.add(searchAndfilter(), BorderLayout.CENTER);
 		container.add(inputProduct(), BorderLayout.EAST);
 		hienBangTableThuoc();
+		enterListen();
 		return container;
 	}
 
@@ -95,8 +98,8 @@ public class QuanLyThuoc_UI {
 	public JPanel findID() {
 		JPanel f = new JPanel();
 		f.setLayout(new BorderLayout());
-		JTextField text = new JTextField();
-		f.add(text, BorderLayout.CENTER);
+		textFind = new JTextField();
+		f.add(textFind, BorderLayout.CENTER);
 		f.setBorder(new EmptyBorder(5, 5, 5, 0));
 		JButton timkiemMaThuoc = buttonInPage("Tìm kiếm", "");
 		f.add(timkiemMaThuoc, BorderLayout.EAST);
@@ -131,8 +134,9 @@ public class QuanLyThuoc_UI {
 
 		JPanel t2 = new JPanel();
 		t2.setLayout(new BoxLayout(t2, BoxLayout.X_AXIS));
-		String[] optionTinhTrang = {"","sản phẩm hết hạn","sản phẩm sắp hết hạn","sản phẩm hết hàng","sản phẩm sắp hết","sản phẩm còn hạn"};
-		
+		String[] optionTinhTrang = { "", "sản phẩm hết hạn", "sản phẩm sắp hết hạn", "sản phẩm hết hàng",
+				"sản phẩm sắp hết", "sản phẩm còn hạn" };
+
 		t2.add(createJcombobox("Tình trạng", new JComboBox(optionTinhTrang)));
 
 		box1.add(t);
@@ -173,11 +177,10 @@ public class QuanLyThuoc_UI {
 	// bảng 2 tạo thông tin
 	public JPanel inputProduct() {
 		JPanel inputManager = new JPanel(new GridLayout(2, 1));
-		
+
 		inputManager.add(inputInformation());
 		inputManager.add(detailInformation());
-		
-		
+
 		return inputManager;
 	}
 
@@ -193,6 +196,7 @@ public class QuanLyThuoc_UI {
 		JPanel boxImage = new JPanel(new BorderLayout());
 
 		labelImage = new JLabel();
+		labelImage.setBorder(new EmptyBorder(10, 10, 0, 0));
 		labelImage.setPreferredSize(new Dimension(230, 150));
 		boxImage.add(labelImage, BorderLayout.CENTER);
 
@@ -253,7 +257,7 @@ public class QuanLyThuoc_UI {
 // phần 2 nữa dưới
 	public JPanel detailInformation() {
 		JPanel detail_big = new JPanel(new BorderLayout());
-		
+
 		createTitle(detail_big, "Chi tiết thông tin");
 		JPanel detail_compoment = new JPanel();
 		detail_compoment.setLayout(new BoxLayout(detail_compoment, BoxLayout.Y_AXIS));
@@ -321,16 +325,16 @@ public class QuanLyThuoc_UI {
 
 	}
 
-
 	public void hienBangTableThuoc() {
 
 		ArrayList<Thuoc> list_thuoc = list_Thuoc.getThuocDataBase();
-		
+
 		for (Thuoc thuoc : list_thuoc) {
 			NhaSanXuat nsx = thuoc.getTenNhaSanXuat();
-			
+
 			String[] row = { thuoc.getMaThuoc(), thuoc.getTenThuoc(), thuoc.getSoLuong() + "", thuoc.getGia() + "",
-					thuoc.getLoaiThuoc(), nsx.getTenNSX(), formatTime(thuoc.getNgaySanXuat()) , formatTime(thuoc.getNgayHetHan()) };
+					thuoc.getLoaiThuoc(), nsx.getTenNSX(), formatTime(thuoc.getNgaySanXuat()),
+					formatTime(thuoc.getNgayHetHan()) };
 			model.addRow(row);
 		}
 
@@ -366,28 +370,7 @@ public class QuanLyThuoc_UI {
 				String maThuocTable = table.getValueAt(index, 0).toString();
 				for (Thuoc thuoc : list_thuoc) {
 					if (thuoc.getMaThuoc().equals(maThuocTable)) {
-						jTextMaThuoc.setText(thuoc.getMaThuoc());
-						jTextTenThuoc.setText(thuoc.getTenThuoc());
-						((JTextField) object_inf[0][1]).setText(thuoc.getSoLuong() + "");
-						((JTextField) object_inf[1][1]).setText(thuoc.getGia() + "");
-
-						cbLoaiThuoc.setSelectedItem(thuoc.getLoaiThuoc());
-
-						cbNSX.setSelectedItem(thuoc.getTenNhaSanXuat().getTenNSX());
-						((JDateChooser) object_inf[4][1]).setDate(java.sql.Date.valueOf(thuoc.getNgaySanXuat()));
-						((JDateChooser) object_inf[5][1]).setDate(java.sql.Date.valueOf(thuoc.getNgayHetHan()));
-						String pathFile = thuoc.getHinhAnh();
-						File file = new File(pathFile);
-						displayImage(file);
-						((JTextField) object_detail[0][1]).setText(thuoc.getDonVi());
-						((JTextField) object_detail[1][1]).setText(thuoc.getDangBaoChe());
-						cbTuoiSD.setSelectedItem(thuoc.getDoTuoi());
-					
-						((JTextField) object_detail[3][1]).setText(thuoc.getThanhPhan());
-						((JTextField) object_detail[4][1]).setText(thuoc.getChiDinh());
-						((JTextField) object_detail[5][1]).setText(thuoc.getLieuDung());
-						((JTextField) object_detail[6][1]).setText(thuoc.getBaoQuan());
-						jTextAreaMoTa.setText(thuoc.getMoTa());
+						hienThongTin(thuoc);
 					}
 				}
 
@@ -395,7 +378,30 @@ public class QuanLyThuoc_UI {
 		});
 		table.setModel(model);
 	}
+	public void hienThongTin(Thuoc thuoc) {
+		jTextMaThuoc.setText(thuoc.getMaThuoc());
+		jTextTenThuoc.setText(thuoc.getTenThuoc());
+		((JTextField) object_inf[0][1]).setText(thuoc.getSoLuong() + "");
+		((JTextField) object_inf[1][1]).setText(thuoc.getGia() + "");
 
+		cbLoaiThuoc.setSelectedItem(thuoc.getLoaiThuoc());
+
+		cbNSX.setSelectedItem(thuoc.getTenNhaSanXuat().getTenNSX());
+		((JDateChooser) object_inf[4][1]).setDate(java.sql.Date.valueOf(thuoc.getNgaySanXuat()));
+		((JDateChooser) object_inf[5][1]).setDate(java.sql.Date.valueOf(thuoc.getNgayHetHan()));
+		String pathFile = thuoc.getHinhAnh();
+		File file = new File(pathFile);
+		displayImage(file);
+		((JTextField) object_detail[0][1]).setText(thuoc.getDonVi());
+		((JTextField) object_detail[1][1]).setText(thuoc.getDangBaoChe());
+		cbTuoiSD.setSelectedItem(thuoc.getDoTuoi());
+
+		((JTextField) object_detail[3][1]).setText(thuoc.getThanhPhan());
+		((JTextField) object_detail[4][1]).setText(thuoc.getChiDinh());
+		((JTextField) object_detail[5][1]).setText(thuoc.getLieuDung());
+		((JTextField) object_detail[6][1]).setText(thuoc.getBaoQuan());
+		jTextAreaMoTa.setText(thuoc.getMoTa());
+	}
 	public void themThuoc() {
 
 		String ma = jTextMaThuoc.getText();
@@ -425,7 +431,7 @@ public class QuanLyThuoc_UI {
 					ngaySanXuat + "", ngayHetHan + "" };
 			model.addRow(row);
 		} else {
-			JOptionPane.showMessageDialog(table, "Mã thuốc bị trùng");
+			JOptionPane.showMessageDialog(null, "Mã thuốc bị trùng");
 		}
 
 	}
@@ -460,11 +466,11 @@ public class QuanLyThuoc_UI {
 		if (!ma.equals(maThuoc)) {
 			JOptionPane.showMessageDialog(table, "Không được sửa mã thuốc");
 		} else {
-			int question = JOptionPane.showConfirmDialog(table, "Bạn có chắc muốn sửa thông tin thuốc này hay không ?",
+			int question = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn sửa thông tin thuốc này hay không ?",
 					"Chú ý", JOptionPane.YES_NO_OPTION);
 			if (question == JOptionPane.YES_OPTION) {
 				if (list_Thuoc.suaThuoc(thuoc)) {
-					JOptionPane.showMessageDialog(table, "Sửa thành công");
+					JOptionPane.showMessageDialog(null, "Sửa thành công");
 					table.setValueAt(maThuoc, index, 0);
 					table.setValueAt(ten, index, 1);
 					table.setValueAt(soLuong, index, 2);
@@ -485,8 +491,7 @@ public class QuanLyThuoc_UI {
 		jTextTenThuoc.setText("");
 		((JTextField) object_inf[0][1]).setText("");
 		((JTextField) object_inf[1][1]).setText("");
-	
-		
+
 		cbLoaiThuoc.setSelectedIndex(0);
 
 		cbNSX.setSelectedIndex(0);
@@ -527,46 +532,105 @@ public class QuanLyThuoc_UI {
 		}
 	}
 
+	private boolean regex() {
+		if (textFind.getText().equals("")) {
+			JOptionPane.showMessageDialog(null, "Phải nhập mã thuôc trước khi tìm");
+			textFind.requestFocus();
+			return false;
+		}
+//		if (table.getRowCount() > 0) {
+//			if (!table.getValueAt(model.getRowCount() - 1, 3).toString().matches("\\d+")) {
+//				JOptionPane.showMessageDialog(null, "Số lượng thuốc phải là chữ số");
+//				textMaThuocFind.requestFocus();
+//				return false;
+//			}
+//		}
+		return true;
+	}
+	public void timThuoc() {
+		if(regex()) {
+		String maThuoc = textFind.getText();
+
+		Thuoc th = list_Thuoc.getThuocByID(maThuoc);
+		if (th.getMaThuoc() != null) {
+			model.setRowCount(0);
+
+			Object[] row = { th.getMaThuoc(), th.getTenThuoc(), th.getSoLuong() + "", th.getGia() + "",
+					th.getLoaiThuoc(), th.getTenNhaSanXuat().getTenNSX(), formatTime(th.getNgaySanXuat()),
+					formatTime(th.getNgayHetHan()) };
+			model.addRow(row);
+			table.setModel(model);
+			table.setRowSelectionInterval(0, 0);
+			hienThongTin(th);
+			
+		} else {
+			JOptionPane.showMessageDialog(null, "Không tìm thấy mã thuốc trong hệ thống");
+		}
+		}
+	}
+	private void enterListen() {
+
+		ActionListener enter = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+
+					timThuoc();
+
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+
+			}
+		};
+		textFind.addActionListener(enter);
+	}
 	// tạo nút và bắt sự kiện
-		public JButton buttonInPage(String nameBtn, String pathIcon) {
-			JButton btn = createJbutton(nameBtn, pathIcon);
-			btn.setPreferredSize(new Dimension(120, 40));
+	public JButton buttonInPage(String nameBtn, String pathIcon) {
+		JButton btn = createJbutton(nameBtn, pathIcon);
+		btn.setPreferredSize(new Dimension(120, 40));
 
-			btn.addActionListener(new ActionListener() {
+		btn.addActionListener(new ActionListener() {
 
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (nameBtn.equals("Chọn hình ảnh")) {
-						chooseImage();
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (nameBtn.equals("Chọn hình ảnh")) {
+					chooseImage();
 
-					} else if (nameBtn.equals("Thêm")) {
+				} else if (nameBtn.equals("Thêm")) {
 //						String gia = ((JTextField)object_inf[1][1]).getText();
 
-						themThuoc();
+					themThuoc();
 
-					} else if (nameBtn.equals("Cập nhật")) {
+				} else if (nameBtn.equals("Cập nhật")) {
 
-						suaThuoc();
-					} else if (nameBtn.equals("Xóa trắng")) {
+					suaThuoc();
+				} else if (nameBtn.equals("Xóa trắng")) {
 
-						xoaTrang();
-					} else if (nameBtn.equals("")) {
-						model.setRowCount(0);
-						xoaTrang();
-						hienBangTableThuoc();
+					xoaTrang();
+				} else if (nameBtn.equals("")) {
+					model.setRowCount(0);
+					xoaTrang();
+					hienBangTableThuoc();
 
-					} else if (nameBtn.equals("Lọc")) {
+				} else if (nameBtn.equals("Lọc")) {
 
-						timNangCao();
-					} else {
-
-						System.out.println(nameBtn);
-					}
-
+					timNangCao();
+				} else if(nameBtn.equals("Tìm kiếm")) {
+					timThuoc();
 				}
-			});
+				else if(nameBtn.equals("Excel")) {
+					ArrayList<Thuoc> list_thuoc = list_Thuoc.getThuocDataBase();
+				writeToExcelWithFileChooser(list_thuoc);
+				}
+				else {
+				System.out.println(nameBtn);
+				}
+			}
+		});
 
-			return btn;
-		}
+		return btn;
+	}
 
 }

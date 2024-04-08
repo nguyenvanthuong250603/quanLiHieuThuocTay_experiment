@@ -3,7 +3,7 @@ package experiment_UI;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Label;
+//import java.awt.Label;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -38,6 +38,7 @@ public class DoiThuoc_UI {
 
 	public JPanel getDoiThuoc() {
 		JPanel doithuoc = new JPanel(new BorderLayout());
+		createTiTlePage(doithuoc, "QUẢN LÝ ĐỔI TRẢ THUỐC");
 		doithuoc.add(table_Exchange(), BorderLayout.CENTER);
 		doithuoc.add(inputSell(), BorderLayout.EAST);
 		return doithuoc;
@@ -46,10 +47,11 @@ public class DoiThuoc_UI {
 //center
 	public JPanel findID() {
 		JPanel f = new JPanel();
+		createTitle(f, "Tìm kiếm hóa đơn");
 		f.setLayout(new BorderLayout());
 		JTextField text = new JTextField();
 		f.add(text, BorderLayout.CENTER);
-		f.setBorder(new EmptyBorder(5, 5, 5, 0));
+//		f.setBorder(new EmptyBorder(5, 5, 5, 0));
 		JButton timkiemMaThuoc = buttonInPageExChange("Tìm", "");
 		timkiemMaThuoc.setPreferredSize(new Dimension(120, 40));
 		f.add(timkiemMaThuoc, BorderLayout.EAST);

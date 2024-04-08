@@ -1,41 +1,77 @@
 package experiment_UI;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.TabStop.Alignment;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import java.awt.Desktop;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
+import static experiment_UI.Generate_All.formatTime;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.HeadlessException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.font.TextAttribute;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.Phaser;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
+
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.toedter.calendar.JDateChooser;
 
 import dao.ChiTietHoaDon_DAO;
@@ -46,6 +82,7 @@ import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.KhachHang;
 import entity.NhanVien;
+import entity.Thuoc;
 
 public class Generate_All {
 	private static KhachHang_DAO khang = new KhachHang_DAO();
@@ -53,6 +90,220 @@ public class Generate_All {
 	private static NhanVien_DAO nvDao = new NhanVien_DAO();
 	private static ChiTietHoaDon_DAO cTietHoaDon_DAO = new ChiTietHoaDon_DAO();
 	private static KhachHang_DAO khDao = new KhachHang_DAO();
+
+	public static void generateInvoice(HoaDon hd,double tongTien, double khachDua, String khuyenMai) {
+		// Tạo một đối tượng Document
+		Document document = new Document();
+
+		try {
+
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			PdfWriter writer = PdfWriter.getInstance(document, outputStream);
+
+			BaseFont baseFont = BaseFont.createFont("library\\Arial Unicode Font.ttf", BaseFont.IDENTITY_H,
+					BaseFont.EMBEDDED);
+			com.itextpdf.text.Font font = new com.itextpdf.text.Font(baseFont, 22, com.itextpdf.text.Font.NORMAL);
+			com.itextpdf.text.Font fontsdt = new com.itextpdf.text.Font(baseFont, 18,
+					com.itextpdf.text.Font.BOLDITALIC);
+			com.itextpdf.text.Font fontHD = new com.itextpdf.text.Font(baseFont, 24, com.itextpdf.text.Font.BOLD);
+			com.itextpdf.text.Font fontWord = new com.itextpdf.text.Font(baseFont, 16, com.itextpdf.text.Font.BOLD);
+			com.itextpdf.text.Font fontWord2 = new com.itextpdf.text.Font(baseFont, 16, com.itextpdf.text.Font.NORMAL);
+			// Mở Document
+			document.open();
+
+			Paragraph title = new Paragraph("NHÀ THUỐC ÁNH DƯƠNG", font);
+			title.setAlignment(Element.ALIGN_CENTER);
+			document.add(title);
+			Paragraph diaChi = new Paragraph("Đ.C: 123- NGUYỄN VĂN C - XYZ - HCM", font);
+			diaChi.setAlignment(Element.ALIGN_CENTER);
+			document.add(diaChi);
+
+			Paragraph SDT = new Paragraph("SĐT: 0968xxxxxxx", fontsdt);
+			SDT.setAlignment(Element.ALIGN_CENTER);
+			document.add(SDT);
+			document.add(new Paragraph(""));
+
+			Paragraph tenHD = new Paragraph("HÓA ĐƠN BÁN LẺ", fontHD);
+			tenHD.setAlignment(Element.ALIGN_CENTER);
+			document.add(tenHD);
+			document.add(new Paragraph(" "));
+			document.add(new Paragraph("  "));
+			Paragraph ngayMua = new Paragraph();
+			ngayMua.add(new Phrase("Ngày mua : ", fontWord));
+			ngayMua.add(new Phrase("" + formatTime(hd.getNgayTaoHoaDon()), fontWord2));
+			ngayMua.add(Chunk.TABBING);
+			ngayMua.add(new Phrase("Mã hóa đơn :", fontWord));
+			ngayMua.add(new Phrase(hd.getMaHD(), fontWord2));
+			document.add(ngayMua);
+
+			document.add(new Paragraph("  "));
+			Paragraph nhanVien = new Paragraph();
+			nhanVien.add(new Phrase("Nhân viên : ", fontWord));
+			nhanVien.add(new Phrase(hd.getMaNV().getMaNV(), fontWord2));
+			document.add(nhanVien);
+
+			document.add(new Paragraph("  "));
+			Paragraph ten = new Paragraph();
+			ten.add(new Phrase("Tên khách hàng : ", fontWord));
+			KhachHang kh = getKH(hd.getMaKh().getMaKH(), "");
+			ten.add(new Phrase(kh.getTenKH(), fontWord2));
+			ten.add(Chunk.TABBING);
+			ten.add(new Phrase("Mã KH:", fontWord));
+			ten.add(new Phrase(hd.getMaKh().getMaKH(), fontWord2));
+
+			document.add(ten);
+
+			document.add(new Paragraph("  "));
+			LocalTime currentTime = LocalTime.now();
+
+			// Định dạng thời gian để in ra
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+			// In thời gian hiện tại với định dạng giờ:phút
+			String formattedTime = currentTime.format(formatter);
+			Paragraph thoiGian = new Paragraph(
+					"Thời gian in : " + formatTime(LocalDate.now()) + "      " + formattedTime,fontWord2);
+			thoiGian.setAlignment(Element.ALIGN_CENTER);
+			document.add(thoiGian);
+			document.add(new Paragraph("  "));
+
+			ArrayList<ChiTietHoaDon> lcthd = hd.getListChiTietHoaDon();
+			PdfPTable table = new PdfPTable(7);
+			addCell(table, "STT", fontWord);
+			addCell(table, "Mã thuốc", fontWord);
+			addCell(table, "Tên thuốc", fontWord);
+			addCell(table, "Đơn vị", fontWord);
+			addCell(table, "Số lượng", fontWord);
+			addCell(table, "Giá", fontWord);
+			addCell(table, "Thành tiền", fontWord);
+			int i = 0;
+			for (ChiTietHoaDon chiTietHoaDon : lcthd) {
+				i+=1;
+				addCell(table,i+"", fontWord2);
+				addCell(table, chiTietHoaDon.getMaThuoc().getMaThuoc(), fontWord2); // Không sử dụng font cho các cell khác
+				addCell(table, chiTietHoaDon.getTenThuoc(), fontWord2);
+				addCell(table, chiTietHoaDon.getDonVi(),fontWord2);
+				addCell(table, String.valueOf(chiTietHoaDon.getSoLuong()), fontWord2);
+				addCell(table, String.valueOf(chiTietHoaDon.getDonGia()), fontWord2);
+				addCell(table, String.valueOf(chiTietHoaDon.getThanhTien()), fontWord2);// Chuyển thành tiền thành chuỗi
+			}
+			document.add(table);
+			document.add(new Paragraph("   "));
+			
+			Paragraph khachCanTra = new Paragraph("Tiền hàng : " + tongTien, fontWord);
+			khachCanTra.setAlignment(Element.ALIGN_RIGHT);
+			document.add(khachCanTra);
+			
+			Paragraph thanhtoan = new Paragraph();
+
+			// Tạo Phrase cho điểm thành viên và thêm vào Paragraph
+			Phrase km = new Phrase("Điểm thành viên : " + khuyenMai, fontWord);
+			thanhtoan.add(km);
+
+			// Tạo một khoảng cách trắng giữa hai Phrase
+			thanhtoan.add(Chunk.TABBING);
+
+			// Thêm khoảng trắng vào Paragraph
+			
+
+			// Tạo Phrase cho tổng tiền và thêm vào Paragraph
+			Phrase km2 = new Phrase("Tổng tiền :" + hd.getTongTien(), fontWord);
+			thanhtoan.setAlignment(Element.ALIGN_RIGHT);
+			thanhtoan.add(km2);
+
+			document.add(thanhtoan);
+
+			
+			
+			document.close();
+
+			byte[] pdfBytes = outputStream.toByteArray();
+
+			File tempFile = File.createTempFile("invoice", ".pdf");
+			tempFile.deleteOnExit();
+
+			try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+				fos.write(pdfBytes);
+			}
+
+			Desktop.getDesktop().open(tempFile);
+		} catch (DocumentException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	public static void writeToExcelWithFileChooser(ArrayList<Thuoc> thuocList) {
+		JFileChooser fileChooser = new JFileChooser() {
+			@Override
+			protected JDialog createDialog(Component parent) throws HeadlessException {
+				JDialog dialog = super.createDialog(parent);
+				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+				return dialog;
+			}
+		};
+		fileChooser.setDialogTitle("Nhập tên file");
+		int userSelection = fileChooser.showSaveDialog(null);
+		// Nếu người dùng chọn nơi lưu trữ và nhấn OK
+		if (userSelection == JFileChooser.APPROVE_OPTION) {
+			try {
+				// Lấy đường dẫn đã chọn
+				String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+				// Kiểm tra xem có danh sách thuốc không
+				if (thuocList.isEmpty()) {
+					System.out.println("Không có dữ liệu để ghi vào file Excel.");
+					return;
+				}
+
+				// Tạo workbook và sheet
+				try (Workbook workbook = new XSSFWorkbook()) {
+					Sheet sheet = workbook.createSheet("Danh sách thuốc");
+
+					// Tạo hàng tiêu đề
+					Row headerRow = sheet.createRow(0);
+					String[] headers = { "Mã thuốc", "Tên thuốc", "Số lượng", "Giá", "Loại thuốc", "Nhà sản xuất",
+							"Ngày sản xuất", "Ngày hết hạn" };
+					for (int i = 0; i < headers.length; i++) {
+						Cell cell = headerRow.createCell(i);
+						cell.setCellValue(headers[i]);
+					}
+
+					// Ghi thông tin từ danh sách thuốc vào file Excel
+					int rowNum = 1;
+					for (Thuoc thuoc : thuocList) {
+						Row row = sheet.createRow(rowNum++);
+
+						row.createCell(0).setCellValue(thuoc.getMaThuoc());
+						row.createCell(1).setCellValue(thuoc.getTenThuoc());
+						row.createCell(2).setCellValue(thuoc.getSoLuong() + "");
+						row.createCell(3).setCellValue(thuoc.getGia() + "");
+						row.createCell(4).setCellValue(thuoc.getLoaiThuoc());
+						row.createCell(5).setCellValue(thuoc.getTenNhaSanXuat().getTenNSX());
+						row.createCell(6).setCellValue(formatTime(thuoc.getNgaySanXuat()));
+						row.createCell(7).setCellValue(formatTime(thuoc.getNgayHetHan()));
+					}
+
+					// Ghi workbook vào file
+					String excelFilePath = filePath + ".xlsx";
+					try (FileOutputStream fileOut = new FileOutputStream(excelFilePath)) {
+						workbook.write(fileOut);
+						JOptionPane.showMessageDialog(null, "xuất file thành công");
+						Desktop.getDesktop().open(new File(excelFilePath));
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	private static void addCell(PdfPTable table, String text, com.itextpdf.text.Font font) {
+		PdfPCell cell;
+		if (font != null) {
+			cell = new PdfPCell(new Phrase(text, font));
+			
+		} else {
+			cell = new PdfPCell(new Phrase(text));
+		}
+		table.addCell(cell);
+	}
 
 	public static JButton createJbutton(String nameButton, String pathIcon) {
 		JButton btn = new JButton(nameButton);
@@ -172,7 +423,20 @@ public class Generate_All {
 
 	public static JRadioButton customRadio(String name) {
 		JRadioButton rd = new JRadioButton(name);
+		
+	       rd.setContentAreaFilled(false);
+	        rd.setFocusPainted(false);
+	        rd.setBorderPainted(false);
 
+		rd.setBorderPainted(false);
+		 if (rd.isSelected()) {
+	        
+	            rd.setBorderPainted(false);
+	        } else {
+	           
+	            rd.setBorderPainted(true);
+	        }
+	
 		return rd;
 	}
 
@@ -263,6 +527,7 @@ public class Generate_All {
 						((JTextField) objects[5][1]).setText(khachHang.getsDT());
 						((JTextField) objects[6][1]).setText(khachHang.getDiaCHi());
 						((JLabel) objects[7][1]).setText(khachHang.getDiemThanhVien() + "");
+
 					}
 				}
 			}
@@ -289,7 +554,7 @@ public class Generate_All {
 	}
 
 	public static String formatValueDouble(double result) {
-		DecimalFormat y = new DecimalFormat("#,##0.000");
+		DecimalFormat y = new DecimalFormat("#,000");
 		return y.format(result);
 	}
 
@@ -328,7 +593,7 @@ public class Generate_All {
 	public static void hienTableInHoaDon(JTable table, DefaultTableModel model, JTable table_product,
 			DefaultTableModel model_product, Object[][] object) {
 
-		ArrayList<HoaDon> hDons = hDon_DAO.getHoaDons();
+		ArrayList<HoaDon> hDons = hDon_DAO.getHoaDonToLuuTam("");
 		for (HoaDon hoaDon : hDons) {
 			NhanVien nv = getNV(hoaDon.getMaNV().getMaNV());
 			Object[] row = { hoaDon.getMaHD(), nv.getHoTen(), hoaDon.getMaKh().getMaKH(),
@@ -337,10 +602,11 @@ public class Generate_All {
 
 		}
 		table.setModel(model);
-		table.setRowSelectionInterval(0, 0);
-		defaultMouse(model_product, table_product, table.getValueAt(0, 0).toString(), table.getValueAt(0, 2).toString(),
-				object, table);
-
+		if (table.getRowCount() >= 1) {
+			table.setRowSelectionInterval(0, 0);
+			defaultMouse(model_product, table_product, table.getValueAt(0, 0).toString(),
+					table.getValueAt(0, 2).toString(), object, table);
+		}
 		table.addMouseListener(new MouseListener() {
 
 			@Override
@@ -380,10 +646,10 @@ public class Generate_All {
 	}
 
 	private static void defaultMouse(DefaultTableModel model_product, JTable table_product, String maHD, String maKH,
-			Object[][] obj,JTable table) {
+			Object[][] obj, JTable table) {
 
 		ArrayList<ChiTietHoaDon> lChiTietHoaDons = cTietHoaDon_DAO.getcChiTietHoaDons(maHD);
-		KhachHang kh = getKH(maKH);
+		KhachHang kh = getKH(maKH, "");
 		for (ChiTietHoaDon ct : lChiTietHoaDons) {
 			Object[] row_product = { ct.getMaThuoc().getMaThuoc(), ct.getTenThuoc(), ct.getDonVi(), ct.getSoLuong(),
 					ct.getDonGia(), ct.getThanhTien() };
@@ -395,12 +661,16 @@ public class Generate_All {
 		((JTextField) obj[1][1]).setText(kh.getsDT());
 		((JTextField) obj[2][1]).setText(table.getValueAt(table.getSelectedRow(), 4).toString());
 	}
+
 	public static NhanVien getNV(String maNv) {
 		NhanVien nv = nvDao.getNhanVienFindByID(maNv);
 		return nv;
 	}
-	public static KhachHang getKH(String maKH) {
-		KhachHang kh = khang.getKhachHangByID(maKH);
+
+	public static KhachHang getKH(String maKH, String sdt) {
+		KhachHang kh = khang.getKhachHangByID(maKH, sdt);
 		return kh;
 	}
+	
+
 }

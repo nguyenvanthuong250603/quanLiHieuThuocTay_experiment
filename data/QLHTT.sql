@@ -53,7 +53,7 @@ CREATE TABLE Thuoc(
 
 GO 
 CREATE TABLE KhachHang(
-	MaKH NVARCHAR(50) NOT NULL PRIMARY KEY,
+	MaKH NVARCHAR(50)  PRIMARY KEY,
 	TenKH NVARCHAR(255),
 	NgaySinh DATE,
 	Tuoi INT,
@@ -102,10 +102,11 @@ INSERT INTO Thuoc VALUES ('TH001',N'Bảo thanh 3',20,10000,N'Thuốc sát khu�
 INSERT INTO Thuoc VALUES ('TH006',N'Bảo thanh 3',20,10000,N'Thuốc sát khuẩn , khử trùng','CTY SX1','2024-01-30','2025-01-30','C:\Users\ADMIN\Downloads\TRAI-NGHIEM-CUOC-SONG-DINH-CU-O-ANH-1.jpg',N'Hộp 1 vĩ x 5 viên nén',N'Dạng viên nén',N'Từ 2-11 tuổi','thanhphan2','thanhphan2','thanhphan2','thanhphan2','thanhphan2');
 
 GO 
+
 SELECT *FROM HoaDon 
 
-SELECT *FROM HoaDon WHERE MaHD ='HĐ06040015348'
 SELECT *FROM ChiTietHoaDon
+SELECT *FROM HoaDon WHERE MaHD ='HĐ06040015348'
 GO
 INSERT INTO NhanVien VALUES ('NV001',N'Nguyễn Văn Thương',1,'2003-06-25',20,'0794571318','067203000247',N'ĐĂK NÔNG',N'Quản lý','2024-03-20');
 
@@ -115,4 +116,6 @@ GO
 INSERT INTO KhachHang VALUES('KH001',N'Nguyễn Văn Nam','2024-03-19','20',1,'01213562326','Đăk lăk',100)
 INSERT INTO KhachHang VALUES('KH002',N'Nguyễn Thị Đào','2024-03-19','20',0,'01213562326','Đăk lăk',2000)
 
+INSERT INTO HoaDon VALUES ('HĐ07040018425', 'NV001', null, '', 'Tiền mặt', '2024-04-07', 0, 'Mới bán', 0.0)
+ 
 

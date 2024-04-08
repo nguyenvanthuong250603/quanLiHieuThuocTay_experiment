@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+
 import static connectDataBase.ConnectionData.*;
 import static dao.Trage_DAO.*;
 import entity.NhaSanXuat;
@@ -51,7 +53,7 @@ public class Thuoc_DAO {
 
 	public boolean themThuoc(Thuoc thuoc) {
 
-		ArrayList<Thuoc> list_thuoc = new ArrayList<>();
+		ArrayList<Thuoc> list_thuoc = getThuocDataBase();
 
 		Connection con = accessDataBase();
 		NhaSanXuat nsx = thuoc.getTenNhaSanXuat();
@@ -82,9 +84,10 @@ public class Thuoc_DAO {
 				p.setString(16, thuoc.getBaoQuan());
 				p.setString(17, thuoc.getMoTa());
 				p.executeUpdate();
-
+				return true;
 			} catch (Exception e) {
-				e.printStackTrace();
+				
+				return false;
 			}
 			finally {
 				try {
@@ -95,7 +98,7 @@ public class Thuoc_DAO {
 					e.printStackTrace();
 				}
 			}
-			return true;
+			
 		}
 
 	}
@@ -162,20 +165,23 @@ public class Thuoc_DAO {
 		PreparedStatement p = null;
 		try {
 
-			String sql = "SELECT * FROM Thuoc WHERE Thuoc.NhaSanXuat = ? AND Thuoc.LoaiThuoc = ?";
-//		      if(!NSX.equals("")&&loaiThuoc.equals("")) {
-//		    	  sql += "SELECT *FROM Thuoc WHERE Thuoc.NhaSanXuat = ?";
-//		      }else if(NSX.equals("")&&!loaiThuoc.equals("")) {
-//		    	  sql += "SELECT *FROM Thuoc WHERE Thuoc.loaiThuoc = ?";
-//		      }else {
-//		    	  sql+="SELECT * FROM Thuoc WHERE Thuoc.NhaSanXuat = ? AND Thuoc.LoaiThuoc = ?";
-//		      }
+			String sql ;
+		      if(!NSX.equals("")&&loaiThuoc.equals("")) {
+		    	  sql = "SELECT *FROM Thuoc WHERE Thuoc.NhaSanXuat = ?";
+		    	  p = con.prepareStatement(sql);
+					p.setString(1, NSX);
+		    	  
+		      }else if(NSX.equals("")&&!loaiThuoc.equals("")) {
+		    	  sql = "SELECT *FROM Thuoc WHERE Thuoc.loaiThuoc = ?";
+		    	  p = con.prepareStatement(sql);
+					p.setString(1, loaiThuoc);
+		      }else {
+		    	  sql="SELECT * FROM Thuoc WHERE Thuoc.NhaSanXuat = ? AND Thuoc.LoaiThuoc = ?";
+		    	  p = con.prepareStatement(sql);
+		    	  p.setString(1, NSX);
+		    	  p.setString(2, loaiThuoc);
+		      }
 
-			p = con.prepareStatement(sql);
-
-			// Đặt giá trị cho các tham số
-			p.setString(1, NSX);
-			p.setString(2, loaiThuoc);
 
 			ResultSet rs = p.executeQuery();
 			while (rs.next()) {

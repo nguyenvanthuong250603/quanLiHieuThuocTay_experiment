@@ -54,7 +54,7 @@ public class Default_UI {
 		jFrame.setTitle("Hiệu Thuốc Ánh Dương");
 		jFrame.setExtendedState(jFrame.MAXIMIZED_BOTH);
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		String iconPath = "gift\\store.png";
+		String iconPath = "gift\\logo1.jpg";
 		ImageIcon icon = new ImageIcon(iconPath);
 		Image iconImage = icon.getImage();
 		jFrame.setIconImage(iconImage);
@@ -69,11 +69,12 @@ public class Default_UI {
 		container = new JPanel();
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
+		container.add(createQuanLyThuoc(), T);
 		container.add(createBanThuoc(MaNV), BT);
 		container.add(createHoaDon(),HĐBT);
 		container.add(createNhanVien(),NV);
 		container.add(createKhachHang(),KH);
-		container.add(createQuanLyThuoc(), T);
+		
 		container.add(createDoiThuoc(), DT);
 		container.add(createQuanLyNhapThuoc(),TDNT);
 		container.add(createNhapThuoc(),HDNT);
@@ -223,9 +224,9 @@ public class Default_UI {
 
 	public JPanel brand(String MaNV) {
 		JPanel compomet = new JPanel(new BorderLayout());
-		ImageIcon iconn = new ImageIcon("gift\\storee.png");
+		ImageIcon iconn = new ImageIcon("gift\\logo1.jpg");
 		JLabel text = new JLabel(iconn);
-		text.setText("Cửa Hàng");
+		text.setText("ÁNH DƯƠNG");
 		text.setFont(new Font("Arial", Font.BOLD, 30));
 		text.setForeground(Color.WHITE);
 		text.setIconTextGap(20);

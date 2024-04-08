@@ -45,14 +45,18 @@ public class KhachHang_DAO {
 		return lkh;
 	}
 
-	public KhachHang getKhachHangByID(String maKh) {
+	public KhachHang getKhachHangByID(String maKh,String sdt) {
 		Connection con = connectDataBase.ConnectionData.accessDataBase();
 		KhachHang kh = new KhachHang();
 		PreparedStatement p = null;
 		try {
-
+			if(!maKh.equals("")) {
 			p = con.prepareStatement("SELECT *FROM KhachHang WHERE MaKH= ?");
 			p.setString(1, maKh);
+			}else {
+				p = con.prepareStatement("SELECT *FROM KhachHang WHERE MaKH IN(SELECT MaKH FROM KhachHang WHERE SDT = ?)");
+				p.setString(1, sdt);
+			}
 			try (ResultSet rs = p.executeQuery()) {
 
 				while (rs.next()) {
@@ -79,6 +83,13 @@ public class KhachHang_DAO {
 	}
 
 	public boolean themKhachHang(KhachHang kh) {
+		ArrayList<KhachHang> khang = getListKhachHang();
+		if(khang.equals(kh.getsDT())) {
+			return false;
+		}
+		else {
+			
+		
 		Connection con = connectDataBase.ConnectionData.accessDataBase();
 		PreparedStatement p = null;
 		try {
@@ -97,6 +108,7 @@ public class KhachHang_DAO {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		} finally {
 			try {
 				if (con != null) {
@@ -106,6 +118,7 @@ public class KhachHang_DAO {
 				e.printStackTrace();
 			}
 		}
-		return false;
+		
+		}
 	}
 }
