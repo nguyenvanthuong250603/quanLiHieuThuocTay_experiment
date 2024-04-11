@@ -6,6 +6,7 @@ import static dao.Trage_DAO.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -21,7 +22,7 @@ import entity.Thuoc;
 public class HoaDon_DAO {
 	private static ChiTietHoaDon_DAO lcthd = new ChiTietHoaDon_DAO();
 
-	public  ArrayList<HoaDon> getHoaDons() {
+	public ArrayList<HoaDon> getHoaDons() {
 		ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
 		Connection con = accessDataBase();
 		try {
@@ -30,7 +31,7 @@ public class HoaDon_DAO {
 			while (rs.next()) {
 				HoaDon hd = new HoaDon(rs.getString(1), new NhanVien(rs.getString(2)), new KhachHang(rs.getString(3)),
 						rs.getString(4), rs.getString(5), chageTimeSQL(rs.getDate(6)),
-						changeLoaiThuocToSQLFromUI(rs.getInt(7)), rs.getString(8), rs.getDouble(9),
+						changeLoaiThuocToSQLFromUI(rs.getInt(7)), rs.getString(8), rs.getDouble(9),rs.getString(10),
 						lcthd.getcChiTietHoaDons(rs.getString(1)));
 
 				lhd.add(hd);
@@ -52,7 +53,7 @@ public class HoaDon_DAO {
 		return lhd;
 	}
 
-	public  boolean themHoaDon(HoaDon hd) {
+	public boolean themHoaDon(HoaDon hd) {
 		ArrayList<HoaDon> lhd = getHoaDons();
 		Connection con = accessDataBase();
 		PreparedStatement p = null;
@@ -63,16 +64,16 @@ public class HoaDon_DAO {
 		} else {
 
 			try {
-				p = con.prepareStatement("INSERT INTO HoaDon VALUES (?,?,?,?,?,?,?,?,?)");
+				p = con.prepareStatement("INSERT INTO HoaDon VALUES (?,?,?,?,?,?,?,?,?,?)");
 				p.setString(1, maHD);
 				p.setString(2, hd.getMaNV().getMaNV());
-				
+
 				if (hd.getMaKh().getMaKH().equals("")) {
-				    p.setNull(3, java.sql.Types.VARCHAR);
+					p.setNull(3, java.sql.Types.VARCHAR);
 				} else {
-				    p.setString(3, hd.getMaKh().getMaKH());
+					p.setString(3, hd.getMaKh().getMaKH());
 				}
-				
+
 				p.setString(4, hd.getTenKH());
 				p.setString(5, hd.getHinhThucThanhToan());
 				p.setDate(6, java.sql.Date.valueOf(hd.getNgayTaoHoaDon()));
@@ -85,7 +86,11 @@ public class HoaDon_DAO {
 				}
 				p.setString(8, hd.getTinhTrang());
 				p.setDouble(9, hd.getTongTien());
-	
+				
+					p.setString(10, hd.getLyDo());
+							
+				
+
 				p.executeUpdate();
 				ArrayList<ChiTietHoaDon> lcthd = hd.getListChiTietHoaDon();
 				pct = con.prepareStatement("INSERT INTO ChiTietHoaDon VALUES(?,?,?,?,?,?,?)");
@@ -99,10 +104,10 @@ public class HoaDon_DAO {
 					pct.setDouble(7, chiTietHoaDon.getThanhTien());
 					pct.executeUpdate();
 				}
-			
+
 				return true;
 			} catch (Exception e) {
-				
+
 				return false;
 			} finally {
 				try {
@@ -138,7 +143,7 @@ public class HoaDon_DAO {
 
 					hd = new HoaDon(rs.getString(1), new NhanVien(rs.getString(2)), new KhachHang(rs.getString(3)),
 							rs.getString(4), rs.getString(5), chageTimeSQL(rs.getDate(6)), loaihd, rs.getString(8),
-							rs.getDouble(9), ct.getcChiTietHoaDons(maHD));
+							rs.getDouble(9), rs.getString(10),ct.getcChiTietHoaDons(maHD));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -163,7 +168,6 @@ public class HoaDon_DAO {
 
 		Connection con = accessDataBase();
 		PreparedStatement p = null;
-		
 
 		try {
 			p = con.prepareStatement("UPDATE HoaDon SET LoaiHoaDon = ?, TinhTrang = ? WHERE MaHD = ?");
@@ -195,22 +199,43 @@ public class HoaDon_DAO {
 			}
 		}
 
-		
 	}
-	public ArrayList<HoaDon> getHoaDonToLuuTam(String tinhTrang) {
+
+	public ArrayList<HoaDon> getHoaDonToLuuTam(String sdt, int LoaiHD) {
 		ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
 		Connection con = accessDataBase();
 		PreparedStatement p = null;
-
 		try {
-			p = con.prepareStatement("SELECT *FROM HoaDon WHERE tinhTrang = ?");
-			p.setString(1, tinhTrang);
+			
+			if (sdt.equals("")) {
+				p = con.prepareStatement("SELECT *FROM HoaDon WHERE  LoaiHoaDon " + (LoaiHD==3 ? "IS NULL" : "= ?"));
+				if (LoaiHD !=3 ) {
+				    p.setInt(1, LoaiHD);
+				}
+
+			} else if (LoaiHD!=0 || LoaiHD !=1) {
+				p = con.prepareStatement(
+						"SELECT *FROM HoaDon WHERE  MaKH IN (SELECT MaKH FROM KhachHang WHERE SDT =?)");
+				p.setString(1, sdt);
+			}else if(!sdt.equals("")&&LoaiHD==3){
+				p = con.prepareStatement(
+						"SELECT *FROM HoaDon WHERE LoaiHoaDon IS NULL AND  MaKH IN (SELECT MaKH FROM KhachHang WHERE SDT =?)");
+				p.setInt(1, LoaiHD);
+				p.setString(2, sdt);
+			}
+			else {
+				p = con.prepareStatement(
+						"SELECT *FROM HoaDon WHERE LoaiHoaDon = ? AND  MaKH IN (SELECT MaKH FROM KhachHang WHERE SDT =?)");
+				p.setInt(1, LoaiHD);
+				p.setString(2, sdt);
+
+			}
 			try (ResultSet rs = p.executeQuery()) {
 				while (rs.next()) {
-					HoaDon hd = new HoaDon(rs.getString(1), new NhanVien(rs.getString(2)), new KhachHang(rs.getString(3)),
-							rs.getString(4), rs.getString(5), chageTimeSQL(rs.getDate(6)),
-							changeLoaiThuocToSQLFromUI(rs.getInt(7)), rs.getString(8), rs.getDouble(9),
-							lcthd.getcChiTietHoaDons(rs.getString(1)));
+					HoaDon hd = new HoaDon(rs.getString(1), new NhanVien(rs.getString(2)),
+							new KhachHang(rs.getString(3)), rs.getString(4), rs.getString(5),
+							chageTimeSQL(rs.getDate(6)), changeLoaiThuocToSQLFromUI(rs.getInt(7)), rs.getString(8),
+							rs.getDouble(9), rs.getString(10),lcthd.getcChiTietHoaDons(rs.getString(1)));
 
 					lhd.add(hd);
 				}
@@ -232,6 +257,25 @@ public class HoaDon_DAO {
 		}
 
 		return lhd;
+	}
+	public boolean xoaHoaDonLuuTam(String maHD) {
+		Connection con = accessDataBase();
+		PreparedStatement p =null;
+		
+		try {
+			p  = con.prepareStatement("DELETE HoaDon " +(!maHD.equals("")? " WHERE  MaHD= ?": "WHERE LoaiHoaDon IS NULL"));
+			if(!maHD.equals("")) {
+				p.setString(1, maHD);
+			}
+			p.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		
+		
 	}
 
 }

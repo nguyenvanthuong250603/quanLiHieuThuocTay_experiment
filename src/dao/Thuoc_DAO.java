@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import javax.swing.table.DefaultTableCellRenderer;
+
 import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 import static connectDataBase.ConnectionData.*;
@@ -37,8 +39,7 @@ public class Thuoc_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			try {
 				if (con != null) {
 					con.close();
@@ -86,10 +87,73 @@ public class Thuoc_DAO {
 				p.executeUpdate();
 				return true;
 			} catch (Exception e) {
-				
+
 				return false;
+			} finally {
+				try {
+					if (con != null) {
+						con.close();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
-			finally {
+
+		}
+
+	}
+
+	public boolean suaThuoc(Thuoc thuoc, int soLuong, String ma) {
+
+		ArrayList<Thuoc> list_thuoc = new ArrayList<>();
+
+		Connection con = accessDataBase();
+		NhaSanXuat nsx = thuoc.getTenNhaSanXuat();
+		PreparedStatement p = null;
+
+		if (list_thuoc.contains(thuoc)) {
+			return false;
+		} else {
+			try {
+				if (ma.equals("") && soLuong ==0) {
+					p = con.prepareStatement(
+							"UPDATE Thuoc SET TenThuoc = ? ,SoLuong = ?,Gia = ?,LoaiThuoc=?,NhaSanXuat=?,"
+									+ "NgaySanXuat=?,NgayHetHan=?,HinhAnh=?,"
+									+ "DonVi = ?,DangBaoChe =  ?,DoTuoi =?,ThanhPhan=?,ChiDinh=?,LieuDung=?,BaoQuan=?,MoTa=? WHERE MaThuoc = ?");
+
+					p.setString(1, thuoc.getTenThuoc());
+					p.setInt(2, thuoc.getSoLuong());
+					p.setDouble(3, thuoc.getGia());
+
+					p.setString(4, thuoc.getLoaiThuoc());
+
+					p.setString(5, nsx.getTenNSX());
+					p.setDate(6, java.sql.Date.valueOf(thuoc.getNgaySanXuat()));
+					p.setDate(7, java.sql.Date.valueOf(thuoc.getNgayHetHan()));
+					p.setString(8, thuoc.getHinhAnh());
+					p.setString(9, thuoc.getDonVi());
+					p.setString(10, thuoc.getDangBaoChe());
+					p.setString(11, thuoc.getDoTuoi());
+
+					p.setString(12, thuoc.getThanhPhan());
+					p.setString(13, thuoc.getChiDinh());
+					p.setString(14, thuoc.getLieuDung());
+					p.setString(15, thuoc.getBaoQuan());
+					p.setString(16, thuoc.getMoTa());
+					p.setString(17, thuoc.getMaThuoc());
+					p.executeUpdate();
+					return true;
+				} else {
+					p = con.prepareStatement("UPDATE Thuoc SET SoLuong = ? WHERE MaThuoc = ?");
+					p.setInt(1, soLuong);
+					p.setString(2, ma);
+					p.executeUpdate();
+					return true;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			} finally {
 				try {
 					if (con != null) {
 						con.close();
@@ -103,85 +167,28 @@ public class Thuoc_DAO {
 
 	}
 
-	public boolean suaThuoc(Thuoc thuoc) {
-
-		ArrayList<Thuoc> list_thuoc = new ArrayList<>();
-
-		Connection con = accessDataBase();
-		NhaSanXuat nsx = thuoc.getTenNhaSanXuat();
-		PreparedStatement p = null;
-
-		if (list_thuoc.contains(thuoc)) {
-			return false;
-		} else {
-			try {
-				p = con.prepareStatement(
-						"UPDATE Thuoc SET TenThuoc = ? ,SoLuong = ?,Gia = ?,LoaiThuoc=?,NhaSanXuat=?,"
-						+ "NgaySanXuat=?,NgayHetHan=?,HinhAnh=?,"
-						+ "DonVi = ?,DangBaoChe =  ?,DoTuoi =?,ThanhPhan=?,ChiDinh=?,LieuDung=?,BaoQuan=?,MoTa=? WHERE MaThuoc = ?");
-
-				p.setString(1, thuoc.getTenThuoc());
-				p.setInt(2, thuoc.getSoLuong());
-				p.setDouble(3, thuoc.getGia());
-
-				p.setString(4, thuoc.getLoaiThuoc());
-
-				p.setString(5, nsx.getTenNSX());
-				p.setDate(6, java.sql.Date.valueOf(thuoc.getNgaySanXuat()));
-				p.setDate(7, java.sql.Date.valueOf(thuoc.getNgayHetHan()));
-				p.setString(8, thuoc.getHinhAnh());
-				p.setString(9, thuoc.getDonVi());
-				p.setString(10, thuoc.getDangBaoChe());
-				p.setString(11, thuoc.getDoTuoi());
-
-				p.setString(12, thuoc.getThanhPhan());
-				p.setString(13, thuoc.getChiDinh());
-				p.setString(14, thuoc.getLieuDung());
-				p.setString(15, thuoc.getBaoQuan());
-				p.setString(16, thuoc.getMoTa());
-				p.setString(17, thuoc.getMaThuoc());
-				p.executeUpdate();
-				System.out.println(p.executeUpdate());
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
-			finally {
-				try {
-					if (con != null) {
-						con.close();
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			return true;
-		}
-
-	}
-
 	public ArrayList<Thuoc> timThuoc(String NSX, String loaiThuoc) {
 		ArrayList<Thuoc> list_Thuoc = new ArrayList<Thuoc>();
 		Connection con = accessDataBase();
 		PreparedStatement p = null;
 		try {
 
-			String sql ;
-		      if(!NSX.equals("")&&loaiThuoc.equals("")) {
-		    	  sql = "SELECT *FROM Thuoc WHERE Thuoc.NhaSanXuat = ?";
-		    	  p = con.prepareStatement(sql);
-					p.setString(1, NSX);
-		    	  
-		      }else if(NSX.equals("")&&!loaiThuoc.equals("")) {
-		    	  sql = "SELECT *FROM Thuoc WHERE Thuoc.loaiThuoc = ?";
-		    	  p = con.prepareStatement(sql);
-					p.setString(1, loaiThuoc);
-		      }else {
-		    	  sql="SELECT * FROM Thuoc WHERE Thuoc.NhaSanXuat = ? AND Thuoc.LoaiThuoc = ?";
-		    	  p = con.prepareStatement(sql);
-		    	  p.setString(1, NSX);
-		    	  p.setString(2, loaiThuoc);
-		      }
+			String sql;
+			if (!NSX.equals("") && loaiThuoc.equals("")) {
+				sql = "SELECT *FROM Thuoc WHERE Thuoc.NhaSanXuat = ?";
+				p = con.prepareStatement(sql);
+				p.setString(1, NSX);
 
+			} else if (NSX.equals("") && !loaiThuoc.equals("")) {
+				sql = "SELECT *FROM Thuoc WHERE Thuoc.loaiThuoc = ?";
+				p = con.prepareStatement(sql);
+				p.setString(1, loaiThuoc);
+			} else {
+				sql = "SELECT * FROM Thuoc WHERE Thuoc.NhaSanXuat = ? AND Thuoc.LoaiThuoc = ?";
+				p = con.prepareStatement(sql);
+				p.setString(1, NSX);
+				p.setString(2, loaiThuoc);
+			}
 
 			ResultSet rs = p.executeQuery();
 			while (rs.next()) {
@@ -224,8 +231,7 @@ public class Thuoc_DAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			try {
 				if (con != null) {
 					con.close();

@@ -69,13 +69,13 @@ public class Default_UI {
 		container = new JPanel();
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
-		container.add(createQuanLyThuoc(), T);
+		container.add(createDoiThuoc(), DT);
 		container.add(createBanThuoc(MaNV), BT);
+		container.add(createQuanLyThuoc(), T);
 		container.add(createHoaDon(),HĐBT);
 		container.add(createNhanVien(),NV);
 		container.add(createKhachHang(),KH);
 		
-		container.add(createDoiThuoc(), DT);
 		container.add(createQuanLyNhapThuoc(),TDNT);
 		container.add(createNhapThuoc(),HDNT);
 		jFrame.add(sidebar, BorderLayout.WEST);
@@ -86,7 +86,7 @@ public class Default_UI {
 
 	public JPanel createCompoment(String iconRight, String nameButton, String iconLeft, boolean type) {
 		JPanel compoment = new JPanel(new BorderLayout());
-		compoment.setBackground(new Color(0, 132, 255));
+	
 		AbstractButton btn;
 
 		if (type) {
@@ -102,7 +102,7 @@ public class Default_UI {
 					new Dimension(compoment.getPreferredSize().width + 260, btn.getPreferredSize().height + 40));
 		}
 
-		btn.setBackground(new Color(0, 132, 255));
+		btn.setBackground(new Color(89,168,104));
 		btn.setFocusPainted(false);
 		btn.setBorder(new EmptyBorder(0, 20, 0, 10));
 
@@ -122,7 +122,7 @@ public class Default_UI {
 			public void actionPerformed(ActionEvent e) {
 				if (type) {
 					if (selectedButton != null) {
-						selectedButton.setBackground(new Color(0, 132, 255));
+						selectedButton.setBackground(new Color(89,168,104 ));
 					}
 					btn.setBackground(Color.red);
 					selectedButton = btn;
@@ -206,7 +206,7 @@ public class Default_UI {
 	public JPanel west(String MaNV) {
 		JPanel westt = new JPanel();
 		Box boxx = Box.createVerticalBox();
-		westt.setBackground(new Color(0, 132, 255));
+		westt.setBackground(new Color(89,168,104));
 		boxx.add(brand(MaNV));
 
 		boxx.add(createCompoment("gift\\thuoc.png", "Bán thuốc", "gift\\thuoc.png", true));
@@ -224,21 +224,21 @@ public class Default_UI {
 
 	public JPanel brand(String MaNV) {
 		JPanel compomet = new JPanel(new BorderLayout());
-		ImageIcon iconn = new ImageIcon("gift\\logo1.jpg");
+		ImageIcon iconn = new ImageIcon("gift\\logo2.png");
 		JLabel text = new JLabel(iconn);
-		text.setText("ÁNH DƯƠNG");
-		text.setFont(new Font("Arial", Font.BOLD, 30));
-		text.setForeground(Color.WHITE);
+//		text.setText("ÁNH DƯƠNG");
+//		text.setFont(new Font("Arial", Font.BOLD, 30));
+//		text.setForeground(Color.WHITE);
 		text.setIconTextGap(20);
 		compomet.setBorder(new EmptyBorder(20, 0, 10, 20));
-		compomet.setBackground(new Color(0, 132, 255));
+		compomet.setBackground(new Color(89,168,104 ));
 		compomet.add(text,BorderLayout.NORTH);
 		
 		NhanVien nv = nv_Dao.getNhanVienFindByID(MaNV);
-		JLabel x = new JLabel(nv.getChucVu() + ":"+ nv.getHoTen());
-		x.setFont(new Font("Arial", Font.BOLD, 16));
-		x.setBorder(new EmptyBorder(10, 10, 10, 0));
-		
+		JLabel x = new JLabel(nv.getChucVu() + " :  "+ nv.getHoTen());
+		x.setFont(new Font("Arial", Font.BOLD, 18));
+		x.setBorder(new EmptyBorder(15, 10, 0, 0));
+		x.setForeground(Color.WHITE);
 		
 		compomet.add(x,BorderLayout.AFTER_LAST_LINE);
 		return compomet;

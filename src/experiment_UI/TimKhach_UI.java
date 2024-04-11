@@ -67,7 +67,7 @@ public class TimKhach_UI {
 		hienTableKhachHang(table, model, objects_custommer);
 		renderTuoi();
 		((JLabel) objects_custommer[0][1]).setText(generateCode("KH"));
-
+		
 		frame.setVisible(true);
 		frame.setResizable(false);
 		this.Jtext_maKH = maKH;
@@ -270,8 +270,8 @@ public class TimKhach_UI {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(150, 40));
 		btn.addActionListener(e -> {
-
 			if (nameButton.equals("Thoát")) {
+				
 				frame.dispose();
 			} else if (nameButton.equals("Chọn")) {
 				serviceTimKhach();
@@ -299,7 +299,8 @@ public class TimKhach_UI {
 						JOptionPane.showMessageDialog(null, "Không có số điện thoại nào trùng với mã trên");
 					}
 				
-			} else if(nameButton.equals("")){
+			} else if(nameButton.equals("btnReset")){
+				System.out.println(nameButton);
 				model.setRowCount(0);
 				((JLabel) objects_custommer[0][1]).setText(generateCode("KH"));
 				hienTableKhachHang(table, model,  objects_custommer);
@@ -311,6 +312,9 @@ public class TimKhach_UI {
 				((JTextField) objects_custommer[5][1]).setText("");
 				((JTextField) objects_custommer[6][1]).setText("");
 				((JLabel)objects_custommer[7][1]).setText("");
+			}
+			else {
+				System.out.println(nameButton);
 			}
 		});
 		return btn;

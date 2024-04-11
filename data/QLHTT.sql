@@ -13,8 +13,9 @@ CREATE TABLE NhanVien (
     cccd VARCHAR(20),
 	DiaChi NVARCHAR(255),
     ChucVu NVARCHAR(50),
-	
-    NgayVaoLam DATE
+	TinhTrang NVARCHAR(50),
+    NgayVaoLam DATE,
+	HinhAnh NVARCHAR(255)
 );
 GO
 CREATE TABLE TaiKhoan (
@@ -75,6 +76,7 @@ CREATE TABLE HoaDon(
 	LoaiHoaDon BIT,
 	TinhTrang NVARCHAR(255),
 	TongTien FLOAT,
+	Lydo NVARCHAR(255),
 	FOREIGN KEY (MaNV) REFERENCES nhanVien(MaNV),
 	FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH)
 )
@@ -103,19 +105,30 @@ INSERT INTO Thuoc VALUES ('TH006',N'Bảo thanh 3',20,10000,N'Thuốc sát khu�
 
 GO 
 
-SELECT *FROM HoaDon 
 
-SELECT *FROM ChiTietHoaDon
-SELECT *FROM HoaDon WHERE MaHD ='HĐ06040015348'
 GO
-INSERT INTO NhanVien VALUES ('NV001',N'Nguyễn Văn Thương',1,'2003-06-25',20,'0794571318','067203000247',N'ĐĂK NÔNG',N'Quản lý','2024-03-20');
+INSERT INTO NhanVien VALUES ('NV001',N'Nguyễn Văn Thương',1,'2003-06-25',20,'0794571318','067203000247',N'ĐĂK NÔNG',N'Quản lý',N'Đang làm','2024-03-20','');
+
 
 GO
 INSERT INTO TaiKhoan VALUES('NV001','123')
 GO  
 INSERT INTO KhachHang VALUES('KH001',N'Nguyễn Văn Nam','2024-03-19','20',1,'01213562326','Đăk lăk',100)
 INSERT INTO KhachHang VALUES('KH002',N'Nguyễn Thị Đào','2024-03-19','20',0,'01213562326','Đăk lăk',2000)
+INSERT INTO KhachHang VALUES('KH003',N'Nguyễn Văn Hoàng','2024-03-19','20',0,'0794571318','Đăk lăk',20)
+INSERT INTO HoaDon VALUES ('HĐ07040018486', 'NV001', null, '', N'Tiền mặt', '2024-04-07', 0, N'Mới bán', 0.0,'')
+INSERT INTO HoaDon VALUES ('HĐ07040018485', 'NV001', 'KH001', '', N'Tiền mặt', '2024-04-07', null, N'Mới bán', 0.0,'')
+ ------------------------------------------------------------
+SELECT *FROM HoaDon 
+SELECT *FROM KhachHang
+SELECT *FROM ChiTietHoaDon
+SELECT *FROM NhanVien
+SELECT *FROM TaiKhoan
+SELECT *FROM NhaSanXuat
+SELECT *FROM Thuoc
+SELECT *FROM HoaDon WHERE MaHD ='HĐ11040019268'
+SELECT *FROM HoaDon WHERE LoaiHoaDon IS NULL;
 
-INSERT INTO HoaDon VALUES ('HĐ07040018425', 'NV001', null, '', 'Tiền mặt', '2024-04-07', 0, 'Mới bán', 0.0)
- 
-
+------------------------------------
+DELETE HoaDon WHERE MaHD ='HĐ11040019268'
+delete ChiTietHoaDon

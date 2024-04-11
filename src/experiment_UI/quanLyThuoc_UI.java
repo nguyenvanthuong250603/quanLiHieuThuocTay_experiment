@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 
@@ -18,6 +18,7 @@ import java.time.LocalDate;
 
 import java.util.ArrayList;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -36,11 +37,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-
 
 import com.toedter.calendar.JDateChooser;
 
@@ -60,7 +59,7 @@ public class QuanLyThuoc_UI {
 	private JTextArea jTextTenThuoc, jTextAreaMoTa;
 	private JTable table;
 	private DefaultTableModel model;
-	private JTextField textFind ;
+	private JTextField textFind;
 	private Thuoc_DAO list_Thuoc = new Thuoc_DAO();
 
 	String pathImageShow;
@@ -79,6 +78,24 @@ public class QuanLyThuoc_UI {
 		JPanel managerment = new JPanel();
 		createTitle(managerment, "Danh sách sản phẩm");
 		managerment.setLayout(new BorderLayout());
+		JPanel north = new JPanel(new GridLayout(1, 5));
+		Object[][] note = { { "còn hạn", Color.white }, { "sắp hết hạn", Color.yellow }, { "hết hạn", Color.red },
+				{ "sắp hết hàng", Color.orange }, { "hết hàng", Color.BLUE } };
+
+		for (Object[] objects : note) {
+			JPanel t = new JPanel(new FlowLayout(FlowLayout.LEFT));
+//			t.setLayout(new BoxLayout(t, BoxLayout.X_AXIS));
+
+			JButton btn = new JButton("");
+			btn.setBackground(((Color) objects[1]));
+			btn.setPreferredSize(new Dimension(40, 20));
+			t.add(btn);
+			t.add(Box.createHorizontalStrut(5));
+		
+			t.add(new JLabel(objects[0].toString()));
+			btn.setEnabled(false);
+			north.add(t);
+		}
 		String[] column = { "Mã thuốc", "Tên thuốc ", "Số lượng", "Giá", "Loại thuốc", "Nhà sản xuất", "Ngày sản xuất",
 				"Ngày hết Hạn", };
 		model = new DefaultTableModel(column, 0);
@@ -88,8 +105,9 @@ public class QuanLyThuoc_UI {
 		table.setDefaultRenderer(Object.class, cellRenderer);
 		table.setShowGrid(false);
 		table.setShowVerticalLines(false);
-		table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
+		table.setDefaultRenderer(Object.class, new CustomTableCellRendererThuoc());
 		JScrollPane scoll = new JScrollPane(table);
+		managerment.add(north, BorderLayout.NORTH);
 		managerment.add(scoll, BorderLayout.CENTER);
 		managerment.add(footer_table(), BorderLayout.SOUTH);
 		return managerment;
@@ -196,8 +214,10 @@ public class QuanLyThuoc_UI {
 		JPanel boxImage = new JPanel(new BorderLayout());
 
 		labelImage = new JLabel();
+
 		labelImage.setBorder(new EmptyBorder(10, 10, 0, 0));
 		labelImage.setPreferredSize(new Dimension(230, 150));
+
 		boxImage.add(labelImage, BorderLayout.CENTER);
 
 		JButton inputImage = buttonInPage("Chọn hình ảnh", "");
@@ -378,6 +398,7 @@ public class QuanLyThuoc_UI {
 		});
 		table.setModel(model);
 	}
+
 	public void hienThongTin(Thuoc thuoc) {
 		jTextMaThuoc.setText(thuoc.getMaThuoc());
 		jTextTenThuoc.setText(thuoc.getTenThuoc());
@@ -402,6 +423,7 @@ public class QuanLyThuoc_UI {
 		((JTextField) object_detail[6][1]).setText(thuoc.getBaoQuan());
 		jTextAreaMoTa.setText(thuoc.getMoTa());
 	}
+
 	public void themThuoc() {
 
 		String ma = jTextMaThuoc.getText();
@@ -469,7 +491,7 @@ public class QuanLyThuoc_UI {
 			int question = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn sửa thông tin thuốc này hay không ?",
 					"Chú ý", JOptionPane.YES_NO_OPTION);
 			if (question == JOptionPane.YES_OPTION) {
-				if (list_Thuoc.suaThuoc(thuoc)) {
+				if (list_Thuoc.suaThuoc(thuoc,0,"")) {
 					JOptionPane.showMessageDialog(null, "Sửa thành công");
 					table.setValueAt(maThuoc, index, 0);
 					table.setValueAt(ten, index, 1);
@@ -514,7 +536,7 @@ public class QuanLyThuoc_UI {
 
 		String tenNSX = getValueInComboBox(cbNSXTim);
 		String loaithuoc = getValueInComboBox(cbLoaiThuocTim);
-		if (!tenNSX.equals("") || !loaithuoc.equals("")) {
+		if (!tenNSX.equals("") && !loaithuoc.equals("")) {
 
 			ArrayList<Thuoc> list_ThuocTim = list_Thuoc.timThuoc(tenNSX, loaithuoc);
 
@@ -547,27 +569,29 @@ public class QuanLyThuoc_UI {
 //		}
 		return true;
 	}
+
 	public void timThuoc() {
-		if(regex()) {
-		String maThuoc = textFind.getText();
+		if (regex()) {
+			String maThuoc = textFind.getText();
 
-		Thuoc th = list_Thuoc.getThuocByID(maThuoc);
-		if (th.getMaThuoc() != null) {
-			model.setRowCount(0);
+			Thuoc th = list_Thuoc.getThuocByID(maThuoc);
+			if (th.getMaThuoc() != null) {
+				model.setRowCount(0);
 
-			Object[] row = { th.getMaThuoc(), th.getTenThuoc(), th.getSoLuong() + "", th.getGia() + "",
-					th.getLoaiThuoc(), th.getTenNhaSanXuat().getTenNSX(), formatTime(th.getNgaySanXuat()),
-					formatTime(th.getNgayHetHan()) };
-			model.addRow(row);
-			table.setModel(model);
-			table.setRowSelectionInterval(0, 0);
-			hienThongTin(th);
-			
-		} else {
-			JOptionPane.showMessageDialog(null, "Không tìm thấy mã thuốc trong hệ thống");
-		}
+				Object[] row = { th.getMaThuoc(), th.getTenThuoc(), th.getSoLuong() + "", th.getGia() + "",
+						th.getLoaiThuoc(), th.getTenNhaSanXuat().getTenNSX(), formatTime(th.getNgaySanXuat()),
+						formatTime(th.getNgayHetHan()) };
+				model.addRow(row);
+				table.setModel(model);
+				table.setRowSelectionInterval(0, 0);
+				hienThongTin(th);
+
+			} else {
+				JOptionPane.showMessageDialog(null, "Không tìm thấy mã thuốc trong hệ thống");
+			}
 		}
 	}
+
 	private void enterListen() {
 
 		ActionListener enter = new ActionListener() {
@@ -586,6 +610,21 @@ public class QuanLyThuoc_UI {
 		};
 		textFind.addActionListener(enter);
 	}
+	public class CustomTableCellRendererThuoc extends CustomTableCellRenderer {
+	    @Override
+	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+	            int row, int column) {
+	        Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+	        Object cellValue = table.getValueAt(row, 0); // Lấy giá trị của cột đầu tiên
+	        if (cellValue != null && cellValue.toString().equals("TH001") && column == 0) {
+	            // Thiết lập màu nền cho cột đầu tiên của dòng "TH001" thành màu vàng
+	            component.setBackground(Color.yellow);
+	        }
+	        return component;
+	    }
+	}
+	
+	
 	// tạo nút và bắt sự kiện
 	public JButton buttonInPage(String nameBtn, String pathIcon) {
 		JButton btn = createJbutton(nameBtn, pathIcon);
@@ -617,15 +656,13 @@ public class QuanLyThuoc_UI {
 				} else if (nameBtn.equals("Lọc")) {
 
 					timNangCao();
-				} else if(nameBtn.equals("Tìm kiếm")) {
+				} else if (nameBtn.equals("Tìm kiếm")) {
 					timThuoc();
-				}
-				else if(nameBtn.equals("Excel")) {
+				} else if (nameBtn.equals("Excel")) {
 					ArrayList<Thuoc> list_thuoc = list_Thuoc.getThuocDataBase();
-				writeToExcelWithFileChooser(list_thuoc);
-				}
-				else {
-				System.out.println(nameBtn);
+					writeToExcelWithFileChooser(list_thuoc);
+				} else {
+					System.out.println(nameBtn);
 				}
 			}
 		});
@@ -634,3 +671,6 @@ public class QuanLyThuoc_UI {
 	}
 
 }
+
+
+

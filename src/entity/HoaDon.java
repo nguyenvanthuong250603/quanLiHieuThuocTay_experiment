@@ -21,6 +21,7 @@ public class HoaDon {
 	private Boolean loaiHoaDon;
 	private String tinhTrang;
 	private double tongTien;
+	private String lyDo;
 	private ArrayList<ChiTietHoaDon> ListChiTietHoaDon;
 	public String getMaHD() {
 		return maHD;
@@ -69,8 +70,23 @@ public class HoaDon {
 
 	
 
+
+	public Boolean getLoaiHoaDon() {
+		return loaiHoaDon;
+	}
+	public void setLoaiHoaDon(Boolean loaiHoaDon) {
+		this.loaiHoaDon = loaiHoaDon;
+	}
+
+	@Override
+	public String toString() {
+		return "HoaDon [maHD=" + maHD + ", maNV=" + maNV + ", maKh=" + maKh + ", tenKH=" + tenKH
+				+ ", hinhThucThanhToan=" + hinhThucThanhToan + ", ngayTaoHoaDon=" + ngayTaoHoaDon + ", loaiHoaDon="
+				+ loaiHoaDon + ", tinhTrang=" + tinhTrang + ", tongTien=" + tongTien + ", lyDo=" + lyDo
+				+ ", ListChiTietHoaDon=" + ListChiTietHoaDon + "]";
+	}
 	public HoaDon(String maHD, NhanVien maNV, KhachHang maKh, String tenKH, String hinhThucThanhToan,
-			LocalDate ngayTaoHoaDon, Boolean loaiHoaDon, String tinhTrang, double tongTien,
+			LocalDate ngayTaoHoaDon, Boolean loaiHoaDon, String tinhTrang, double tongTien, String lyDo,
 			ArrayList<ChiTietHoaDon> listChiTietHoaDon) {
 		super();
 		this.maHD = maHD;
@@ -82,20 +98,14 @@ public class HoaDon {
 		this.loaiHoaDon = loaiHoaDon;
 		this.tinhTrang = tinhTrang;
 		this.tongTien = tongTien;
+		this.lyDo = lyDo;
 		ListChiTietHoaDon = listChiTietHoaDon;
 	}
-	public Boolean getLoaiHoaDon() {
-		return loaiHoaDon;
+	public String getLyDo() {
+		return lyDo;
 	}
-	public void setLoaiHoaDon(Boolean loaiHoaDon) {
-		this.loaiHoaDon = loaiHoaDon;
-	}
-	@Override
-	public String toString() {
-		return "HoaDon [maHD=" + maHD + ", maNV=" + maNV + ", maKh=" + maKh + ", tenKH=" + tenKH
-				+ ", hinhThucThanhToan=" + hinhThucThanhToan + ", ngayTaoHoaDon=" + ngayTaoHoaDon + ", loaiHoaDon="
-				+ loaiHoaDon + ", tinhTrang=" + tinhTrang + ", tongTien=" + tongTien + ", ListChiTietHoaDon="
-				+ ListChiTietHoaDon + "]";
+	public void setLyDo(String lyDo) {
+		this.lyDo = lyDo;
 	}
 	public String getTinhTrang() {
 		return tinhTrang;

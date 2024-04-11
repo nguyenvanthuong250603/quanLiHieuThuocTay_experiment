@@ -91,7 +91,7 @@ public class Generate_All {
 	private static ChiTietHoaDon_DAO cTietHoaDon_DAO = new ChiTietHoaDon_DAO();
 	private static KhachHang_DAO khDao = new KhachHang_DAO();
 
-	public static void generateInvoice(HoaDon hd,double tongTien, double khachDua, String khuyenMai) {
+	public static void generateInvoice(HoaDon hd, double tongTien, double khachDua, String khuyenMai) {
 		// Tạo một đối tượng Document
 		Document document = new Document();
 
@@ -162,7 +162,7 @@ public class Generate_All {
 			// In thời gian hiện tại với định dạng giờ:phút
 			String formattedTime = currentTime.format(formatter);
 			Paragraph thoiGian = new Paragraph(
-					"Thời gian in : " + formatTime(LocalDate.now()) + "      " + formattedTime,fontWord2);
+					"Thời gian in : " + formatTime(LocalDate.now()) + "      " + formattedTime, fontWord2);
 			thoiGian.setAlignment(Element.ALIGN_CENTER);
 			document.add(thoiGian);
 			document.add(new Paragraph("  "));
@@ -178,22 +178,23 @@ public class Generate_All {
 			addCell(table, "Thành tiền", fontWord);
 			int i = 0;
 			for (ChiTietHoaDon chiTietHoaDon : lcthd) {
-				i+=1;
-				addCell(table,i+"", fontWord2);
-				addCell(table, chiTietHoaDon.getMaThuoc().getMaThuoc(), fontWord2); // Không sử dụng font cho các cell khác
+				i += 1;
+				addCell(table, i + "", fontWord2);
+				addCell(table, chiTietHoaDon.getMaThuoc().getMaThuoc(), fontWord2); // Không sử dụng font cho các cell
+																					// khác
 				addCell(table, chiTietHoaDon.getTenThuoc(), fontWord2);
-				addCell(table, chiTietHoaDon.getDonVi(),fontWord2);
+				addCell(table, chiTietHoaDon.getDonVi(), fontWord2);
 				addCell(table, String.valueOf(chiTietHoaDon.getSoLuong()), fontWord2);
 				addCell(table, String.valueOf(chiTietHoaDon.getDonGia()), fontWord2);
 				addCell(table, String.valueOf(chiTietHoaDon.getThanhTien()), fontWord2);// Chuyển thành tiền thành chuỗi
 			}
 			document.add(table);
 			document.add(new Paragraph("   "));
-			
+
 			Paragraph khachCanTra = new Paragraph("Tiền hàng : " + tongTien, fontWord);
 			khachCanTra.setAlignment(Element.ALIGN_RIGHT);
 			document.add(khachCanTra);
-			
+
 			Paragraph thanhtoan = new Paragraph();
 
 			// Tạo Phrase cho điểm thành viên và thêm vào Paragraph
@@ -204,7 +205,6 @@ public class Generate_All {
 			thanhtoan.add(Chunk.TABBING);
 
 			// Thêm khoảng trắng vào Paragraph
-			
 
 			// Tạo Phrase cho tổng tiền và thêm vào Paragraph
 			Phrase km2 = new Phrase("Tổng tiền :" + hd.getTongTien(), fontWord);
@@ -213,8 +213,6 @@ public class Generate_All {
 
 			document.add(thanhtoan);
 
-			
-			
 			document.close();
 
 			byte[] pdfBytes = outputStream.toByteArray();
@@ -231,6 +229,7 @@ public class Generate_All {
 			e.printStackTrace();
 		}
 	}
+
 	public static void writeToExcelWithFileChooser(ArrayList<Thuoc> thuocList) {
 		JFileChooser fileChooser = new JFileChooser() {
 			@Override
@@ -294,11 +293,12 @@ public class Generate_All {
 			}
 		}
 	}
+
 	private static void addCell(PdfPTable table, String text, com.itextpdf.text.Font font) {
 		PdfPCell cell;
 		if (font != null) {
 			cell = new PdfPCell(new Phrase(text, font));
-			
+
 		} else {
 			cell = new PdfPCell(new Phrase(text));
 		}
@@ -310,7 +310,7 @@ public class Generate_All {
 		ImageIcon icon = new ImageIcon(pathIcon);
 		btn.setIcon(icon);
 		btn.setIconTextGap(10);
-		btn.setBackground(new Color(69, 173, 255));
+		btn.setBackground(new Color(89, 168, 104));
 		btn.setFocusPainted(false);
 		btn.setForeground(Color.WHITE);
 		btn.setFont(new Font("Arial", Font.BOLD, 15));
@@ -318,10 +318,10 @@ public class Generate_All {
 	}
 
 	public static void createTitle(JPanel t, String title) {
-		TitledBorder boderDecor = new TitledBorder(BorderFactory.createLineBorder(new Color(190, 195, 199), 4), title);
+		TitledBorder boderDecor = new TitledBorder(BorderFactory.createLineBorder(new Color(89, 168, 104), 3), title);
 
-		boderDecor.setTitleColor(new Color(0, 132, 255));
-		boderDecor.setTitleFont(new Font("Arial", Font.ITALIC, 20));
+		boderDecor.setTitleColor(new Color(89, 168, 104));
+		boderDecor.setTitleFont(new Font("Arial", Font.BOLD, 20));
 		t.setBorder(boderDecor);
 
 	}
@@ -375,7 +375,7 @@ public class Generate_All {
 				int row, int column) {
 			Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			if (isSelected) {
-				component.setBackground(new Color(125, 124, 124));
+				component.setBackground(new Color(89, 168, 104, 150));
 				component.setForeground(Color.white);
 
 			} else {
@@ -423,20 +423,20 @@ public class Generate_All {
 
 	public static JRadioButton customRadio(String name) {
 		JRadioButton rd = new JRadioButton(name);
-		
-	       rd.setContentAreaFilled(false);
-	        rd.setFocusPainted(false);
-	        rd.setBorderPainted(false);
+
+		rd.setContentAreaFilled(false);
+		rd.setFocusPainted(false);
+		rd.setBorderPainted(false);
 
 		rd.setBorderPainted(false);
-		 if (rd.isSelected()) {
-	        
-	            rd.setBorderPainted(false);
-	        } else {
-	           
-	            rd.setBorderPainted(true);
-	        }
-	
+		if (rd.isSelected()) {
+
+			rd.setBorderPainted(false);
+		} else {
+
+			rd.setBorderPainted(true);
+		}
+
 		return rd;
 	}
 
@@ -456,7 +456,7 @@ public class Generate_All {
 		return Integer.parseInt(textField.getText());
 	}
 
-	public static String getValueInComboBox(JComboBox combo) {
+	public static String getValueInComboBox(JComboBox<String> combo) {
 
 		return combo.getSelectedItem().toString();
 	}
@@ -590,10 +590,10 @@ public class Generate_All {
 		return customerCode;
 	}
 
-	public static void hienTableInHoaDon(JTable table, DefaultTableModel model, JTable table_product,
-			DefaultTableModel model_product, Object[][] object) {
+	public static void hienTableTrongHoaDon(JTable table, DefaultTableModel model, JTable table_product,
+			DefaultTableModel model_product, Object[][] object, String sdt, int loai) {
 
-		ArrayList<HoaDon> hDons = hDon_DAO.getHoaDonToLuuTam("");
+		ArrayList<HoaDon> hDons = hDon_DAO.getHoaDonToLuuTam(sdt, loai);
 		for (HoaDon hoaDon : hDons) {
 			NhanVien nv = getNV(hoaDon.getMaNV().getMaNV());
 			Object[] row = { hoaDon.getMaHD(), nv.getHoTen(), hoaDon.getMaKh().getMaKH(),
@@ -601,12 +601,15 @@ public class Generate_All {
 			model.addRow(row);
 
 		}
-		table.setModel(model);
+
 		if (table.getRowCount() >= 1) {
 			table.setRowSelectionInterval(0, 0);
+			
+			String maKH =table.getValueAt(0, 2) ==null ?"":table.getValueAt(0, 2).toString();
 			defaultMouse(model_product, table_product, table.getValueAt(0, 0).toString(),
-					table.getValueAt(0, 2).toString(), object, table);
+					maKH, object, table);
 		}
+		table.setModel(model);
 		table.addMouseListener(new MouseListener() {
 
 			@Override
@@ -634,11 +637,11 @@ public class Generate_All {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				String maKH =table.getValueAt(0, 2) ==null ?"":table.getValueAt(0, 2).toString();
 				model_product.setRowCount(0);
 				int index = table.getSelectedRow();
 				String maHD = table.getValueAt(index, 0).toString();
-				defaultMouse(model_product, table_product, maHD, table.getValueAt(index, 2).toString(), object, table);
+				defaultMouse(model_product, table_product, maHD,maKH, object, table);
 
 			}
 		});
@@ -648,8 +651,10 @@ public class Generate_All {
 	private static void defaultMouse(DefaultTableModel model_product, JTable table_product, String maHD, String maKH,
 			Object[][] obj, JTable table) {
 
+		HoaDon hd = hDon_DAO.getHoaDonByID(maHD);
+
 		ArrayList<ChiTietHoaDon> lChiTietHoaDons = cTietHoaDon_DAO.getcChiTietHoaDons(maHD);
-		KhachHang kh = getKH(maKH, "");
+		
 		for (ChiTietHoaDon ct : lChiTietHoaDons) {
 			Object[] row_product = { ct.getMaThuoc().getMaThuoc(), ct.getTenThuoc(), ct.getDonVi(), ct.getSoLuong(),
 					ct.getDonGia(), ct.getThanhTien() };
@@ -657,9 +662,21 @@ public class Generate_All {
 
 		}
 		table_product.setModel(model_product);
-		((JTextField) obj[0][1]).setText(kh.getTenKH());
-		((JTextField) obj[1][1]).setText(kh.getsDT());
-		((JTextField) obj[2][1]).setText(table.getValueAt(table.getSelectedRow(), 4).toString());
+		if(!maKH.equals("")) {
+			KhachHang kh = getKH(maKH, "");
+			((JTextField) obj[0][1]).setText(kh.getTenKH());
+
+			((JTextField) obj[1][1]).setText(kh.getsDT());
+			((JTextField) obj[2][1]).setText(table.getValueAt(table.getSelectedRow(), 4).toString());
+			if (obj.length > 3) {
+				((JTextField) obj[0][1]).setText(kh.getMaKH());
+
+				((JTextField) obj[1][1]).setText(kh.getTenKH());
+				((JTextField) obj[2][1]).setText(kh.getsDT());
+				((JTextField) obj[3][1]).setText(transGender(kh.isGioiTinh()));
+			
+			}
+		}
 	}
 
 	public static NhanVien getNV(String maNv) {
@@ -671,6 +688,5 @@ public class Generate_All {
 		KhachHang kh = khang.getKhachHangByID(maKH, sdt);
 		return kh;
 	}
-	
 
 }

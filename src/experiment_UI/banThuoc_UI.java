@@ -22,11 +22,13 @@ import javax.swing.border.EmptyBorder;
 
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.html.FormSubmitEvent;
+
+import org.apache.commons.math3.stat.descriptive.moment.Skewness;
 
 import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.itextpdf.text.xml.simpleparser.NewLineHandler;
@@ -87,8 +89,8 @@ public class BanThuoc_UI {
 	private double result;
 	private HoaDonLuuTam_UI hoaDonLuuTam = new HoaDonLuuTam_UI();
 	private ArrayList<HoaDon> listHD = new ArrayList<HoaDon>();
-	public static HoaDon_DAO hDao = new HoaDon_DAO();
-
+	public HoaDon_DAO hDao = new HoaDon_DAO();
+	private Thuoc_DAO thuoc_DAO = new Thuoc_DAO();
 	public JPanel getBanThuoc(String maNV) {
 		JPanel sellTotal = new JPanel(new BorderLayout());
 		JPanel sellManagement = new JPanel(new BorderLayout());
@@ -188,7 +190,7 @@ public class BanThuoc_UI {
 		check.add(cb);
 		check.setBorder(new EmptyBorder(0, 30, 0, 0));
 		check.add(sampleModel2("Lưu thông tin khách hàng"));
-		
+
 //	center		
 		JPanel input = new JPanel();
 		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
@@ -390,7 +392,7 @@ public class BanThuoc_UI {
 						doc.addDocumentListener(new DocumentListener() {
 							@Override
 							public void insertUpdate(DocumentEvent e) {
-								if (!table.getValueAt(model.getRowCount() - 1, 3).toString().equals(""))
+								if (!table.getValueAt(model.getRowCount() - 1, 3).toString().equals("")&&table.getValueAt(model.getRowCount() - 1, 3).toString().matches("\\d+"))
 									updateTotalPrice();
 							}
 
@@ -402,7 +404,7 @@ public class BanThuoc_UI {
 
 							@Override
 							public void changedUpdate(DocumentEvent e) {
-								// Plain text components do not fire these events
+								
 							}
 						});
 						model.addTableModelListener(new TableModelListener() {
@@ -455,8 +457,8 @@ public class BanThuoc_UI {
 		double gia = 0;
 
 		try {
-
-			soLuong = Integer.parseInt(table.getValueAt(lastRowIndex, soLuongColumnIndex).toString());
+			
+				soLuong = Integer.parseInt(table.getValueAt(lastRowIndex, soLuongColumnIndex).toString());
 			gia = Double.parseDouble(table.getValueAt(lastRowIndex, 4).toString());
 
 		} catch (NumberFormatException ex) {
@@ -473,13 +475,7 @@ public class BanThuoc_UI {
 			textMaThuocFind.requestFocus();
 			return false;
 		}
-//		if (table.getRowCount() > 0) {
-//			if (!table.getValueAt(model.getRowCount() - 1, 3).toString().matches("\\d+")) {
-//				JOptionPane.showMessageDialog(null, "Số lượng thuốc phải là chữ số");
-//				textMaThuocFind.requestFocus();
-//				return false;
-//			}
-//		}
+
 		return true;
 	}
 
@@ -489,8 +485,7 @@ public class BanThuoc_UI {
 			JOptionPane.showMessageDialog(null, "Bạn chưa chọn thuốc để lập hoá đơn");
 			textMaThuocFind.requestFocus();
 			return false;
-		}
-		if (!tienDua.matches("\\d+")) {
+		} else if (!tienDua.matches("\\d+")) {
 			if (tienDua.equals("")) {
 				JOptionPane.showMessageDialog(null, "Bạn chưa nhập tiền khách đưa");
 				((JTextField) object_sell[5][1]).requestFocus();
@@ -625,22 +620,25 @@ public class BanThuoc_UI {
 			} else {
 				kh = new KhachHang("");
 			}
-			tinhTrang = "Mới bán";
+			tinhTrang = "Bán ra";
 
 		}
-		double tongTien = result;
-		HoaDon hd = new HoaDon(maHD, nv, kh, tenKh, hinhThucThanhToan, LocalDate.now(), loaiHoaDon, tinhTrang, tongTien,
-				listCtHD);
+		
+		double tongTien = Double.parseDouble(getValueStringInJTextField(object_sell[2][1]));
+		HoaDon hd = new HoaDon(maHD, nv, kh, tenKh, hinhThucThanhToan, LocalDate.now(), loaiHoaDon, tinhTrang, tongTien, "", listCtHD);
 		return hd;
 	}
 
 	public void luuTamHoaDON() {
-//		Lấy hóa đơn ghi vào mảng
+
 		if (cb.isSelected()) {
+			if(table.getRowCount()>0) {
 			HoaDon hd = getHoaDon("");
+			System.out.println(hd);
 			int recomment = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn thêm hóa đơn vào hàng chờ ", "Lưu ý",
 					JOptionPane.YES_NO_OPTION);
 			if (recomment == JOptionPane.YES_OPTION) {
+				
 				if (hDao.themHoaDon(hd)) {
 					JOptionPane.showMessageDialog(null, "Thêm hóa đơn vào hàng chờ thành công");
 					xoaTrang();
@@ -648,7 +646,10 @@ public class BanThuoc_UI {
 					JOptionPane.showMessageDialog(null, "Hóa đơn đã có sẵn trong hàng chờ");
 				}
 			}
-
+			}else {
+			textMaThuocFind.requestFocus();
+				JOptionPane.showMessageDialog(null, "Bạn cần chọn thuốc để lập hóa đơn");
+			}
 		} else {
 			JOptionPane.showMessageDialog(null, "Cần lưu thông tin khách hàng để thêm hóa đơn vào hàng chờ", "Lỗi",
 					JOptionPane.ERROR_MESSAGE);
@@ -678,26 +679,35 @@ public class BanThuoc_UI {
 	}
 
 	public void thanhToan(double tongTien, double khachDua, String khuyenMai) {
-		if (regexInHoaDon()) {
+		
+			
 			HoaDon hd = getHoaDon("1");
-			generateInvoice(hd,tongTien,khachDua,khuyenMai);
+//			generateInvoice(hd, tongTien, khachDua, khuyenMai);
 
-//		if (!hDao.themHoaDon(hd)) {
-//			Boolean loaiHoaDon = cb.isSelected() ? true : false;
-//			if (hDao.themHoaDonVaoLoai(loaiHoaDon, "Bán ra", hd.getMaHD())) {
-//				JOptionPane.showMessageDialog(null, "Tạo hóa đơn thành công");
-//			} else {
-//				JOptionPane.showMessageDialog(null, "Thêm hóa đơn không thành công");
-//			}
-//
-//		} else {
-//			JOptionPane.showMessageDialog(null, "Tạo hóa đơn thành công");
-//		}
-//		xoaTrang();
+		if (!hDao.themHoaDon(hd)) {
+			Boolean loaiHoaDon = cb.isSelected() ? true : false;
+			if (hDao.themHoaDonVaoLoai(loaiHoaDon, "Bán ra", hd.getMaHD())) {
+				JOptionPane.showMessageDialog(null, "Tạo hóa đơn thành công");
+			} else {
+				JOptionPane.showMessageDialog(null, "Thêm hóa đơn không thành công");
+			}
 
+		} else {
+			JOptionPane.showMessageDialog(null, "Tạo hóa đơn thành công");
 		}
-	}
+		xoaTrang();
 
+		
+	}
+public void thayDoiSoLuongThuoc() {
+	for(int i=0;i <table.getRowCount();i++) {
+		String maThuoc = table.getValueAt(i, 0).toString();
+		int soLuong = Integer.parseInt(table.getValueAt(i, 3).toString());
+		Thuoc th = thuoc_DAO.getThuocByID(maThuoc);
+		soLuong = th.getSoLuong() -soLuong;
+		thuoc_DAO.suaThuoc(new Thuoc(), soLuong, maThuoc);
+	}
+}
 	public JButton buttonInPageSell(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(150, 40));
@@ -717,15 +727,24 @@ public class BanThuoc_UI {
 				xoaThuoc();
 			} else if (nameButton.equals("Xử lí hóa đơn tạm")) {
 
+				String ma = getValueStringInJlabel(object_sell[0][1]);
 				hoaDonLuuTam.getHoaDonLuuTam(jtextMaKH, object_custommer, object_sell, labelDTL, table, cb);
-
-				hidden(true);
+ 				if(ma.equals(getValueStringInJlabel(object_sell[0][1]))) {
+ 				
+ 					hidden(false);
+ 				}
+ 				else {
+ 					hidden(true);
+ 				}
 			} else if (nameButton.equals("Lưu tạm")) {
 				luuTamHoaDON();
 
 			} else if (nameButton.equals("Thanh toán")) {
-				thanhToan(getValueDoubleỊntextField(object_sell[2][1]),getValueDoubleỊntextField(object_sell[5][1]),
+				if(regexInHoaDon()) {
+				thanhToan(getValueDoubleỊntextField(object_sell[2][1]), getValueDoubleỊntextField(object_sell[5][1]),
 						getValueStringInJlabel(object_sell[6][1]));
+				thayDoiSoLuongThuoc();
+				}
 			}
 		});
 

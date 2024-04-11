@@ -22,5 +22,11 @@ public class Trage_DAO {
 		return ch == 1 ? true: false;
 	
 	}
+	public static int dinhNghia(String LoaiHD) {
+		int lhoadon = 0;
+		if ( LoaiHD != null)
+			lhoadon = LoaiHD.equals("Hóa đơn bán hàng") ? 1 : 0;
+		return lhoadon;
+	}
 	
 }

@@ -19,7 +19,9 @@ public class NhanVien {
 	private String cccd;
 	private String diaChi;
 	private String chucVu;
+	private String tinhTrang;
 	private LocalDate ngayVaoLam;
+	private String hinhAnh;
 	public String getMaNV() {
 		return maNV;
 	}
@@ -80,14 +82,20 @@ public class NhanVien {
 	public void setNgayVaoLam(LocalDate ngayVaoLam) {
 		this.ngayVaoLam = ngayVaoLam;
 	}
-	@Override
-	public String toString() {
-		return "NhanVien [maNV=" + maNV + ", hoTen=" + hoTen + ", gioiTinh=" + gioiTinh + ", ngaySinh=" + ngaySinh
-				+ ", tuoi=" + tuoi + ", sdt=" + sdt + ", cccd=" + cccd + ", diaChi=" + diaChi + ", chucVu=" + chucVu
-				+ ", ngayVaoLam=" + ngayVaoLam + "]";
+	public String getTinhTrang() {
+		return tinhTrang;
+	}
+	public void setTinhTrang(String tinhTrang) {
+		this.tinhTrang = tinhTrang;
+	}
+	public String getHinhAnh() {
+		return hinhAnh;
+	}
+	public void setHinhAnh(String hinhAnh) {
+		this.hinhAnh = hinhAnh;
 	}
 	public NhanVien(String maNV, String hoTen, boolean gioiTinh, LocalDate ngaySinh, int tuoi, String sdt, String cccd,
-			String diaChi, String chucVu, LocalDate ngayVaoLam) {
+			String diaChi, String chucVu, String tinhTrang, LocalDate ngayVaoLam, String hinhAnh) {
 		super();
 		this.maNV = maNV;
 		this.hoTen = hoTen;
@@ -98,8 +106,17 @@ public class NhanVien {
 		this.cccd = cccd;
 		this.diaChi = diaChi;
 		this.chucVu = chucVu;
+		this.tinhTrang = tinhTrang;
 		this.ngayVaoLam = ngayVaoLam;
+		this.hinhAnh = hinhAnh;
 	}
+	@Override
+	public String toString() {
+		return "NhanVien [maNV=" + maNV + ", hoTen=" + hoTen + ", gioiTinh=" + gioiTinh + ", ngaySinh=" + ngaySinh
+				+ ", tuoi=" + tuoi + ", sdt=" + sdt + ", cccd=" + cccd + ", diaChi=" + diaChi + ", chucVu=" + chucVu
+				+ ", tinhTrang=" + tinhTrang + ", ngayVaoLam=" + ngayVaoLam + ", hinhAnh=" + hinhAnh + "]";
+	}
+
 
 	
 	

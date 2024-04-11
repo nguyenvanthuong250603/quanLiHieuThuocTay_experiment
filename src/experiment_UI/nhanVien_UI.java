@@ -52,7 +52,7 @@ public class NhanVien_UI {
 		String[] gender2 = {"Nam","Nữ"};
 		
 		
-		Object[][] trage = { { new JTextField(29), "Mã nhân viên" }, { new JTextField(), "Tên nhân viên" },
+		Object[][] trage = { { new JTextField(26), "Mã nhân viên" }, { new JTextField(), "Tên nhân viên" },
 				{new JComboBox(gender2), "Giới tính" }, { new JDateChooser(), "Ngày sinh" }, { new JTextField(), "Tuổi" },
 				};
 		inf_personnel_left = trage;
