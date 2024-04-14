@@ -104,15 +104,15 @@ INSERT [dbo].[NhaSanXuat] ([TenNSX], [DiaChiNSX]) VALUES (N'Phát Đạt', N'13 
 INSERT [dbo].[NhaSanXuat] ([TenNSX], [DiaChiNSX]) VALUES (N'Thái Thịnh', N'40 Nguyễn Huệ , Quận 1 ,HCM')
 
 GO
-INSERT INTO NhanVien VALUES ('NV001',N'Nguyễn Văn Thương',1,'2003-06-25',20,'0794571318','067203000247',N'ĐĂK NÔNG',N'Quản lý',N'Đang làm','2024-03-20','');
+INSERT INTO NhanVien VALUES ('NV12061111',N'Nguyễn Văn Thương',1,'2003-06-25',20,'0794571318','067203000247',N'ĐĂK NÔNG',N'Quản lý',N'Đang làm','2024-03-20','');
 
 
 GO
-INSERT INTO TaiKhoan VALUES('NV001','123')
+INSERT INTO TaiKhoan VALUES('NV12061111','123')
 GO  
-INSERT INTO KhachHang VALUES('KH001',N'Nguyễn Văn Nam','2024-03-19','20',1,'01213562326','Đăk lăk',100,N'Đồng')
-INSERT INTO KhachHang VALUES('KH002',N'Nguyễn Thị Đào','2024-03-19','20',0,'01213562326','Đăk lăk',570,N'Bạc')
-INSERT INTO KhachHang VALUES('KH003',N'Nguyễn Văn Hoàng','2024-03-19','20',0,'0794571318','Đăk lăk',1960,N'Vàng')
+INSERT INTO KhachHang VALUES('KH1204115',N'Nguyễn Văn Nam','2024-03-19','20',1,'01213562326','Đăk lăk',100,N'Đồng')
+INSERT INTO KhachHang VALUES('KH1205798',N'Nguyễn Thị Đào','2024-03-19','20',0,'01213562326','Đăk lăk',570,N'Bạc')
+INSERT INTO KhachHang VALUES('KH1212888',N'Nguyễn Văn Hoàng','2024-03-19','20',1,'0794571318','Đăk lăk',1960,N'Vàng')
 
  ------------------------------------------------------------
 SELECT *FROM KhachHang
@@ -123,22 +123,32 @@ SELECT *FROM TaiKhoan
 SELECT *FROM NhaSanXuat
 SELECT *FROM Thuoc
 SELECT *FROM HoaDon 
-SELECT *FROM HoaDon WHERE LoaiHoaDon IS NULL;
+SELECT *FROM Thuoc WHERE MaThuoc = 'TH04050241';
+
+SELECT COUNT(*) AS SoLuongHoaDon FROM HoaDon WHERE NgayTaoHoaDon > '2024-03-15';
+SELECT * FROM table_name WHERE ngay_column BETWEEN '2024-04-01' AND '2024-04-14';
+SELECT * FROM HoaDon WHERE MONTH(NgayTaoHoaDon) = 4 AND YEAR(NgayTaoHoaDon) = 2024;
 
 ------------------------------------
+INSERT INTO HoaDon VALUES (N'HĐ1321312',N'NV12061111','KH1205798',N'Nguyễn Thị Đào',N'Tiền mặt','2024-03-1',1,N'Bán ra','200000','')
 
 
 GO
 
 INSERT INTO Thuoc (MaThuoc, TenThuoc, SoLuong, Gia, LoaiThuoc, NhaSanXuat, NgaySanXuat, NgayHetHan, HinhAnh, DonVi, DangBaoChe, DoTuoi, ThanhPhan, ChiDinh, LieuDung, BaoQuan, MoTa)
-VALUES 
+VALUES
+ ('TH04051341', N'Paracetamol', 4, 20000, N'Thuốc giảm đau, hạ sốt', N'Thái Thịnh', '2023-05-15', '2024-05-19', 'C:\Users\ADMIN\Downloads\ptud\paracetamol.jpg', N'Hộp 1 chai 50 viên', N'Viên nén', N'Từ 2-11 tuổi', N'Paracetamol', N'Điều trị đau nhẹ đến trung bình và hạ sốt', N'1-2 viên mỗi 4-6 giờ', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
+
+	  ('TH04050341', N'Paracetamol', 8, 20000, N'Thuốc giảm đau, hạ sốt', N'Nam Hà', '2023-05-15', '2024-05-15', 'C:\Users\ADMIN\Downloads\ptud\paracetamol.jpg', N'Hộp 1 chai 50 viên', N'Viên nén', N'Từ 2-11 tuổi', N'Paracetamol', N'Điều trị đau nhẹ đến trung bình và hạ sốt', N'1-2 viên mỗi 4-6 giờ', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),	
+  ('TH04050241', N'Paracetamol', 100, 20000, N'Thuốc giảm đau, hạ sốt', N'Nam Hà', '2023-05-15', '2024-05-15', 'C:\Users\ADMIN\Downloads\ptud\paracetamol.jpg', N'Hộp 1 chai 50 viên', N'Viên nén', N'Từ 2-11 tuổi', N'Paracetamol', N'Điều trị đau nhẹ đến trung bình và hạ sốt', N'1-2 viên mỗi 4-6 giờ', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
+	  ('TH04050141', N'Paracetamol', 9, 20000, N'Thuốc giảm đau, hạ sốt', N'Nam Hà', '2023-05-15', '2024-05-15', 'C:\Users\ADMIN\Downloads\ptud\paracetamol.jpg', N'Hộp 1 chai 50 viên', N'Viên nén', N'Từ 2-11 tuổi', N'Paracetamol', N'Điều trị đau nhẹ đến trung bình và hạ sốt', N'1-2 viên mỗi 4-6 giờ', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
     ('TH04050041', N'Paracetamol', 100, 20000, N'Thuốc giảm đau, hạ sốt', N'Nam Hà', '2023-05-15', '2024-05-15', 'C:\Users\ADMIN\Downloads\ptud\paracetamol.jpg', N'Hộp 1 chai 50 viên', N'Viên nén', N'Từ 2-11 tuổi', N'Paracetamol', N'Điều trị đau nhẹ đến trung bình và hạ sốt', N'1-2 viên mỗi 4-6 giờ', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
-	('TH04050042', N'Ibuprofen', 100, 50000, N'Thuốc giảm đau, hạ sốt', N'Thái Thịnh', '2023-09-10', '2024-09-10', 'C:\Users\ADMIN\Downloads\ptud\chong_viems_1.jpg', N'Hộp 1 chai 30 viên', N'Viên nén', N'Từ 12-17 tuổi', N'Ibuprofen', N'Điều trị triệu chứng đau và viêm', N'1 viên mỗi 6 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
-    ('TH04050043', N'Aspirin', 80, 40000, N'Thuốc giảm đau, hạ sốt', N'Nam Hà', '2023-10-20', '2024-10-20', 'C:\Users\ADMIN\Downloads\ptud\chong_viems_2.jpg', N'Hộp 1 chai 50 viên', N'Viên nén', N'Mọi lứa tuổi', N'Aspirin', N'Điều trị đau và viêm', N'1 viên mỗi 4 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
-    ('TH04050044', N'Naproxen', 120, 55000, N'Thuốc giảm đau, hạ sốt', N'Hà Nam', '2023-11-15', '2024-11-15', 'C:\Users\ADMIN\Downloads\ptud\chong_viems_3.jpg', N'Hộp 1 chai 20 viên', N'Viên nén', N'Từ 18 tuổi trở lên', N'Naproxen', N'Điều trị đau và viêm', N'1 viên mỗi 8 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
+	('TH04050042', N'Ibuprofen', 100, 50000, N'Thuốc giảm đau, hạ sốt', N'Thái Thịnh', '2023-09-10', '2024-09-10', 'C:\Users\ADMIN\Downloads\ptud\chong_viem_1.jpg', N'Hộp 1 chai 30 viên', N'Viên nén', N'Từ 12-17 tuổi', N'Ibuprofen', N'Điều trị triệu chứng đau và viêm', N'1 viên mỗi 6 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
+    ('TH04050043', N'Aspirin', 80, 40000, N'Thuốc giảm đau, hạ sốt', N'Nam Hà', '2023-10-20', '2024-10-20', 'C:\Users\ADMIN\Downloads\ptud\chong_viem_2.jpg', N'Hộp 1 chai 50 viên', N'Viên nén', N'Mọi lứa tuổi', N'Aspirin', N'Điều trị đau và viêm', N'1 viên mỗi 4 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
+    ('TH04050044', N'Naproxen', 120, 55000, N'Thuốc giảm đau, hạ sốt', N'Hà Nam', '2023-11-15', '2024-11-15', 'C:\Users\ADMIN\Downloads\ptud\chong_viem_3.jpg', N'Hộp 1 chai 20 viên', N'Viên nén', N'Từ 18 tuổi trở lên', N'Naproxen', N'Điều trị đau và viêm', N'1 viên mỗi 8 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
 	('TH04050045', N'Acetaminophen', 120, 18000, N'Thuốc giảm đau, hạ sốt', N'Hà Nam', '2023-07-25', '2024-07-25', 'C:\Users\ADMIN\Downloads\ptud\acetaminophen.jpg', N'Hộp 1 chai 50 viên', N'Viên nén', N'Từ 2-11 tuổi', N'Paracetamol', N'Điều trị đau và hạ sốt', N'1-2 viên mỗi 4-6 giờ', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
-	('TH04050046', N'Diclofenac', 90, 60000, N'Thuốc giảm đau, hạ sốt', N'Phát Đạt', '2023-12-05', '2024-12-05', 'C:\Users\ADMIN\Downloads\ptud\chong_viems_4.jpg', N'Hộp 1 chai 40 viên', N'Viên nén', N'Mọi lứa tuổi', N'Diclofenac', N'Điều trị đau và viêm', N'1 viên mỗi 12 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
-	('TH04050047', N'Ketoprofen', 120, 85000, N'Thuốc giảm đau, hạ sốt', N'Nam Hà', '2023-11-15', '2024-11-15', 'C:\Users\ADMIN\Downloads\ptud\chong_viems_9.jpg', N'Hộp 1 chai 40 viên', N'Viên nén', N'Từ 18 tuổi trở lên', N'Ketoprofen', N'Điều trị đau và viêm', N'1 viên mỗi 12 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
+	('TH04050046', N'Diclofenac', 90, 60000, N'Thuốc giảm đau, hạ sốt', N'Phát Đạt', '2023-12-05', '2024-12-05', 'C:\Users\ADMIN\Downloads\ptud\chong_viem_4.jpg', N'Hộp 1 chai 40 viên', N'Viên nén', N'Mọi lứa tuổi', N'Diclofenac', N'Điều trị đau và viêm', N'1 viên mỗi 12 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
+	('TH04050047', N'Ketoprofen', 120, 85000, N'Thuốc giảm đau, hạ sốt', N'Nam Hà', '2023-11-15', '2024-11-15', 'C:\Users\ADMIN\Downloads\ptud\chong_viem_9.jpg', N'Hộp 1 chai 40 viên', N'Viên nén', N'Từ 18 tuổi trở lên', N'Ketoprofen', N'Điều trị đau và viêm', N'1 viên mỗi 12 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
 	('TH04050048', N'Tramadol', 40, 70000, N'Thuốc giảm đau', N'Phát Đạt', '2023-04-12', '2024-04-12', 'C:\Users\ADMIN\Downloads\ptud\tramadol.jpg', N'Hộp 1 chai 20 viên', N'Viên nén', N'Từ 18 tuổi trở lên', N'Tramadol', N'Điều trị đau cấp tính và mãn tính', N'1-2 viên mỗi 4-6 giờ', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
 	('TH04050049', N'Codeine', 30, 60000, N'Thuốc giảm đau', N'Thái Thịnh', '2023-03-20', '2024-03-20', 'C:\Users\ADMIN\Downloads\ptud\codeine.jpg', N'Hộp 1 chai 20 viên', N'Viên nén', N'Từ 12-17 tuổi', N'Codeine', N'Điều trị đau trung bình đến nặng', N'1-2 viên mỗi 4-6 giờ', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
 	('TH04050050', N'Morphine', 20, 150000, N'Thuốc giảm đau', N'Phát Đạt', '2023-02-10', '2024-02-10', 'C:\Users\ADMIN\Downloads\ptud\morphine.jpg', N'Hộp 1 chai 10 viên', N'Viên nén', N'Từ 18 tuổi trở lên', N'Morphine', N'Điều trị đau nặng', N'1 viên mỗi 4-6 giờ', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
@@ -230,16 +240,16 @@ GO
 
 INSERT INTO Thuoc (MaThuoc, TenThuoc, SoLuong, Gia, LoaiThuoc, NhaSanXuat, NgaySanXuat, NgayHetHan, HinhAnh, DonVi, DangBaoChe, DoTuoi, ThanhPhan, ChiDinh, LieuDung, BaoQuan, MoTa)
 VALUES 
-    ('TH04130099', N'Ibuprofen', 100, 50000, N'Thuốc chống viêm', N'Thái Thịnh', '2023-09-10', '2024-09-10', 'C:\Users\ADMIN\Downloads\ptud\chong_viems_1.jpg', N'Hộp 1 chai 30 viên', N'Viên nén', N'Từ 12-17 tuổi', N'Ibuprofen', N'Thành phần 1', N'1 viên mỗi 6 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
-    ('TH04130132', N'Aspirin', 80, 40000, N'Thuốc chống viêm', N'Hà Nam', '2023-10-20', '2024-10-20', 'C:\Users\ADMIN\Downloads\ptud\chong_viems_2.jpg', N'Hộp 1 chai 50 viên', N'Viên nén', N'Mọi độ tuổi', N'Aspirin', N'Thành phần 1', N'1 viên mỗi 4 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
-    ('TH04130033', N'Naproxen', 120, 55000, N'Thuốc chống viêm', N'Nam Cao', '2023-11-15', '2024-11-15', 'C:\Users\ADMIN\Downloads\ptud\chong_viems_3.jpg', N'Hộp 1 chai 20 viên', N'Viên nén', N'Từ 18 tuổi trở lên', N'Naproxen', N'Thành phần 1', N'1 viên mỗi 8 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
-    ('TH04130034', N'Diclofenac', 90, 60000, N'Thuốc chống viêm', N'Nam Hà', '2023-12-05', '2024-12-05', 'C:\Users\ADMIN\Downloads\ptud\chong_viems_4.jpg', N'Hộp 1 chai 40 viên', N'Viên nén', N'Mọi độ tuổi', N'Diclofenac', N'Thành phần 1', N'1 viên mỗi 12 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
-    ('TH04130035', N'Celecoxib', 70, 75000, N'Thuốc chống viêm', N'Nam Hà', '2023-07-30', '2024-07-30', 'C:\Users\ADMIN\Downloads\ptud\chong_viems_5.jpg', N'Hộp 1 chai 50 viên', N'Viên nén', N'Mọi độ tuổi', N'Celecoxib', N'Thành phần 1', N'1 viên mỗi ngày sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
-    ('TH04130036', N'Meloxicam', 100, 65000, N'Thuốc chống viêm', N'Thái Thịnh', '2023-08-20', '2024-08-20', 'C:\Users\ADMIN\Downloads\ptud\chong_viems_6.jpg', N'Hộp 1 chai 60 viên', N'Viên nén', N'Từ 18 tuổi trở lên', N'Meloxicam', N'Thành phần 1', N'1 viên mỗi ngày sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
-    ('TH04130037', N'Indomethacin', 80, 70000, N'Thuốc chống viêm', N'Hà Nam', '2023-09-10', '2024-09-10', 'C:\Users\ADMIN\Downloads\ptud\chong_viems_7.jpg', N'Hộp 1 chai 30 viên', N'Viên nén', N'Từ 18 tuổi trở lên', N'Indomethacin', N'Thành phần 1', N'1 viên mỗi 6 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
-    ('TH04130038', N'Piroxicam', 110, 80000, N'Thuốc chống viêm', N'Nam Hà', '2023-10-30', '2024-10-30', 'C:\Users\ADMIN\Downloads\ptud\chong_viems_8.jpg', N'Hộp 1 chai 20 viên', N'Viên nén', N'Mọi độ tuổi', N'Piroxicam', N'Thành phần 1', N'1 viên mỗi 8 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
-    ('TH04130039', N'Ketoprofen', 120, 85000, N'Thuốc chống viêm', N'Nam Cao', '2023-11-15', '2024-11-15', 'C:\Users\ADMIN\Downloads\ptud\chong_viems_9.jpg', N'Hộp 1 chai 40 viên', N'Viên nén', N'Từ 18 tuổi trở lên', N'Ketoprofen', N'Thành phần 1', N'1 viên mỗi 12 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
-    ('TH04130040', N'Etodolac', 150, 90000, N'Thuốc chống viêm', N'Phát Đạt', '2023-12-05', '2024-04-14', 'C:\Users\ADMIN\Downloads\ptud\chong_viems_10.jpg', N'Hộp 1 chai 50 viên', N'Viên nén', N'Từ 18 tuổi trở lên', N'Etodolac', N'Thành phần 1', N'1 viên mỗi ngày sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không');
+    ('TH04130099', N'Ibuprofen', 100, 50000, N'Thuốc chống viêm', N'Thái Thịnh', '2023-09-10', '2024-09-10', 'C:\Users\ADMIN\Downloads\ptud\chong_viem_1.jpg', N'Hộp 1 chai 30 viên', N'Viên nén', N'Từ 12-17 tuổi', N'Ibuprofen', N'Thành phần 1', N'1 viên mỗi 6 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
+    ('TH04130132', N'Aspirin', 80, 40000, N'Thuốc chống viêm', N'Hà Nam', '2023-10-20', '2024-10-20', 'C:\Users\ADMIN\Downloads\ptud\chong_viem_2.jpg', N'Hộp 1 chai 50 viên', N'Viên nén', N'Mọi độ tuổi', N'Aspirin', N'Thành phần 1', N'1 viên mỗi 4 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
+    ('TH04130033', N'Naproxen', 120, 55000, N'Thuốc chống viêm', N'Nam Cao', '2023-11-15', '2024-11-15', 'C:\Users\ADMIN\Downloads\ptud\chong_viem_3.jpg', N'Hộp 1 chai 20 viên', N'Viên nén', N'Từ 18 tuổi trở lên', N'Naproxen', N'Thành phần 1', N'1 viên mỗi 8 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
+    ('TH04130034', N'Diclofenac', 90, 60000, N'Thuốc chống viêm', N'Nam Hà', '2023-12-05', '2024-12-05', 'C:\Users\ADMIN\Downloads\ptud\chong_viem_4.jpg', N'Hộp 1 chai 40 viên', N'Viên nén', N'Mọi độ tuổi', N'Diclofenac', N'Thành phần 1', N'1 viên mỗi 12 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
+    ('TH04130035', N'Celecoxib', 70, 75000, N'Thuốc chống viêm', N'Nam Hà', '2023-07-30', '2024-07-30', 'C:\Users\ADMIN\Downloads\ptud\chong_viem_5.jpg', N'Hộp 1 chai 50 viên', N'Viên nén', N'Mọi độ tuổi', N'Celecoxib', N'Thành phần 1', N'1 viên mỗi ngày sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
+    ('TH04130036', N'Meloxicam', 100, 65000, N'Thuốc chống viêm', N'Thái Thịnh', '2023-08-20', '2024-08-20', 'C:\Users\ADMIN\Downloads\ptud\chong_viem_6.jpg', N'Hộp 1 chai 60 viên', N'Viên nén', N'Từ 18 tuổi trở lên', N'Meloxicam', N'Thành phần 1', N'1 viên mỗi ngày sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
+    ('TH04130037', N'Indomethacin', 80, 70000, N'Thuốc chống viêm', N'Hà Nam', '2023-09-10', '2024-09-10', 'C:\Users\ADMIN\Downloads\ptud\chong_viem_7.jpg', N'Hộp 1 chai 30 viên', N'Viên nén', N'Từ 18 tuổi trở lên', N'Indomethacin', N'Thành phần 1', N'1 viên mỗi 6 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
+    ('TH04130038', N'Piroxicam', 110, 80000, N'Thuốc chống viêm', N'Nam Hà', '2023-10-30', '2024-10-30', 'C:\Users\ADMIN\Downloads\ptud\chong_viem_8.jpg', N'Hộp 1 chai 20 viên', N'Viên nén', N'Mọi độ tuổi', N'Piroxicam', N'Thành phần 1', N'1 viên mỗi 8 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
+    ('TH04130039', N'Ketoprofen', 120, 85000, N'Thuốc chống viêm', N'Nam Cao', '2023-11-15', '2024-11-15', 'C:\Users\ADMIN\Downloads\ptud\chong_viem_9.jpg', N'Hộp 1 chai 40 viên', N'Viên nén', N'Từ 18 tuổi trở lên', N'Ketoprofen', N'Thành phần 1', N'1 viên mỗi 12 giờ sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không'),
+    ('TH04130040', N'Etodolac', 150, 90000, N'Thuốc chống viêm', N'Phát Đạt', '2023-12-05', '2024-04-14', 'C:\Users\ADMIN\Downloads\ptud\chong_viem_10.jpg', N'Hộp 1 chai 50 viên', N'Viên nén', N'Từ 18 tuổi trở lên', N'Etodolac', N'Thành phần 1', N'1 viên mỗi ngày sau bữa ăn', N'Nơi khô ráo, tránh ánh sáng trực tiếp', N'Không');
 GO
 
 INSERT [dbo].[Thuoc] ([MaThuoc], [TenThuoc], [SoLuong], [Gia], [LoaiThuoc], [NhaSanXuat], [NgaySanXuat], [NgayHetHan], [HinhAnh], [DonVi], [DangBaoChe], [DoTuoi], [ThanhPhan], [ChiDinh], [LieuDung], [BaoQuan], [MoTa]) VALUES (N'TH04120001', N'Seduxen', 10, 35000, N'Thuốc an thần', N'Nam Cao', CAST(N'2024-04-12' AS Date), CAST(N'2024-04-19' AS Date), N'C:\Users\ADMIN\Downloads\ptud\thuocanthan1.jpg', N'Hộp 1 vĩ x10 viên nén', N'Dạng viên nén', N'Từ 18 tuổi trở lên', N'Diazepam là hoạt chất chính', N'điều trị mất ngủ kinh niên', N'mỗi ngày không quá 3 viên', N'khô ráo, tránh ẩm ước', N'không')

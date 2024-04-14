@@ -290,14 +290,9 @@ public class NhanVien_UI {
 					"Chú ý", JOptionPane.YES_NO_OPTION);
 			if (question == JOptionPane.YES_OPTION) {
 				if (nhanVien_DAO.updateNhanVien(nv)) {
-					JOptionPane.showMessageDialog(null, "Cập nhật nhân viên thành công");
-					table.setValueAt(nv.getMaNV(), index, 0);
-					table.setValueAt(nv.getHoTen(), index, 1);
-					table.setValueAt(nv.getSdt(), index, 2);
-					table.setValueAt(nv.getChucVu(), index, 3);
-					table.setValueAt(nv.getTinhTrang(), index, 4);
-					table.setValueAt(nv.getDiaChi(), index, 5);
+				
 					xoaTrang();
+				
 				}
 			}
 		} else {

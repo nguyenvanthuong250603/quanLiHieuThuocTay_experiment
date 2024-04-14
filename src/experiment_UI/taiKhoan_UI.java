@@ -103,7 +103,7 @@ public class TaiKhoan_UI  extends JFrame{
 		box1.add(maNhanVienJtextField = new JTextField());
 		maNhanVienJtextField.setPreferredSize(new Dimension(300, 40));
 		center.setBackground(new Color(0, 0,0, 0));
-		maNhanVienJtextField.setText("NV001");
+		maNhanVienJtextField.setText("NV12061111");
 		
 		JPanel box2 = new JPanel();
 		box2.setBackground(new Color(0, 0,0, 0));

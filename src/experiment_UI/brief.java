@@ -11,4 +11,5 @@ public class Brief {
 	public final static String KH = "Khách hàng";
 	public final static String NV = "Nhân viên";
 	public final static String HĐBT = "Hóa đơn bán thuốc";
+	public final static String TK = "Thống Kê";
 }

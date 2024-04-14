@@ -17,6 +17,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
@@ -24,6 +25,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.html.FormSubmitEvent;
@@ -42,6 +44,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
 import dao.HoaDon_DAO;
+import dao.KhachHang_DAO;
 import dao.Thuoc_DAO;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
@@ -90,7 +93,9 @@ public class BanThuoc_UI {
 	private ArrayList<HoaDon> listHD = new ArrayList<HoaDon>();
 	public HoaDon_DAO hDao = new HoaDon_DAO();
 	private Thuoc_DAO thuoc_DAO = new Thuoc_DAO();
-	private String checkIsselect;
+	private KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+	private HoaDonBanThuoc_UI hoaDonBanThuoc_UI = new HoaDonBanThuoc_UI();
+
 	public JPanel getBanThuoc(String maNV) {
 		JPanel sellTotal = new JPanel(new BorderLayout());
 		JPanel sellManagement = new JPanel(new BorderLayout());
@@ -116,10 +121,10 @@ public class BanThuoc_UI {
 		jtextMaKH.setEditable(value);
 		for (int i = 0; i < object_custommer.length; i++) {
 			if (object_custommer[i][1] instanceof JTextField) {
-				
+
 				((JTextField) object_custommer[i][1]).setEditable(value);
-			}  else {
-				
+			} else {
+
 				((JComboBox) object_custommer[i][1]).setEnabled(value);
 			}
 
@@ -241,7 +246,7 @@ public class BanThuoc_UI {
 		String[] pttt = { "Tiền mặt", "Chuyển khoản", "Quẹt thẻ" };
 
 		Object[][] trage = { { "Mã HĐ", new JLabel() }, { "Ngày tạo", new JTextField() },
-				{ "Khách cần trả", new JTextField(37) },{ "Khấu trừ", new JLabel() }, { "PTTT", new JComboBox(pttt) },
+				{ "Khách cần trả", new JTextField(37) }, { "Khấu trừ", new JLabel() }, { "PTTT", new JComboBox(pttt) },
 				{ "Khách đưa", new JTextField() }, };
 
 		object_sell = trage;
@@ -355,8 +360,21 @@ public class BanThuoc_UI {
 		if (!getValue1.isEmpty() && !getValue2.isEmpty()) {
 			double value1 = Double.parseDouble(getValue1);
 			double value2 = Double.parseDouble(getValue2);
-			result = value2 - value1;
-
+			double giampt = 0;
+			String giam = ((JLabel) object_sell[3][1]).getText();
+			if (giam.equals("0%")) {
+				giampt = 0;
+			} else if (giam.equals("1%")) {
+				giampt = 1;
+			} else if (giam.equals("2%")) {
+				giampt = 2;
+			} else if (giam.equals("3%")) {
+				giampt = 3;
+			} else if (giam.equals("4.5%")) {
+				giampt = 4.5;
+			}
+			double truTien = (value1 / 100) * giampt;
+			result = value2 - value1 + truTien;
 			labelTotal.setText("SỐ TIỀN TRẢ LẠI : " + formatValueDouble(result) + "VND");
 		}
 	}
@@ -382,40 +400,8 @@ public class BanThuoc_UI {
 						table.changeSelection(lastRowIndex, soLuongColumnIndex, false, false);
 						table.editCellAt(lastRowIndex, soLuongColumnIndex);
 						Component editor = table.getEditorComponent();
-						if (editor != null && editor instanceof JTextComponent) {
-							((JTextComponent) editor).selectAll();
-						}
-						Document doc = ((JTextComponent) editor).getDocument();
-						doc.addDocumentListener(new DocumentListener() {
-							@Override
-							public void insertUpdate(DocumentEvent e) {
-								if (!table.getValueAt(model.getRowCount() - 1, 3).toString().equals("")
-										&& table.getValueAt(model.getRowCount() - 1, 3).toString().matches("\\d+"))
-									updateTotalPrice();
-							}
+						testBug(editor);
 
-							@Override
-							public void removeUpdate(DocumentEvent e) {
-								if (!table.getValueAt(model.getRowCount() - 1, 3).toString().equals(""))
-									updateTotalPrice();
-							}
-
-							@Override
-							public void changedUpdate(DocumentEvent e) {
-
-							}
-						});
-						model.addTableModelListener(new TableModelListener() {
-							@Override
-							public void tableChanged(TableModelEvent e) {
-								if (e.getType() == TableModelEvent.UPDATE && e.getColumn() == soLuongColumnIndex) {
-									updateTotalPrice();
-									double tong = tinhGia();
-
-									((JTextField) object_sell[2][1]).setText(tong + "");
-								}
-							}
-						});
 					} else {
 						JOptionPane.showMessageDialog(null,
 								"Vui lòng nhập số lượng trước khi tìm kiếm sản phẩm tiếp theo");
@@ -426,7 +412,47 @@ public class BanThuoc_UI {
 			} else {
 				JOptionPane.showMessageDialog(null, "Thuốc đã có trong danh sách");
 			}
+			textMaThuocFind.setText("");
 		}
+	}
+
+	private void testBug(Component editor) {
+
+		if (editor != null && editor instanceof JTextComponent) {
+			((JTextComponent) editor).selectAll();
+		}
+		Document doc = ((JTextComponent) editor).getDocument();
+		doc.addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				if (!table.getValueAt(model.getRowCount() - 1, 3).toString().equals("")
+						&& table.getValueAt(model.getRowCount() - 1, 3).toString().matches("\\d+"))
+					updateTotalPrice();
+
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				if (!table.getValueAt(model.getRowCount() - 1, 3).toString().equals(""))
+					updateTotalPrice();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+
+			}
+		});
+		model.addTableModelListener(new TableModelListener() {
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				if (e.getType() == TableModelEvent.UPDATE && e.getColumn() == 3) {
+					updateTotalPrice();
+					double tong = tinhGia();
+
+					((JTextField) object_sell[2][1]).setText(tong + "");
+				}
+			}
+		});
 	}
 
 	private boolean isSoLuongFilled() {
@@ -446,25 +472,24 @@ public class BanThuoc_UI {
 	}
 
 	private void updateTotalPrice() {
-
 		int soLuongColumnIndex = 3;
-
 		int lastRowIndex = model.getRowCount() - 1;
-
 		int soLuong = 0;
 		double gia = 0;
 
 		try {
+			String soLuongInput = table.getValueAt(lastRowIndex, soLuongColumnIndex).toString();
+			String giaInput = table.getValueAt(lastRowIndex, 4).toString();
 
-			soLuong = Integer.parseInt(table.getValueAt(lastRowIndex, soLuongColumnIndex).toString());
-			gia = Double.parseDouble(table.getValueAt(lastRowIndex, 4).toString());
+			soLuong = Integer.parseInt(soLuongInput);
+			gia = Double.parseDouble(giaInput);
 
 		} catch (NumberFormatException ex) {
 			ex.printStackTrace();
 		}
+
 		double thanhTien = soLuong * gia;
 		table.setValueAt(thanhTien, lastRowIndex, 5);
-
 	}
 
 	private boolean regex() {
@@ -524,9 +549,8 @@ public class BanThuoc_UI {
 		((JLabel) object_sell[0][1]).setText(generateCustomerCode(ma));
 		((JLabel) object_sell[0][1]).setFont(new Font("Arial", Font.BOLD, 15));
 		((JTextField) object_sell[1][1]).setText(formatTime(LocalDate.now()));
-		 checkIsselect =getValueStringInJlabel((JLabel) object_sell[0][1]);
+
 		((JTextField) object_sell[1][1]).setFont(new Font("Arial", Font.BOLD, 15));
-	
 
 	}
 
@@ -546,9 +570,9 @@ public class BanThuoc_UI {
 		((JLabel) object_sell[3][1]).setText("");
 		((JComboBox) object_sell[4][1]).setSelectedIndex(0);
 		((JTextField) object_sell[5][1]).setText("");
-	
+
 		labelTotal.setText("SỐ TIỀN TRẢ LẠI : ");
-		
+
 		textMaThuocFind.setText("");
 		model.setRowCount(0);
 		table.setModel(model);
@@ -623,7 +647,7 @@ public class BanThuoc_UI {
 		if (cb.isSelected()) {
 			if (table.getRowCount() > 0) {
 				HoaDon hd = getHoaDon("");
-				
+
 				int recomment = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn thêm hóa đơn vào hàng chờ ",
 						"Lưu ý", JOptionPane.YES_NO_OPTION);
 				if (recomment == JOptionPane.YES_OPTION) {
@@ -670,21 +694,38 @@ public class BanThuoc_UI {
 	public void thanhToan(double tongTien, double khachDua, String khuyenMai) {
 
 		HoaDon hd = getHoaDon("1");
-//			generateInvoice(hd, tongTien, khachDua, khuyenMai);
+	
 
 		if (!hDao.themHoaDon(hd)) {
 			Boolean loaiHoaDon = cb.isSelected() ? true : false;
-			if (hDao.themHoaDonVaoLoai(loaiHoaDon, "Bán ra", hd.getMaHD(), "")) {
+			if (hDao.themHoaDonVaoLoai(loaiHoaDon, "Bán ra", hd.getMaHD())) {
 				JOptionPane.showMessageDialog(null, "Tạo hóa đơn thành công");
+				if(hd.getMaKh().getMaKH().equals("")) {
+					generateInvoiceBanLe(hd, tongTien, khachDua,result);
+				}
+				else {
+					generateInvoice(hd, tongTien, khachDua, khuyenMai,result);
+				}
+				thayDoiDiemXepHang();
+				thayDoiSoLuongThuoc();
+				xoaTrang();
+
 			} else {
 				JOptionPane.showMessageDialog(null, "Thêm hóa đơn không thành công");
 			}
 
 		} else {
 			JOptionPane.showMessageDialog(null, "Tạo hóa đơn thành công");
+			if(hd.getMaKh().getMaKH().equals("")) {
+				generateInvoiceBanLe(hd, tongTien, khachDua,result);
+			}
+			else {
+				generateInvoice(hd, tongTien, khachDua, khuyenMai,result);
+			}
+			thayDoiDiemXepHang();
+			thayDoiSoLuongThuoc();
+			xoaTrang();
 		}
-		thayDoiSoLuongThuoc();
-		xoaTrang();
 
 	}
 
@@ -696,6 +737,30 @@ public class BanThuoc_UI {
 
 			soLuong = th.getSoLuong() - soLuong;
 			thuoc_DAO.suaThuoc(new Thuoc(), soLuong, maThuoc);
+		}
+	}
+
+	public void thayDoiDiemXepHang() {
+		String maKh = jtextMaKH.getText();
+		int dtl = (int) tinhGia() / 1000;
+		KhachHang kh = khachHang_DAO.getKhachHangByID(maKh, "");
+		int tinhDiem = kh.getDiemThanhVien() + dtl;
+		String xepHang;
+		if (tinhDiem <= 100) {
+			xepHang = "Đồng";
+		} else if (tinhDiem > 100 && tinhDiem <= 500) {
+			xepHang = "Bạc";
+		} else if (tinhDiem > 500 && tinhDiem <= 1500) {
+			xepHang = "Vàng";
+		} else if (tinhDiem > 1500 && tinhDiem <= 4000) {
+			xepHang = "Bạch kim";
+		} else {
+			xepHang = "Kim cương";
+		}
+		if (khachHang_DAO.updateKhachHangXepHang(tinhDiem, xepHang, maKh)) {
+
+		} else {
+			System.out.println("sai");
 		}
 	}
 
@@ -712,21 +777,20 @@ public class BanThuoc_UI {
 			} else if (nameButton.equals("Tìm")) {
 				timKhach.getTimKhach(jtextMaKH, (JTextField) object_custommer[0][1],
 						(JTextField) object_custommer[1][1], (JComboBox) object_custommer[2][1],
-						(JTextField) object_custommer[3][1], (JTextField) object_custommer[4][1]);
+						(JTextField) object_custommer[3][1], (JTextField) object_custommer[4][1],
+						(JLabel) object_sell[3][1]);
 
 			} else if (nameButton.equals("Xóa Thuốc")) {
 				xoaThuoc();
 			} else if (nameButton.equals("Xử lí hóa đơn tạm")) {
 
-		
-		
+//				String ma = ((JLabel) object_sell[0][1]).getText();
+//				System.out.println("Ma Truoc : " + ma);
 				hoaDonLuuTam.getHoaDonLuuTam(jtextMaKH, object_custommer, object_sell, table, cb);
-				if(!((JTextField) object_sell[2][1]).getText().equals("")) {
-					hidden(true);
-				}else {
-					hidden(false);
-				}
-				
+
+//				String masau = ((JLabel) object_sell[0][1]).getText();
+//				System.out.println("Ma Sau : " + masau);
+
 			} else if (nameButton.equals("Lưu tạm")) {
 				luuTamHoaDON();
 
@@ -734,6 +798,7 @@ public class BanThuoc_UI {
 				if (regexInHoaDon()) {
 					thanhToan(getValueDoubleỊntextField(object_sell[2][1]),
 							getValueDoubleỊntextField(object_sell[5][1]), getValueStringInJlabel(object_sell[3][1]));
+						
 
 				}
 			}

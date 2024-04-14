@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
@@ -164,13 +165,13 @@ public class HoaDon_DAO {
 	}
 
 //	update trang thai
-	public boolean themHoaDonVaoLoai(Boolean loai, String trangthai, String ma,String lyDo) {
+	public boolean themHoaDonVaoLoai(Boolean loai, String trangthai, String ma) {
 
 		Connection con = accessDataBase();
 		PreparedStatement p = null;
 
 		try {
-			p = con.prepareStatement("UPDATE HoaDon SET LoaiHoaDon = ?, TinhTrang = ?, Lydo =  " + (lyDo.equals("")?"": "N'" + lyDo + "'") + "WHERE MaHD = ?");
+			p = con.prepareStatement("UPDATE HoaDon SET LoaiHoaDon = ?, TinhTrang = ?  WHERE MaHD = ?");
 			int loaihd;
 
 			if (loai == null) {
@@ -265,6 +266,45 @@ public class HoaDon_DAO {
 
 		return lhd;
 	}
+	
+	public boolean themHoaDonVaoLoaiLyDo(Boolean loai, String trangthai, String ma, String lyDo) {
+	    Connection con = accessDataBase();
+	    PreparedStatement p = null;
+
+	    try {
+	        String sql = "UPDATE HoaDon SET LoaiHoaDon = ?, TinhTrang = ?, Lydo = ? WHERE MaHD = ?";
+	        p = con.prepareStatement(sql);
+	        
+	        int loaihd;
+	        if (loai == null) {
+	            p.setNull(1, java.sql.Types.BIT);
+	        } else {
+	            loaihd = loai ? 1 : 0;
+	            p.setInt(1, loaihd);
+	        }
+	        p.setString(2, trangthai);
+	        p.setString(3, lyDo); 
+	        p.setString(4, ma);
+
+	        p.executeUpdate();
+
+	        return true;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        try {
+	            if (con != null) {
+	                con.close();
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
+
+	
+	
 	public boolean xoaHoaDonLuuTam(String maHD) {
 		Connection con = accessDataBase();
 		PreparedStatement p =null;
@@ -283,6 +323,28 @@ public class HoaDon_DAO {
 		
 		
 		
+	}
+	public int thongKeHoaDon(String loai,LocalDate lv) {
+		Connection con =accessDataBase();
+		PreparedStatement p = null;
+		int soLuongHoaDon = 0;
+		try {
+			p =con.prepareStatement("SELECT COUNT(*) AS SoLuong FROM HoaDon WHERE TinhTrang = ? AND NgayTaoHoaDon = ?");
+			p.setString(1, loai);
+			p.setDate(2, java.sql.Date.valueOf(lv));
+			try (ResultSet rs = p.executeQuery()){
+				while (rs.next()) {
+					 soLuongHoaDon = rs.getInt("SoLuong");
+					
+					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		 return soLuongHoaDon;
 	}
 
 }

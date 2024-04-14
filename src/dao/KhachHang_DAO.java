@@ -131,7 +131,7 @@ public class KhachHang_DAO {
 				
 				p = con.prepareStatement(
 						"UPDATE KhachHang SET TenKH = ?,NgaySinh =?,Tuoi = ?,GioiTinh=?,"
-						+ "SDT=?,DiaChi =?,DiemThanhVien= ? ,XepHang = ? WHERE MaKH=?");
+						+ "SDT=?,DiaChi =?,DiemThanhVien= ?  WHERE MaKH=?");
 				p.setString(1, kh.getTenKH());
 				p.setDate(2, java.sql.Date.valueOf(kh.getNgaySinh()));
 				p.setInt(3, kh.getTuoi());
@@ -163,4 +163,37 @@ public class KhachHang_DAO {
 		}
 
 	}
+	public boolean updateKhachHangXepHang(int dtv, String xh,String ma) {
+
+		Connection con = connectDataBase.ConnectionData.accessDataBase();
+		PreparedStatement p = null;
+		try {
+			
+				
+				p = con.prepareStatement(
+						"UPDATE KhachHang SET DiemThanhVien= ? ,XepHang = ? WHERE MaKH=?");
+				
+
+				p.setInt(1, dtv);
+				p.setString(2, xh);
+				p.setString(3, ma);
+			
+			p.executeUpdate();
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+	
 }

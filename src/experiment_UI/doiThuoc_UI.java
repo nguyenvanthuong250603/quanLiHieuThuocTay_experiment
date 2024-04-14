@@ -506,7 +506,7 @@ public class DoiThuoc_UI {
 			if (ctDao.upDateDoiTra(listCtHD)) {
 				Boolean loaiHD = getValueInComboBox((JComboBox) object_find[1][1]).equals("Hóa đơn bán hàng") ? true
 						: false;
-				hoaDon_DAO.themHoaDonVaoLoai(loaiHD, "Đổi thuốc", table.getValueAt(0, 0).toString(),
+				hoaDon_DAO.themHoaDonVaoLoaiLyDo(loaiHD, "Đổi thuốc", table.getValueAt(0, 0).toString(),
 						jtetJTextAreReason.getText());
 			} else {
 				System.out.println("loi");
@@ -668,7 +668,7 @@ public class DoiThuoc_UI {
 				}
 				Boolean loaiHD = getValueInComboBox((JComboBox) object_find[1][1]).equals("Hóa đơn bán hàng") ? true
 						: false;
-				hoaDon_DAO.themHoaDonVaoLoai(loaiHD, "Kê lại đơn",
+				hoaDon_DAO.themHoaDonVaoLoaiLyDo(loaiHD, "Kê lại đơn",
 						table.getValueAt(table.getSelectedRow(), 0).toString(), jtetJTextAreReason.getText());
 
 			}

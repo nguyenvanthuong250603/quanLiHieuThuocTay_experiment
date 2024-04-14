@@ -190,9 +190,8 @@ public class HoaDonLuuTam_UI {
 	public void chonHoaDon() {
 		if (table.getRowCount() > 0) {
 			int index = table.getSelectedRow();
-			((JLabel) obj_sell[0][1]).setText(table.getValueAt(index, 0).toString());
-
-			HoaDon hd = hDao.getHoaDonByID(((JLabel) obj_sell[0][1]).getText());
+			
+			HoaDon hd = hDao.getHoaDonByID(table.getValueAt(index, 0).toString());
 
 			textMaKH.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
 			KhachHang kh = getKH(hd.getMaKh().getMaKH(), "");
@@ -214,7 +213,9 @@ public class HoaDonLuuTam_UI {
 			((JTextField) obj_sell[2][1]).setText(tong + "");
 
 			((JComboBox) obj_sell[4][1]).setSelectedItem(hd.getHinhThucThanhToan());
+			((JLabel) obj_sell[0][1]).setText(hd.getMaHD());
 			table_trage.setModel(model_product);
+			
 			frame.dispose();
 		} else {
 			JOptionPane.showMessageDialog(null, "Không có hóa đơn nào để xử lí");

@@ -47,7 +47,7 @@ public class HoaDonBanThuoc_UI {
 		hienBangDuLieu();
 		return hd;
 	}
-
+	
 	private JPanel north() {
 		JPanel north = new JPanel(new BorderLayout());
 		createTitle(north, "Tìm kiếm và lọc hóa đơn");

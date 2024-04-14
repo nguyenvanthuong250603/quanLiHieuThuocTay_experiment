@@ -70,6 +70,7 @@ public class Default_UI {
 		container = new JPanel();
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
+		container.add(createThongKe(), TK);
 		container.add(createHoaDon(), HĐBT);
 		container.add(createKhachHang(), KH);
 		container.add(createNhanVien(), NV);
@@ -197,6 +198,10 @@ public class Default_UI {
 					cardLayout.show(container, HĐBT);
 					break;
 				}
+				case TK: {
+					cardLayout.show(container,TK);
+					break;
+				}
 				default:
 					throw new IllegalArgumentException("Unexpected value: " + nameButton);
 				}
@@ -223,7 +228,7 @@ public class Default_UI {
 		boxx.add(createCompoment("gift\\down.png", "Hóa đơn", "gift\\hoadon.png", true));
 		boxx.add(createCompoment("gift\\upload.png", "Khách hàng", "gift\\hoadon.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Nhân viên", "gift\\hoadon.png", true));
-		boxx.add(createCompoment("gift\\thuoc.png", "Thống kê", "gift\\drug.png", true));
+		boxx.add(createCompoment("gift\\thuoc.png", "Thống Kê", "gift\\drug.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Kiểm toán", "gift\\hoadon.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Đăng xuất", "gift\\hoadon.png", true));
 		westt.add(boxx);
@@ -290,5 +295,9 @@ public class Default_UI {
 	private JPanel createHoaDon() {
 		HoaDonBanThuoc_UI hd = new HoaDonBanThuoc_UI();
 		return hd.getHoaDon();
+	}
+	private JPanel createThongKe() {
+		ThongKe_UI thongKe_UI = new ThongKe_UI();
+		return thongKe_UI.getThongKe();
 	}
 }
