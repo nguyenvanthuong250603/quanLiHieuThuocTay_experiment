@@ -48,8 +48,9 @@ public class Default_UI {
 	private CardLayout cardLayout;
 	private AbstractButton selectedButton = null;
 	private JFrame jFrame;
-	private NhanVien_DAO nv_Dao= new NhanVien_DAO(); 
-	public Default_UI(JFrame jFrame,String MaNV) {
+	private NhanVien_DAO nv_Dao = new NhanVien_DAO();
+
+	public Default_UI(JFrame jFrame, String MaNV) {
 		this.jFrame = jFrame;
 		jFrame.setTitle("Hiệu Thuốc Ánh Dương");
 		jFrame.setExtendedState(jFrame.MAXIMIZED_BOTH);
@@ -69,15 +70,17 @@ public class Default_UI {
 		container = new JPanel();
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
+		container.add(createHoaDon(), HĐBT);
+		container.add(createKhachHang(), KH);
+		container.add(createNhanVien(), NV);
 		container.add(createDoiThuoc(), DT);
 		container.add(createBanThuoc(MaNV), BT);
 		container.add(createQuanLyThuoc(), T);
-		container.add(createHoaDon(),HĐBT);
-		container.add(createNhanVien(),NV);
-		container.add(createKhachHang(),KH);
-		
-		container.add(createQuanLyNhapThuoc(),TDNT);
-		container.add(createNhapThuoc(),HDNT);
+
+		container.add(createKhachHang(), KH);
+
+		container.add(createQuanLyNhapThuoc(), TDNT);
+		container.add(createNhapThuoc(), HDNT);
 		jFrame.add(sidebar, BorderLayout.WEST);
 		jFrame.add(container, BorderLayout.CENTER);
 		jFrame.setResizable(false);
@@ -86,9 +89,9 @@ public class Default_UI {
 
 	public JPanel createCompoment(String iconRight, String nameButton, String iconLeft, boolean type) {
 		JPanel compoment = new JPanel(new BorderLayout());
-	
-		AbstractButton btn;
 
+		AbstractButton btn;
+	
 		if (type) {
 
 			btn = new JButton();
@@ -102,7 +105,7 @@ public class Default_UI {
 					new Dimension(compoment.getPreferredSize().width + 260, btn.getPreferredSize().height + 40));
 		}
 
-		btn.setBackground(new Color(89,168,104));
+		btn.setBackground(new Color(89, 168, 104));
 		btn.setFocusPainted(false);
 		btn.setBorder(new EmptyBorder(0, 20, 0, 10));
 
@@ -122,7 +125,7 @@ public class Default_UI {
 			public void actionPerformed(ActionEvent e) {
 				if (type) {
 					if (selectedButton != null) {
-						selectedButton.setBackground(new Color(89,168,104 ));
+						selectedButton.setBackground(new Color(89, 168, 104));
 					}
 					btn.setBackground(Color.red);
 					selectedButton = btn;
@@ -135,28 +138,33 @@ public class Default_UI {
 					break;
 				}
 				case HD: {
-					if (btn.isSelected()) {
-
-						btn.setIcon(new ImageIcon("gift//upload.png"));
-
-						JPanel r = new JPanel();
-						r.setLayout(new BoxLayout(r, BoxLayout.Y_AXIS));
-						JPanel v = createCompoment("gift\\upload.png", "Tạo đơn nhập thuốc", "gift\\hoadon.png", true);
-						JPanel o = createCompoment("gift\\upload.png", "Hóa đơn bán thuốc", "gift\\hoadon.png", true);
-						JPanel z = createCompoment("gift\\upload.png", "Hóa đơn nhập thuốc", "gift\\hoadon.png", true);
-						Object[] xx = { v, o, z };
-						for (Object s : xx) {
-							r.add((Component) s);
-						}
-						compoment.add(r, BorderLayout.AFTER_LAST_LINE);
-
-					} else {
-
-						btn.setIcon(new ImageIcon("gift//down.png"));
-						for (int i = 1; i < compoment.getComponentCount(); i++) {
-							compoment.remove(i);
-						}
-					}
+//					if (btn.isSelected()) {
+//
+//						btn.setIcon(new ImageIcon("gift//upload.png"));
+//
+//						JPanel r = new JPanel();
+//						r.setLayout(new BoxLayout(r, BoxLayout.Y_AXIS));
+//						JPanel v = createCompoment("gift\\upload.png", "Tạo đơn nhập thuốc", "gift\\hoadon.png", true);
+//						JPanel o = createCompoment("gift\\upload.png", "Hóa đơn bán thuốc", "gift\\hoadon.png", true);
+//						JPanel z = createCompoment("gift\\upload.png", "Hóa đơn nhập thuốc", "gift\\hoadon.png", true);
+//						Object[] xx = { v, o, z };
+//						for (Object s : xx) {
+//							r.add((Component) s);
+//						}
+//						compoment.add(r, BorderLayout.AFTER_LAST_LINE);
+//
+//					} else {
+//
+//						btn.setIcon(new ImageIcon("gift//down.png"));
+//						for (int i = 1; i < compoment.getComponentCount(); i++) {
+//							compoment.remove(i);
+//						}
+//					}
+				
+						cardLayout.show(container, HĐBT);
+						
+					
+					
 					break;
 				}
 				case BT: {
@@ -169,23 +177,23 @@ public class Default_UI {
 					cardLayout.show(container, DT);
 					break;
 				}
-				case TDNT:{
+				case TDNT: {
 					cardLayout.show(container, TDNT);
 					break;
 				}
-				case HDNT:{
+				case HDNT: {
 					cardLayout.show(container, HDNT);
 					break;
 				}
-				case KH : {
+				case KH: {
 					cardLayout.show(container, KH);
 					break;
 				}
-				case NV : {
+				case NV: {
 					cardLayout.show(container, NV);
 					break;
 				}
-				case HĐBT : {
+				case HĐBT: {
 					cardLayout.show(container, HĐBT);
 					break;
 				}
@@ -206,13 +214,13 @@ public class Default_UI {
 	public JPanel west(String MaNV) {
 		JPanel westt = new JPanel();
 		Box boxx = Box.createVerticalBox();
-		westt.setBackground(new Color(89,168,104));
+		westt.setBackground(new Color(89, 168, 104));
 		boxx.add(brand(MaNV));
 
 		boxx.add(createCompoment("gift\\thuoc.png", "Bán thuốc", "gift\\thuoc.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Thuốc", "gift\\hoadon.png", true));
 		boxx.add(createCompoment("gift\\upload.png", "Đổi Thuốc", "gift\\hoadon.png", true));
-		boxx.add(createCompoment("gift\\down.png", "Hóa đơn", "gift\\hoadon.png", false));
+		boxx.add(createCompoment("gift\\down.png", "Hóa đơn", "gift\\hoadon.png", true));
 		boxx.add(createCompoment("gift\\upload.png", "Khách hàng", "gift\\hoadon.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Nhân viên", "gift\\hoadon.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Thống kê", "gift\\drug.png", true));
@@ -231,16 +239,16 @@ public class Default_UI {
 //		text.setForeground(Color.WHITE);
 		text.setIconTextGap(20);
 		compomet.setBorder(new EmptyBorder(20, 0, 10, 20));
-		compomet.setBackground(new Color(89,168,104 ));
-		compomet.add(text,BorderLayout.NORTH);
-		
+		compomet.setBackground(new Color(89, 168, 104));
+		compomet.add(text, BorderLayout.NORTH);
+
 		NhanVien nv = nv_Dao.getNhanVienFindByID(MaNV);
-		JLabel x = new JLabel(nv.getChucVu() + " :  "+ nv.getHoTen());
+		JLabel x = new JLabel(nv.getChucVu() + " :  " + nv.getHoTen());
 		x.setFont(new Font("Arial", Font.BOLD, 18));
 		x.setBorder(new EmptyBorder(15, 10, 0, 0));
 		x.setForeground(Color.WHITE);
-		
-		compomet.add(x,BorderLayout.AFTER_LAST_LINE);
+
+		compomet.add(x, BorderLayout.AFTER_LAST_LINE);
 		return compomet;
 	}
 
@@ -258,24 +266,29 @@ public class Default_UI {
 		DoiThuoc_UI doiThuoc = new DoiThuoc_UI();
 		return doiThuoc.getDoiThuoc();
 	}
+
 	private JPanel createNhapThuoc() {
-		NhapThuoc_UI nhapThuoc = new  NhapThuoc_UI();
+		NhapThuoc_UI nhapThuoc = new NhapThuoc_UI();
 		return nhapThuoc.getNhapThuoc();
 	}
+
 	private JPanel createQuanLyNhapThuoc() {
 		QuanLyDonNhapThuoc_UI QLDNT = new QuanLyDonNhapThuoc_UI();
 		return QLDNT.getQuanLyDonNhapThuoc();
 	}
+
 	private JPanel createKhachHang() {
 		KhachHang_UI KH = new KhachHang_UI();
 		return KH.getKhachHang();
 	}
+
 	private JPanel createNhanVien() {
 		NhanVien_UI NV = new NhanVien_UI();
-		return  NV.getNhanVien();
+		return NV.getNhanVien();
 	}
+
 	private JPanel createHoaDon() {
 		HoaDonBanThuoc_UI hd = new HoaDonBanThuoc_UI();
-		return  hd.getHoaDon();
+		return hd.getHoaDon();
 	}
 }

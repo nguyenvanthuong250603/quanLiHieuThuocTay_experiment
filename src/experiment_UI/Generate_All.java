@@ -1,21 +1,18 @@
 package experiment_UI;
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.TabStop.Alignment;
+
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import java.awt.Desktop;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-
-import static experiment_UI.Generate_All.formatTime;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -26,21 +23,15 @@ import java.awt.Font;
 import java.awt.HeadlessException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.font.TextAttribute;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+
 import java.util.Random;
-import java.util.concurrent.Phaser;
 
 import javax.swing.BorderFactory;
 
@@ -69,9 +60,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfWriter;
 import com.toedter.calendar.JDateChooser;
 
 import dao.ChiTietHoaDon_DAO;
@@ -350,6 +338,18 @@ public class Generate_All {
 
 	}
 
+	public static JLabel sampleModel3(String string) {
+
+		JLabel lb = new JLabel(string);
+		lb.setFont(new Font("Arial", Font.BOLD, 15));
+
+		lb.setHorizontalTextPosition(JLabel.LEFT);
+		lb.setPreferredSize(new Dimension(120, 30));
+//		lb.setBorder(new EmptyBorder(5, 0, 5, 0));
+		return lb;
+
+	}
+
 	public static JPanel createNameAndTextField(JTextField jtext, String nameLabel) {
 
 		JPanel div = new JPanel(new BorderLayout());
@@ -403,6 +403,16 @@ public class Generate_All {
 	public static JPanel createJcombobox2(String labelString, JComboBox cb) {
 		JPanel t3 = new JPanel(new BorderLayout());
 		t3.add(sampleModel2(labelString), BorderLayout.WEST);
+		t3.add(cb, BorderLayout.CENTER);
+		cb.setPreferredSize(new Dimension(100, 30));
+		t3.setBorder(new EmptyBorder(5, 30, 5, 30));
+		return t3;
+
+	}
+
+	public static JPanel createJcombobox3(String labelString, JComboBox cb) {
+		JPanel t3 = new JPanel(new BorderLayout());
+		t3.add(sampleModel3(labelString), BorderLayout.WEST);
 		t3.add(cb, BorderLayout.CENTER);
 		cb.setPreferredSize(new Dimension(100, 30));
 		t3.setBorder(new EmptyBorder(5, 30, 5, 30));
@@ -519,14 +529,17 @@ public class Generate_All {
 				for (KhachHang khachHang : lkh) {
 					String gender = transGender(khachHang.isGioiTinh());
 					if (khachHang.getMaKH().equals(maKh)) {
+						
 						((JLabel) objects[0][1]).setText(khachHang.getMaKH());
+						
 						((JTextField) objects[1][1]).setText(khachHang.getTenKH());
 						((JDateChooser) objects[2][1]).setDate(java.sql.Date.valueOf(khachHang.getNgaySinh()));
 						((JTextField) objects[3][1]).setText(khachHang.getTuoi() + "");
 						((JComboBox) objects[4][1]).setSelectedItem(gender);
 						((JTextField) objects[5][1]).setText(khachHang.getsDT());
 						((JTextField) objects[6][1]).setText(khachHang.getDiaCHi());
-						((JLabel) objects[7][1]).setText(khachHang.getDiemThanhVien() + "");
+						((JTextField) objects[7][1]).setText(khachHang.getXepHang());
+						((JLabel) objects[8][1]).setText(khachHang.getDiemThanhVien() + "");
 
 					}
 				}
@@ -592,7 +605,7 @@ public class Generate_All {
 
 	public static void hienTableTrongHoaDon(JTable table, DefaultTableModel model, JTable table_product,
 			DefaultTableModel model_product, Object[][] object, String sdt, int loai) {
-
+		System.out.println(sdt);
 		ArrayList<HoaDon> hDons = hDon_DAO.getHoaDonToLuuTam(sdt, loai);
 		for (HoaDon hoaDon : hDons) {
 			NhanVien nv = getNV(hoaDon.getMaNV().getMaNV());
@@ -604,10 +617,9 @@ public class Generate_All {
 
 		if (table.getRowCount() >= 1) {
 			table.setRowSelectionInterval(0, 0);
-			
-			String maKH =table.getValueAt(0, 2) ==null ?"":table.getValueAt(0, 2).toString();
-			defaultMouse(model_product, table_product, table.getValueAt(0, 0).toString(),
-					maKH, object, table);
+
+			String maKH = table.getValueAt(table.getSelectedRow(), 2) == null ? "" : table.getValueAt(table.getSelectedRow(), 2).toString();
+			defaultMouse(model_product, table_product, table.getValueAt(0, 0).toString(), maKH, object, table);
 		}
 		table.setModel(model);
 		table.addMouseListener(new MouseListener() {
@@ -637,11 +649,11 @@ public class Generate_All {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				String maKH =table.getValueAt(0, 2) ==null ?"":table.getValueAt(0, 2).toString();
+				String maKH = table.getValueAt(table.getSelectedRow(), 2) == null ? "" : table.getValueAt(table.getSelectedRow(), 2).toString();
 				model_product.setRowCount(0);
 				int index = table.getSelectedRow();
 				String maHD = table.getValueAt(index, 0).toString();
-				defaultMouse(model_product, table_product, maHD,maKH, object, table);
+				defaultMouse(model_product, table_product, maHD, maKH, object, table);
 
 			}
 		});
@@ -654,7 +666,7 @@ public class Generate_All {
 		HoaDon hd = hDon_DAO.getHoaDonByID(maHD);
 
 		ArrayList<ChiTietHoaDon> lChiTietHoaDons = cTietHoaDon_DAO.getcChiTietHoaDons(maHD);
-		
+
 		for (ChiTietHoaDon ct : lChiTietHoaDons) {
 			Object[] row_product = { ct.getMaThuoc().getMaThuoc(), ct.getTenThuoc(), ct.getDonVi(), ct.getSoLuong(),
 					ct.getDonGia(), ct.getThanhTien() };
@@ -662,7 +674,7 @@ public class Generate_All {
 
 		}
 		table_product.setModel(model_product);
-		if(!maKH.equals("")) {
+		if (!maKH.equals("")) {
 			KhachHang kh = getKH(maKH, "");
 			((JTextField) obj[0][1]).setText(kh.getTenKH());
 
@@ -674,7 +686,7 @@ public class Generate_All {
 				((JTextField) obj[1][1]).setText(kh.getTenKH());
 				((JTextField) obj[2][1]).setText(kh.getsDT());
 				((JTextField) obj[3][1]).setText(transGender(kh.isGioiTinh()));
-			
+
 			}
 		}
 	}

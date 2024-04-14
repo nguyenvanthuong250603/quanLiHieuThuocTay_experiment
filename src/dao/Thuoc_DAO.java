@@ -141,15 +141,14 @@ public class Thuoc_DAO {
 					p.setString(15, thuoc.getBaoQuan());
 					p.setString(16, thuoc.getMoTa());
 					p.setString(17, thuoc.getMaThuoc());
-					p.executeUpdate();
-					return true;
+				
 				} else {
 					p = con.prepareStatement("UPDATE Thuoc SET SoLuong = ? WHERE MaThuoc = ?");
 					p.setInt(1, soLuong);
 					p.setString(2, ma);
-					p.executeUpdate();
-					return true;
 				}
+				p.executeUpdate();
+				return true;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
@@ -175,16 +174,16 @@ public class Thuoc_DAO {
 
 			String sql;
 			if (!NSX.equals("") && loaiThuoc.equals("")) {
-				sql = "SELECT *FROM Thuoc WHERE Thuoc.NhaSanXuat = ?";
+				sql = "SELECT *FROM Thuoc WHERE NhaSanXuat = ?";
 				p = con.prepareStatement(sql);
 				p.setString(1, NSX);
 
 			} else if (NSX.equals("") && !loaiThuoc.equals("")) {
-				sql = "SELECT *FROM Thuoc WHERE Thuoc.loaiThuoc = ?";
+				sql = "SELECT *FROM Thuoc WHERE LoaiThuoc = ?";
 				p = con.prepareStatement(sql);
 				p.setString(1, loaiThuoc);
 			} else {
-				sql = "SELECT * FROM Thuoc WHERE Thuoc.NhaSanXuat = ? AND Thuoc.LoaiThuoc = ?";
+				sql = "SELECT * FROM Thuoc WHERE NhaSanXuat = ? AND LoaiThuoc = ?";
 				p = con.prepareStatement(sql);
 				p.setString(1, NSX);
 				p.setString(2, loaiThuoc);
@@ -197,7 +196,7 @@ public class Thuoc_DAO {
 				LocalDate localDateNsx = date.toLocalDate();
 				LocalDate localDateNhh = dateNhh.toLocalDate();
 				Thuoc thuoc = new Thuoc(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getString(5),
-						new NhaSanXuat(rs.getString(8)), localDateNsx, localDateNhh, rs.getString(9), rs.getString(10),
+						new NhaSanXuat(rs.getString(6)), localDateNsx, localDateNhh, rs.getString(9), rs.getString(10),
 						rs.getString(11), rs.getString(12), rs.getString(13), rs.getString(14), rs.getString(15),
 						rs.getString(16), rs.getString(17));
 

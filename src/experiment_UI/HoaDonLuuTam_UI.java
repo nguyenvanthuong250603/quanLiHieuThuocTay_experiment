@@ -1,16 +1,17 @@
 package experiment_UI;
 
 import static experiment_UI.Generate_All.*;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
+
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
-import java.util.Iterator;
+
 
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
+
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -23,19 +24,16 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.AsyncBoxView.ChildLocator;
 
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
-import com.toedter.calendar.JDateChooser;
 
 import dao.ChiTietHoaDon_DAO;
 import dao.HoaDon_DAO;
-import dao.NhanVien_DAO;
+
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.KhachHang;
 import entity.NhanVien;
-import entity.Thuoc;
+
 import experiment_UI.Generate_All.CustomTableCellRenderer;
 
 public class HoaDonLuuTam_UI {
@@ -53,13 +51,13 @@ public class HoaDonLuuTam_UI {
 	private DefaultTableModel model;
 	private JTextField textMaKH;
 	private Object[][] obj_customer, obj_sell;
-	private JLabel dtl;
+
 	private HoaDon_DAO hDao = new HoaDon_DAO();
 	private JCheckBox cBox;
 	private ChiTietHoaDon_DAO ctDao = new ChiTietHoaDon_DAO();
 	private JTextField timSdt;
 
-	public synchronized void getHoaDonLuuTam(JTextField textMaKhach, Object[][] customer, Object[][] sell, JLabel dtl,
+	public void getHoaDonLuuTam(JTextField textMaKhach, Object[][] customer, Object[][] sell, 
 			JTable tablee, JCheckBox cb) {
 		frame = new JFrame();
 		frame.setTitle("Tìm Kiếm Khách Hàng");
@@ -67,7 +65,7 @@ public class HoaDonLuuTam_UI {
 		frame.setSize(1100, 800);
 		frame.setLocationRelativeTo(null);
 
-		frame.setDefaultCloseOperation(frame.DISPOSE_ON_CLOSE);
+		frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		frame.add(north(), BorderLayout.NORTH);
 		frame.add(cenTer(), BorderLayout.CENTER);
 		frame.add(footer(), BorderLayout.SOUTH);
@@ -76,7 +74,7 @@ public class HoaDonLuuTam_UI {
 			this.textMaKH = textMaKhach;
 			this.obj_customer = customer;
 			this.obj_sell = sell;
-			this.dtl = dtl;
+			
 			this.cBox = cb;
 			this.table_trage = tablee;
 		}
@@ -203,7 +201,9 @@ public class HoaDonLuuTam_UI {
 			((JTextField) obj_customer[1][1]).setText(kh.getTuoi() + "");
 			((JComboBox) obj_customer[2][1]).setSelectedItem(transGender(kh.isGioiTinh()));
 			((JTextField) obj_customer[3][1]).setText(kh.getsDT());
-			dtl.setText(kh.getDiemThanhVien() + "");
+			
+			((JTextField) obj_customer[4][1]).setText(kh.getXepHang());
+			
 			cBox.setSelected(true);
 
 			((JTextField) obj_sell[1][1]).setText(formatTime(hd.getNgayTaoHoaDon()));
@@ -213,7 +213,7 @@ public class HoaDonLuuTam_UI {
 			}
 			((JTextField) obj_sell[2][1]).setText(tong + "");
 
-			((JComboBox) obj_sell[3][1]).setSelectedItem(hd.getHinhThucThanhToan());
+			((JComboBox) obj_sell[4][1]).setSelectedItem(hd.getHinhThucThanhToan());
 			table_trage.setModel(model_product);
 			frame.dispose();
 		} else {
@@ -242,6 +242,7 @@ public class HoaDonLuuTam_UI {
 			model_product.addRow(row_product);
 			
 		}
+		table.setRowSelectionInterval(0, 0);
 		table_product.setModel(model_product);
 		KhachHang kh = getKH(table.getValueAt(0, 2).toString(), "");
 		((JTextField) object_kh[0][1]).setText(kh.getTenKH());

@@ -68,7 +68,7 @@ import java.util.ArrayList;
 
 public class BanThuoc_UI {
 
-	private JCheckBox cb, cbDTL;
+	private JCheckBox cb;
 	private Object[][] object_custommer, object_sell;
 	private JComboBox optionGender, optionPTTT, optionDoTuoi;
 	private JLabel labelTotal;
@@ -80,7 +80,6 @@ public class BanThuoc_UI {
 	private JTable table;
 	private Thuoc_DAO th_DAO = new Thuoc_DAO();
 	private TimKhach_UI timKhach = new TimKhach_UI();
-	private JLabel labelDTL = new JLabel();
 	private int giatru = 0;
 
 	private JPanel sell, find;
@@ -91,6 +90,7 @@ public class BanThuoc_UI {
 	private ArrayList<HoaDon> listHD = new ArrayList<HoaDon>();
 	public HoaDon_DAO hDao = new HoaDon_DAO();
 	private Thuoc_DAO thuoc_DAO = new Thuoc_DAO();
+	private String checkIsselect;
 	public JPanel getBanThuoc(String maNV) {
 		JPanel sellTotal = new JPanel(new BorderLayout());
 		JPanel sellManagement = new JPanel(new BorderLayout());
@@ -116,19 +116,15 @@ public class BanThuoc_UI {
 		jtextMaKH.setEditable(value);
 		for (int i = 0; i < object_custommer.length; i++) {
 			if (object_custommer[i][1] instanceof JTextField) {
-
+				
 				((JTextField) object_custommer[i][1]).setEditable(value);
-			} else if (object_custommer[i][1] instanceof JLabel) {
-				((JLabel) object_custommer[i][1]).setEnabled(value);
-			} else {
+			}  else {
+				
 				((JComboBox) object_custommer[i][1]).setEnabled(value);
 			}
 
 		}
-		cbDTL.setEnabled(value);
-		if (value == false) {
-			cbDTL.setSelected(false);
-		}
+
 	}
 
 	public JPanel table_Drug() {
@@ -205,7 +201,8 @@ public class BanThuoc_UI {
 
 		String[] gt = { "Nam", "Nữ" };
 		Object[][] trage = { { "Tên KH", new JTextField() }, { "Tuổi", new JTextField() },
-				{ "Giới tính", optionGender = new JComboBox(gt) }, { "SDT", new JTextField() } };
+				{ "Giới tính", optionGender = new JComboBox(gt) }, { "SDT", new JTextField() },
+				{ "Xếp hạng", new JTextField() } };
 		object_custommer = trage;
 		for (Object[] objects : object_custommer) {
 			if (objects[1] instanceof JTextField) {
@@ -216,21 +213,21 @@ public class BanThuoc_UI {
 
 			}
 		}
-		JPanel DTL = new JPanel();
-		DTL.setLayout(new BoxLayout(DTL, BoxLayout.X_AXIS));
-		cbDTL = new JCheckBox();
-		cbDTL.setBorder(new EmptyBorder(0, 0, 0, 10));
-		DTL.add(cbDTL);
-		DTL.setBorder(new EmptyBorder(0, 30, 0, 0));
-		DTL.add(sampleModel2("Điểm tích lũy"));
-		labelDTL.setBorder(new EmptyBorder(0, 40, 0, 0));
-		labelDTL.setFont(new Font("Arial", Font.ITALIC, 18));
-		labelDTL.setForeground(Color.RED);
-		DTL.add(labelDTL);
+//		JPanel DTL = new JPanel();
+//		DTL.setLayout(new BoxLayout(DTL, BoxLayout.X_AXIS));
+//		cbDTL = new JCheckBox();
+//		cbDTL.setBorder(new EmptyBorder(0, 0, 0, 10));
+//		DTL.add(cbDTL);
+//		DTL.setBorder(new EmptyBorder(0, 30, 0, 0));
+//		DTL.add(sampleModel2("Điểm tích lũy"));
+//		labelDTL.setBorder(new EmptyBorder(0, 40, 0, 0));
+//		labelDTL.setFont(new Font("Arial", Font.ITALIC, 18));
+//		labelDTL.setForeground(Color.RED);
+//		DTL.add(labelDTL);
 
 		inf.add(check, BorderLayout.NORTH);
 		inf.add(input, BorderLayout.CENTER);
-		inf.add(DTL, BorderLayout.SOUTH);
+
 		return inf;
 
 	}
@@ -244,8 +241,8 @@ public class BanThuoc_UI {
 		String[] pttt = { "Tiền mặt", "Chuyển khoản", "Quẹt thẻ" };
 
 		Object[][] trage = { { "Mã HĐ", new JLabel() }, { "Ngày tạo", new JTextField() },
-				{ "Khách cần trả", new JTextField(37) }, { "PTTT", new JComboBox(pttt) },
-				{ "Thuế VAT", new JLabel("5%") }, { "Khách đưa", new JTextField() }, { "", new JLabel() } };
+				{ "Khách cần trả", new JTextField(37) },{ "Khấu trừ", new JLabel() }, { "PTTT", new JComboBox(pttt) },
+				{ "Khách đưa", new JTextField() }, };
 
 		object_sell = trage;
 		for (Object[] objects : object_sell) {
@@ -358,7 +355,7 @@ public class BanThuoc_UI {
 		if (!getValue1.isEmpty() && !getValue2.isEmpty()) {
 			double value1 = Double.parseDouble(getValue1);
 			double value2 = Double.parseDouble(getValue2);
-			result = value2 - value1 - giatru;
+			result = value2 - value1;
 
 			labelTotal.setText("SỐ TIỀN TRẢ LẠI : " + formatValueDouble(result) + "VND");
 		}
@@ -392,7 +389,8 @@ public class BanThuoc_UI {
 						doc.addDocumentListener(new DocumentListener() {
 							@Override
 							public void insertUpdate(DocumentEvent e) {
-								if (!table.getValueAt(model.getRowCount() - 1, 3).toString().equals("")&&table.getValueAt(model.getRowCount() - 1, 3).toString().matches("\\d+"))
+								if (!table.getValueAt(model.getRowCount() - 1, 3).toString().equals("")
+										&& table.getValueAt(model.getRowCount() - 1, 3).toString().matches("\\d+"))
 									updateTotalPrice();
 							}
 
@@ -404,7 +402,7 @@ public class BanThuoc_UI {
 
 							@Override
 							public void changedUpdate(DocumentEvent e) {
-								
+
 							}
 						});
 						model.addTableModelListener(new TableModelListener() {
@@ -457,8 +455,8 @@ public class BanThuoc_UI {
 		double gia = 0;
 
 		try {
-			
-				soLuong = Integer.parseInt(table.getValueAt(lastRowIndex, soLuongColumnIndex).toString());
+
+			soLuong = Integer.parseInt(table.getValueAt(lastRowIndex, soLuongColumnIndex).toString());
 			gia = Double.parseDouble(table.getValueAt(lastRowIndex, 4).toString());
 
 		} catch (NumberFormatException ex) {
@@ -518,19 +516,7 @@ public class BanThuoc_UI {
 				hidden(false);
 			}
 		});
-		cbDTL.addActionListener(e -> {
-			if (cbDTL.isSelected()) {
-				if (!labelDTL.getText().isEmpty()) {
-					giatru = Integer.parseInt(labelDTL.getText()) * 10;
-					((JLabel) object_sell[6][1]).setText("-" + giatru + "VND");
-					caculateResult();
-				}
-			} else {
-				giatru = 0;
-				((JLabel) object_sell[6][1]).setText("");
-				caculateResult();
-			}
-		});
+
 	}
 
 	public void setDefaultText(String ma) {
@@ -538,10 +524,9 @@ public class BanThuoc_UI {
 		((JLabel) object_sell[0][1]).setText(generateCustomerCode(ma));
 		((JLabel) object_sell[0][1]).setFont(new Font("Arial", Font.BOLD, 15));
 		((JTextField) object_sell[1][1]).setText(formatTime(LocalDate.now()));
-
+		 checkIsselect =getValueStringInJlabel((JLabel) object_sell[0][1]);
 		((JTextField) object_sell[1][1]).setFont(new Font("Arial", Font.BOLD, 15));
-		((JLabel) object_sell[6][1]).setFont(new Font("Arial", Font.ITALIC, 18));
-		((JLabel) object_sell[6][1]).setForeground(Color.RED);
+	
 
 	}
 
@@ -552,15 +537,18 @@ public class BanThuoc_UI {
 		((JTextField) object_custommer[1][1]).setText("");
 		((JComboBox) object_custommer[2][1]).setSelectedIndex(0);
 		((JTextField) object_custommer[3][1]).setText("");
+		((JTextField) object_custommer[4][1]).setText("");
 		jtextMaKH.setText("");
-		labelDTL.setText("");
+
 		cb.setSelected(false);
 
 		((JTextField) object_sell[2][1]).setText("");
-		((JComboBox) object_sell[3][1]).setSelectedIndex(0);
+		((JLabel) object_sell[3][1]).setText("");
+		((JComboBox) object_sell[4][1]).setSelectedIndex(0);
 		((JTextField) object_sell[5][1]).setText("");
+	
 		labelTotal.setText("SỐ TIỀN TRẢ LẠI : ");
-		((JLabel) object_sell[6][1]).setText("");
+		
 		textMaThuocFind.setText("");
 		model.setRowCount(0);
 		table.setModel(model);
@@ -602,7 +590,7 @@ public class BanThuoc_UI {
 		NhanVien nv = new NhanVien(maNhanVien);
 
 		String tenKh = getValueStringInJTextField(object_custommer[0][1]);
-		String hinhThucThanhToan = ((JComboBox) object_sell[3][1]).getSelectedItem().toString();
+		String hinhThucThanhToan = ((JComboBox) object_sell[4][1]).getSelectedItem().toString();
 		Boolean loaiHoaDon;
 
 		if (!fake.equals("")) {
@@ -623,31 +611,32 @@ public class BanThuoc_UI {
 			tinhTrang = "Bán ra";
 
 		}
-		
+
 		double tongTien = Double.parseDouble(getValueStringInJTextField(object_sell[2][1]));
-		HoaDon hd = new HoaDon(maHD, nv, kh, tenKh, hinhThucThanhToan, LocalDate.now(), loaiHoaDon, tinhTrang, tongTien, "", listCtHD);
+		HoaDon hd = new HoaDon(maHD, nv, kh, tenKh, hinhThucThanhToan, LocalDate.now(), loaiHoaDon, tinhTrang, tongTien,
+				"", listCtHD);
 		return hd;
 	}
 
 	public void luuTamHoaDON() {
 
 		if (cb.isSelected()) {
-			if(table.getRowCount()>0) {
-			HoaDon hd = getHoaDon("");
-			System.out.println(hd);
-			int recomment = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn thêm hóa đơn vào hàng chờ ", "Lưu ý",
-					JOptionPane.YES_NO_OPTION);
-			if (recomment == JOptionPane.YES_OPTION) {
+			if (table.getRowCount() > 0) {
+				HoaDon hd = getHoaDon("");
 				
-				if (hDao.themHoaDon(hd)) {
-					JOptionPane.showMessageDialog(null, "Thêm hóa đơn vào hàng chờ thành công");
-					xoaTrang();
-				} else {
-					JOptionPane.showMessageDialog(null, "Hóa đơn đã có sẵn trong hàng chờ");
+				int recomment = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn thêm hóa đơn vào hàng chờ ",
+						"Lưu ý", JOptionPane.YES_NO_OPTION);
+				if (recomment == JOptionPane.YES_OPTION) {
+
+					if (hDao.themHoaDon(hd)) {
+						JOptionPane.showMessageDialog(null, "Thêm hóa đơn vào hàng chờ thành công");
+						xoaTrang();
+					} else {
+						JOptionPane.showMessageDialog(null, "Hóa đơn đã có sẵn trong hàng chờ");
+					}
 				}
-			}
-			}else {
-			textMaThuocFind.requestFocus();
+			} else {
+				textMaThuocFind.requestFocus();
 				JOptionPane.showMessageDialog(null, "Bạn cần chọn thuốc để lập hóa đơn");
 			}
 		} else {
@@ -679,14 +668,13 @@ public class BanThuoc_UI {
 	}
 
 	public void thanhToan(double tongTien, double khachDua, String khuyenMai) {
-		
-			
-			HoaDon hd = getHoaDon("1");
+
+		HoaDon hd = getHoaDon("1");
 //			generateInvoice(hd, tongTien, khachDua, khuyenMai);
 
 		if (!hDao.themHoaDon(hd)) {
 			Boolean loaiHoaDon = cb.isSelected() ? true : false;
-			if (hDao.themHoaDonVaoLoai(loaiHoaDon, "Bán ra", hd.getMaHD())) {
+			if (hDao.themHoaDonVaoLoai(loaiHoaDon, "Bán ra", hd.getMaHD(), "")) {
 				JOptionPane.showMessageDialog(null, "Tạo hóa đơn thành công");
 			} else {
 				JOptionPane.showMessageDialog(null, "Thêm hóa đơn không thành công");
@@ -695,19 +683,22 @@ public class BanThuoc_UI {
 		} else {
 			JOptionPane.showMessageDialog(null, "Tạo hóa đơn thành công");
 		}
+		thayDoiSoLuongThuoc();
 		xoaTrang();
 
-		
 	}
-public void thayDoiSoLuongThuoc() {
-	for(int i=0;i <table.getRowCount();i++) {
-		String maThuoc = table.getValueAt(i, 0).toString();
-		int soLuong = Integer.parseInt(table.getValueAt(i, 3).toString());
-		Thuoc th = thuoc_DAO.getThuocByID(maThuoc);
-		soLuong = th.getSoLuong() -soLuong;
-		thuoc_DAO.suaThuoc(new Thuoc(), soLuong, maThuoc);
+
+	public void thayDoiSoLuongThuoc() {
+		for (int i = 0; i < table.getRowCount(); i++) {
+			String maThuoc = table.getValueAt(i, 0).toString();
+			int soLuong = Integer.parseInt(table.getValueAt(i, 3).toString());
+			Thuoc th = thuoc_DAO.getThuocByID(maThuoc);
+
+			soLuong = th.getSoLuong() - soLuong;
+			thuoc_DAO.suaThuoc(new Thuoc(), soLuong, maThuoc);
+		}
 	}
-}
+
 	public JButton buttonInPageSell(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(150, 40));
@@ -721,29 +712,29 @@ public void thayDoiSoLuongThuoc() {
 			} else if (nameButton.equals("Tìm")) {
 				timKhach.getTimKhach(jtextMaKH, (JTextField) object_custommer[0][1],
 						(JTextField) object_custommer[1][1], (JComboBox) object_custommer[2][1],
-						(JTextField) object_custommer[3][1], labelDTL);
+						(JTextField) object_custommer[3][1], (JTextField) object_custommer[4][1]);
 
 			} else if (nameButton.equals("Xóa Thuốc")) {
 				xoaThuoc();
 			} else if (nameButton.equals("Xử lí hóa đơn tạm")) {
 
-				String ma = getValueStringInJlabel(object_sell[0][1]);
-				hoaDonLuuTam.getHoaDonLuuTam(jtextMaKH, object_custommer, object_sell, labelDTL, table, cb);
- 				if(ma.equals(getValueStringInJlabel(object_sell[0][1]))) {
- 				
- 					hidden(false);
- 				}
- 				else {
- 					hidden(true);
- 				}
+		
+		
+				hoaDonLuuTam.getHoaDonLuuTam(jtextMaKH, object_custommer, object_sell, table, cb);
+				if(!((JTextField) object_sell[2][1]).getText().equals("")) {
+					hidden(true);
+				}else {
+					hidden(false);
+				}
+				
 			} else if (nameButton.equals("Lưu tạm")) {
 				luuTamHoaDON();
 
 			} else if (nameButton.equals("Thanh toán")) {
-				if(regexInHoaDon()) {
-				thanhToan(getValueDoubleỊntextField(object_sell[2][1]), getValueDoubleỊntextField(object_sell[5][1]),
-						getValueStringInJlabel(object_sell[6][1]));
-				thayDoiSoLuongThuoc();
+				if (regexInHoaDon()) {
+					thanhToan(getValueDoubleỊntextField(object_sell[2][1]),
+							getValueDoubleỊntextField(object_sell[5][1]), getValueStringInJlabel(object_sell[3][1]));
+
 				}
 			}
 		});

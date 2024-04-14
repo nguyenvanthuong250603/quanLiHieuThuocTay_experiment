@@ -164,13 +164,13 @@ public class HoaDon_DAO {
 	}
 
 //	update trang thai
-	public boolean themHoaDonVaoLoai(Boolean loai, String trangthai, String ma) {
+	public boolean themHoaDonVaoLoai(Boolean loai, String trangthai, String ma,String lyDo) {
 
 		Connection con = accessDataBase();
 		PreparedStatement p = null;
 
 		try {
-			p = con.prepareStatement("UPDATE HoaDon SET LoaiHoaDon = ?, TinhTrang = ? WHERE MaHD = ?");
+			p = con.prepareStatement("UPDATE HoaDon SET LoaiHoaDon = ?, TinhTrang = ?, Lydo =  " + (lyDo.equals("")?"": "N'" + lyDo + "'") + "WHERE MaHD = ?");
 			int loaihd;
 
 			if (loai == null) {
@@ -212,22 +212,29 @@ public class HoaDon_DAO {
 				if (LoaiHD !=3 ) {
 				    p.setInt(1, LoaiHD);
 				}
+				System.out.println("hiiiii");
 
-			} else if (LoaiHD!=0 || LoaiHD !=1) {
-				p = con.prepareStatement(
-						"SELECT *FROM HoaDon WHERE  MaKH IN (SELECT MaKH FROM KhachHang WHERE SDT =?)");
-				p.setString(1, sdt);
 			}else if(!sdt.equals("")&&LoaiHD==3){
 				p = con.prepareStatement(
 						"SELECT *FROM HoaDon WHERE LoaiHoaDon IS NULL AND  MaKH IN (SELECT MaKH FROM KhachHang WHERE SDT =?)");
-				p.setInt(1, LoaiHD);
-				p.setString(2, sdt);
+			
+				p.setString(1, sdt);
+				System.out.println("hiii");
 			}
+			else if (LoaiHD==4) {
+				System.out.println(LoaiHD);
+				p = con.prepareStatement(
+						"SELECT *FROM HoaDon WHERE  MaKH IN (SELECT MaKH FROM KhachHang WHERE SDT =?)");
+				p.setString(1, sdt);
+				System.out.println("hii");
+			}
+			
 			else {
 				p = con.prepareStatement(
 						"SELECT *FROM HoaDon WHERE LoaiHoaDon = ? AND  MaKH IN (SELECT MaKH FROM KhachHang WHERE SDT =?)");
 				p.setInt(1, LoaiHD);
 				p.setString(2, sdt);
+				System.out.println("hi");
 
 			}
 			try (ResultSet rs = p.executeQuery()) {

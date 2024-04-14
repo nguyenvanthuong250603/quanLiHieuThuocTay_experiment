@@ -6,6 +6,9 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -20,17 +23,28 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
+import dao.ChiTietHoaDon_DAO;
+import dao.HoaDon_DAO;
+import entity.ChiTietHoaDon;
+import entity.HoaDon;
+import entity.KhachHang;
+import entity.NhanVien;
 import experiment_UI.Generate_All.CustomTableCellRenderer;
 
 public class HoaDonBanThuoc_UI {
 	public Object[][] object_search, object_kh;
 	private DefaultTableModel model;
 	private JTable table;
+	private DefaultTableModel model_product;
+	private JTable table_product;
+	private HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
+	private ChiTietHoaDon_DAO chiTietHoaDon_DAO = new ChiTietHoaDon_DAO();
 
 	public JPanel getHoaDon() {
 		JPanel hd = new JPanel(new BorderLayout());
 		hd.add(north(), BorderLayout.NORTH);
 		hd.add(cenTer(), BorderLayout.CENTER);
+		hienBangDuLieu();
 		return hd;
 	}
 
@@ -99,17 +113,14 @@ public class HoaDonBanThuoc_UI {
 		createTitle(input, "Danh sách sản phẩm");
 		String[] column = { "Mã thuốc", "Tên thuốc ", "Số lượng", "Số lượng", "Giá", "Thành tiền" };
 
-		String[][] row = { { "SP01", "Bảo thanh", "" + 20, "" + 10000, "" },
+		model_product = new DefaultTableModel(column, 0);
+		table_product = new JTable(model_product);
 
-				{ "", "", "", "", "", "" } };
-		DefaultTableModel model = new DefaultTableModel(row, column);
-		JTable table = new JTable(model);
+		table_product.setShowGrid(false);
+		table_product.setShowVerticalLines(false);
 
-		table.setShowGrid(false);
-		table.setShowVerticalLines(false);
-
-		table.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
-		JScrollPane scoll = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		table_product.setDefaultRenderer(Object.class, new CustomTableCellRenderer());
+		JScrollPane scoll = new JScrollPane(table_product, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		input.add(scoll, BorderLayout.CENTER);
 		input.add(getThongTin(), BorderLayout.SOUTH);
@@ -140,11 +151,109 @@ public class HoaDonBanThuoc_UI {
 
 	}
 
+	public void hienBangDuLieu() {
+
+		ArrayList<HoaDon> hDons = hoaDon_DAO.getHoaDons();
+		for (HoaDon hoaDon : hDons) {
+			NhanVien nv = getNV(hoaDon.getMaNV().getMaNV());
+			Object[] row = { hoaDon.getMaHD(), nv.getHoTen(), hoaDon.getMaKh().getMaKH(),
+					formatTime(hoaDon.getNgayTaoHoaDon()), hoaDon.getTongTien() };
+			model.addRow(row);
+
+		}
+
+		if (table.getRowCount() >= 1) {
+			table.setRowSelectionInterval(0, 0);
+
+			String maKH = table.getValueAt(table.getSelectedRow(), 2) == null ? ""
+					: table.getValueAt(table.getSelectedRow(), 2).toString();
+			defaultMouse(model_product, table_product, table.getValueAt(0, 0).toString(), maKH, object_kh, table);
+		}
+		table.setModel(model);
+		table.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				model_product.setRowCount(0);
+				int index = table.getSelectedRow();
+				String maKH = table.getValueAt(index, 2) == null ? "" : table.getValueAt(index, 2).toString();
+				String maHD = table.getValueAt(index, 0).toString();
+				defaultMouse(model_product, table_product, maHD, maKH, object_kh, table);
+
+			}
+		});
+
+	}
+
+	private void defaultMouse(DefaultTableModel model_product, JTable table_product, String maHD, String maKH,
+			Object[][] obj, JTable table) {
+
+		ArrayList<ChiTietHoaDon> lChiTietHoaDons = chiTietHoaDon_DAO.getcChiTietHoaDons(maHD);
+
+		for (ChiTietHoaDon ct : lChiTietHoaDons) {
+			Object[] row_product = { ct.getMaThuoc().getMaThuoc(), ct.getTenThuoc(), ct.getDonVi(), ct.getSoLuong(),
+					ct.getDonGia(), ct.getThanhTien() };
+			model_product.addRow(row_product);
+
+		}
+		table_product.setModel(model_product);
+		if (!maKH.equals("")) {
+
+			KhachHang kh = getKH(maKH, "");
+
+			((JTextField) obj[0][1]).setText(kh.getTenKH());
+
+			((JTextField) obj[1][1]).setText(kh.getsDT());
+			((JTextField) obj[2][1]).setText(table.getValueAt(table.getSelectedRow(), 4).toString());
+		} else {
+
+			((JTextField) obj[0][1]).setText("");
+
+			((JTextField) obj[1][1]).setText("");
+			((JTextField) obj[2][1]).setText(table.getValueAt(table.getSelectedRow(), 4).toString());
+		}
+	}
+
+	public void xoaTrang() {
+		((JTextField) object_kh[0][1]).setText("");
+		((JTextField) object_kh[1][1]).setText("");
+		((JTextField) object_kh[2][1]).setText("");
+		model.setRowCount(0);
+		model_product.setRowCount(0);
+		hienTableTrongHoaDon(table, model, table_product, model_product, object_kh, "", 3);
+		table.setModel(model);
+	}
+
 	private JButton createButtonInHoaDonBanHang(String nameBtn, String pathIcon) {
 		JButton btn = createJbutton(nameBtn, pathIcon);
 		btn.setPreferredSize(new Dimension(180, 35));
 		btn.addActionListener(e -> {
-			System.out.println(nameBtn);
+			if (nameBtn.equals("")) {
+				xoaTrang();
+			}
 		});
 		return btn;
 	}

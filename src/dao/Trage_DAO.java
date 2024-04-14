@@ -17,6 +17,7 @@ public class Trage_DAO {
 		int gt = x == true ? 1 :0;
 		return gt;
 	}
+	
 	public static boolean changeLoaiThuocToSQLFromUI(int loai) {
 		int ch = loai;
 		return ch == 1 ? true: false;

@@ -45,17 +45,17 @@ import experiment_UI.Generate_All.CustomTableCellRenderer;
 
 public class TimKhach_UI {
 	private JFrame frame;
-	private JTextField Jtext_maKH, Jtext_tenKH, jText_sdtKH, jText_tuoiKH;
+	private JTextField Jtext_maKH, Jtext_tenKH, jText_sdtKH, jText_tuoiKH,jtextXepHang;
 	private JComboBox cbGioiTinhKH;
 	private Object[][] objects_North, objects_custommer;
 	private JComboBox cbTuoi, cbGioiTinh;
-	private JLabel labelDiemTichLuy;
+
 	private DefaultTableModel model;
 	private JTable table;
 	private KhachHang_DAO lKhachHang_DAO = new KhachHang_DAO();
 
 	public void getTimKhach(JTextField maKH, JTextField tenKH, JTextField tuoiKH, JComboBox gioiTinhKH,
-			JTextField sdtKH, JLabel labelDiem) {
+			JTextField sdtKH, JTextField xepHang) {
 		frame = new JFrame();
 		frame.setTitle("Tìm Kiếm Khách Hàng");
 
@@ -64,6 +64,7 @@ public class TimKhach_UI {
 
 		frame.setDefaultCloseOperation(frame.DISPOSE_ON_CLOSE);
 		frame.add(layOut());
+		
 		hienTableKhachHang(table, model, objects_custommer);
 		renderTuoi();
 		((JLabel) objects_custommer[0][1]).setText(generateCode("KH"));
@@ -76,15 +77,15 @@ public class TimKhach_UI {
 		this.jText_tuoiKH = tuoiKH;
 		this.cbGioiTinhKH = gioiTinhKH;
 		this.jText_sdtKH = sdtKH;
-		this.labelDiemTichLuy = labelDiem;
+		this.jtextXepHang = xepHang;
 	}
 
 	public JPanel layOut() {
 		JPanel management = new JPanel(new BorderLayout());
-		JLabel title = new JLabel("TÌM KIẾM THUỐC");
+		JLabel title = new JLabel("TÌM KIẾM KHÁCH HÀNG");
 		title.setHorizontalAlignment(JLabel.CENTER);
 		title.setFont(new Font("Arail", Font.BOLD, 30));
-		title.setForeground(Color.BLUE);
+		title.setForeground(Color.BLACK);
 		management.add(title, BorderLayout.NORTH);
 		management.add(getKhachHang(), BorderLayout.CENTER);
 		return management;
@@ -169,7 +170,7 @@ public class TimKhach_UI {
 		Object[][] trage = { { "Mã khách hàng", new JLabel() }, { "Tên khách hàng", new JTextField(20) },
 				{ "Ngày sinh", new JDateChooser() }, { "Tuổi", new JTextField() },
 				{ "Giới tính", cbGioiTinh = new JComboBox(gioiTinh), }, { "Số điện thoại", new JTextField() },
-				{ "Địa chỉ", new JTextField() }, { "Điểm tích lũy", new JLabel() } };
+				{ "Địa chỉ", new JTextField() },{ "Xếp hạng", new JTextField() }, { "Điểm tích lũy", new JLabel() } };
 		objects_custommer = trage;
 		for (Object[] objects : trage) {
 			if (objects[1] instanceof Component) {
@@ -209,7 +210,7 @@ public class TimKhach_UI {
 		jText_tuoiKH.setText(kh.getTuoi() + "");
 		cbGioiTinhKH.setSelectedItem(transGender(kh.isGioiTinh()));
 		jText_sdtKH.setText(kh.getsDT());
-		labelDiemTichLuy.setText(kh.getDiemThanhVien() + "");
+		jtextXepHang.setText(kh.getXepHang());
 		frame.dispose();
 	}
 
@@ -244,14 +245,15 @@ public class TimKhach_UI {
 		String gt = getValueInComboBox((JComboBox) objects_custommer[4][1]);
 		String sdt = getValueStringInJTextField(objects_custommer[5][1]);
 		String diaChi = getValueStringInJTextField(objects_custommer[6][1]);
-
-		KhachHang kh = new KhachHang(maKh, tenKh, ngaySing, tuoi, transGenderToSQL(gt), sdt, diaChi, 0);
+		String xepHang = getValueStringInJTextField(objects_custommer[7][1]);
+		
+		KhachHang kh = new KhachHang(maKh, tenKh, ngaySing, tuoi, transGenderToSQL(gt), sdt, diaChi, 0,xepHang);
 		if (lKhachHang_DAO.themKhachHang(kh)) {
 			JOptionPane.showMessageDialog(null, "Thêm khách hàng thành công");
 			String[] row = { maKh, tenKh, 0 + "", sdt, diaChi };
 			model.addRow(row);
 			table.setRowSelectionInterval(model.getRowCount() - 1, model.getRowCount() - 1);
-
+			xoaTrang();
 		} else {
 			JOptionPane.showMessageDialog(null, "Số điện thoại này đã có người sử dụng");
 		}
@@ -265,7 +267,21 @@ public class TimKhach_UI {
 		}
 		return -1;
 	}
-
+	public void xoaTrang() {
+		model.setRowCount(0);
+		hienTableKhachHang(table, model,  objects_custommer);
+		((JLabel) objects_custommer[0][1]).setText(generateCode("KH"));
+		
+		((JTextField) objects_custommer[1][1]).setText("");
+		((JDateChooser) objects_custommer[2][1]).setDate(null);
+		((JTextField) objects_custommer[3][1]).setText( "");
+		((JComboBox) objects_custommer[4][1]).setSelectedIndex(0);
+		((JTextField) objects_custommer[5][1]).setText("");
+		((JTextField) objects_custommer[6][1]).setText("");
+		((JTextField) objects_custommer[7][1]).setText("");
+		((JLabel)objects_custommer[8][1]).setText("");
+		
+	}
 	public JButton buttonInPageCustommer(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(150, 40));
@@ -281,7 +297,7 @@ public class TimKhach_UI {
 			
 					String sdt = ((JTextField) objects_North[0][1]).getText();
 					KhachHang kh = getKH("", sdt);
-					System.out.println(kh);
+				
 					if (kh.getMaKH() !=null ) {
 						int vt = getIndex(sdt);
 						table.setRowSelectionInterval(vt, vt);
@@ -293,25 +309,16 @@ public class TimKhach_UI {
 						((JComboBox) objects_custommer[4][1]).setSelectedItem(gender);
 						((JTextField) objects_custommer[5][1]).setText(kh.getsDT());
 						((JTextField) objects_custommer[6][1]).setText(kh.getDiaCHi());
-						((JLabel)objects_custommer[7][1]).setText(kh.getDiemThanhVien() + "");
+						((JTextField) objects_custommer[7][1]).setText(kh.getXepHang());
+						((JLabel)objects_custommer[8][1]).setText(kh.getDiemThanhVien() + "");
 
 					}else {
 						JOptionPane.showMessageDialog(null, "Không có số điện thoại nào trùng với mã trên");
 					}
 				
-			} else if(nameButton.equals("btnReset")){
-				System.out.println(nameButton);
-				model.setRowCount(0);
-				((JLabel) objects_custommer[0][1]).setText(generateCode("KH"));
-				hienTableKhachHang(table, model,  objects_custommer);
-				((JLabel) objects_custommer[0][1]).setText("");
-				((JTextField) objects_custommer[1][1]).setText("");
-				((JDateChooser) objects_custommer[2][1]).setDate(null);
-				((JTextField) objects_custommer[3][1]).setText( "");
-				((JComboBox) objects_custommer[4][1]).setSelectedIndex(0);
-				((JTextField) objects_custommer[5][1]).setText("");
-				((JTextField) objects_custommer[6][1]).setText("");
-				((JLabel)objects_custommer[7][1]).setText("");
+			} else if(nameButton.equals("")){
+				
+				xoaTrang();
 			}
 			else {
 				System.out.println(nameButton);

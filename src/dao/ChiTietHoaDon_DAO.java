@@ -53,7 +53,7 @@ public class ChiTietHoaDon_DAO {
 		Connection con = accessDataBase();
 		PreparedStatement p = null;
 		try {
-			p = con.prepareStatement("DELETE ChiTietHoaDon" + (!maHD.equals("") ? " WHERE MaHD= ? AND MaThuoc = ?" : ""));
+			p = con.prepareStatement("DELETE ChiTietHoaDon" + (!maHD.equals("") ? " WHERE MaHD = ? AND MaThuoc = ?" : ""));
 			if (!maHD.equals("")) {
 				p.setString(1, maHD);
 				p.setString(2, maThuoc);

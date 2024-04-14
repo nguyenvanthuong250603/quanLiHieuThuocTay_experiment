@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 
@@ -13,10 +14,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -35,6 +39,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -43,6 +48,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
+import dao.NhaSanXuat_DAO;
 import dao.Thuoc_DAO;
 import entity.NhaSanXuat;
 import entity.Thuoc;
@@ -51,8 +57,8 @@ import static experiment_UI.Generate_All.*;
 
 public class QuanLyThuoc_UI {
 	private JLabel labelImage;
-	private JTextField jTextMaThuoc, jTextGiaThuoc, jTextSoLuong, jTextNgaySx, jTextNgayHetHan, jTextDonVi;
-	private JComboBox cbNSX, cbLoaiThuoc, cbTuoiSD, cbNSXTim, cbLoaiThuocTim, cbTinhTrang;
+	private JTextField  jTextGiaThuoc, jTextSoLuong, jTextNgaySx, jTextNgayHetHan, jTextDonVi;
+	private JComboBox<String> cbNSX, cbLoaiThuoc, cbTuoiSD, cbNSXTim, cbLoaiThuocTim, cbTinhTrang;
 	private JCheckBox cb;
 	private JDateChooser JdateNgaySanXuat, JdateNgayHetHan;
 	private Object[][] object_inf, object_detail;
@@ -60,17 +66,21 @@ public class QuanLyThuoc_UI {
 	private JTable table;
 	private DefaultTableModel model;
 	private JTextField textFind;
+	private JTextField jTextMaThuoc;
 	private Thuoc_DAO list_Thuoc = new Thuoc_DAO();
-
+	private NhaSanXuat_DAO nhaSanXuat_DAO = new NhaSanXuat_DAO();
 	String pathImageShow;
 
 	public JPanel getQuanLiThuoc() {
 		JPanel container = new JPanel(new BorderLayout());
 		createTiTlePage(container, "QUẢN LÝ THUỐC");
+
+
 		container.add(searchAndfilter(), BorderLayout.CENTER);
 		container.add(inputProduct(), BorderLayout.EAST);
 		hienBangTableThuoc();
 		enterListen();
+		jTextMaThuoc.setText(generateCode("TH"));
 		return container;
 	}
 
@@ -160,12 +170,12 @@ public class QuanLyThuoc_UI {
 		box1.add(t);
 		box1.add(t2);
 
-		String[] optionNsx = { "", "CTY SX1", "CTY SX2" };
+	
 		String[] optionLoaiThuoc = { "", "Thuốc giảm đau, hạ sốt ", "Thuốc đặc trị", "Kháng sinh", "Thuốc tiêu hóa",
 				"Thuốc an thần", "Vitamin", "Thuốc sát khuẩn , khử trùng", "Thuốc chống dị ứng", "Thuốc chống viêm",
 				"Thuốc tim mạch", "Dịch truyền", "Thực phẩm chức năng" };
 
-		cbNSXTim = new JComboBox(optionNsx);
+		cbNSXTim = new JComboBox<String>();
 		box1.add(createJcombobox("Nhà sản xuất", cbNSXTim));
 
 		cbLoaiThuocTim = new JComboBox(optionLoaiThuoc);
@@ -216,7 +226,9 @@ public class QuanLyThuoc_UI {
 		labelImage = new JLabel();
 
 		labelImage.setBorder(new EmptyBorder(10, 10, 0, 0));
-		labelImage.setPreferredSize(new Dimension(230, 150));
+		labelImage.setPreferredSize(new Dimension(250, 153));
+		 labelImage.setMaximumSize(new Dimension(250, 153));
+
 
 		boxImage.add(labelImage, BorderLayout.CENTER);
 
@@ -229,6 +241,9 @@ public class QuanLyThuoc_UI {
 
 //		ma sp
 		jTextMaThuoc = new JTextField();
+		jTextMaThuoc.setBorder(null);
+		jTextMaThuoc.setBackground(null);
+		jTextMaThuoc.setFont(new Font("Arial", Font.BOLD, 15));
 		infRight_top.add(createNameAndTextField(jTextMaThuoc, "Mã thuốc"), BorderLayout.NORTH);
 //Ten thuoc
 		JPanel box2 = new JPanel(new BorderLayout());
@@ -244,14 +259,14 @@ public class QuanLyThuoc_UI {
 //tao gia , so luong
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BoxLayout(bottom, BoxLayout.Y_AXIS));
-		String[] optionNsx = { "CTY SX1", "CTY SX2" };
+		
 		String[] optionLoaiThuoc = { "Thuốc giảm đau, hạ sốt ", "Thuốc đặc trị", "Kháng sinh", "Thuốc tiêu hóa",
 				"Thuốc an thần", "Vitamin", "Thuốc sát khuẩn , khử trùng", "Thuốc chống dị ứng", "Thuốc chống viêm",
 				"Thuốc tim mạch", "Dịch truyền", "Thực phẩm chức năng" };
 
 		Object[][] trage = { { "Số lượng", new JTextField() }, { "Giá", new JTextField() },
-				{ "Loại thuốc", cbLoaiThuoc = new JComboBox(optionLoaiThuoc) },
-				{ "NSX", cbNSX = new JComboBox(optionNsx) }, { "Ngày SX", new JDateChooser() },
+				{ "Loại thuốc",cbLoaiThuoc =  new JComboBox(optionLoaiThuoc) },
+				{ "NSX", cbNSX = new JComboBox() }, { "Ngày SX", new JDateChooser() },
 				{ "Ngày Hết Hạn", new JDateChooser() } };
 		object_inf = trage;
 		for (Object[] objects : object_inf) {
@@ -269,6 +284,7 @@ public class QuanLyThuoc_UI {
 		}
 		inf.add(bottom, BorderLayout.SOUTH);
 		JScrollPane scroll = new JScrollPane(inf);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		total.add(scroll);
 
 		return total;
@@ -281,7 +297,7 @@ public class QuanLyThuoc_UI {
 		createTitle(detail_big, "Chi tiết thông tin");
 		JPanel detail_compoment = new JPanel();
 		detail_compoment.setLayout(new BoxLayout(detail_compoment, BoxLayout.Y_AXIS));
-		String[] optionDoTuoi = { "Mọi lứa tuổi", "Từ 1-23 tháng", "Từ 2-11 tuổi", "Từ 12 tuổi trở lên" };
+		String[] optionDoTuoi = { "Mọi lứa tuổi", "Từ 1-23 tháng", "Từ 2-11 tuổi", "Từ 12-17 tuổi" ,"Từ 18 tuổi trở lên"};
 		Object[][] trage = { { "Đơn vị ", new JTextField() }, { "Dạng bào chế ", new JTextField() },
 				{ "Độ tuổi", cbTuoiSD = new JComboBox(optionDoTuoi) }, { "Thành phần", new JTextField() },
 				{ "Chỉ định", new JTextField() }, { "Liều dùng", new JTextField() }, { "Bảo quản", new JTextField() } };
@@ -297,6 +313,7 @@ public class QuanLyThuoc_UI {
 		jTextAreaMoTa = new JTextArea();
 		detail_compoment.add(createTextArea("Mô tả", jTextAreaMoTa));
 		JScrollPane scroll = new JScrollPane(detail_compoment);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		detail_big.add(scroll);
 		detail_big.add(footer_inf(), BorderLayout.SOUTH);
 		return detail_big;
@@ -332,17 +349,18 @@ public class QuanLyThuoc_UI {
 	}
 
 	private void displayImage(File file) {
-
-		try {
-			ImageIcon imageIcon = new ImageIcon(file.getAbsolutePath());
-			Image image = imageIcon.getImage().getScaledInstance(200, 150, Image.SCALE_SMOOTH);
-			imageIcon = new ImageIcon(image);
-			labelImage.setIcon(imageIcon);
-			pathImageShow = file.getAbsolutePath();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+	    try {
+	        final ImageIcon imageIcon = new ImageIcon(file.getAbsolutePath());
+	        Image image = imageIcon.getImage().getScaledInstance(250, 153, Image.SCALE_SMOOTH);
+	        imageIcon.setImage(image);
+	        
+	        SwingUtilities.invokeLater(() -> {
+	            labelImage.setIcon(imageIcon);
+	            pathImageShow = file.getAbsolutePath();
+	        });
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 
 	public void hienBangTableThuoc() {
@@ -357,7 +375,11 @@ public class QuanLyThuoc_UI {
 					formatTime(thuoc.getNgayHetHan()) };
 			model.addRow(row);
 		}
-
+		ArrayList<NhaSanXuat> lnsx = nhaSanXuat_DAO.getNhaSanXuatDataBase();
+		for (NhaSanXuat nhaSanXuat : lnsx) {
+			cbNSX.addItem(nhaSanXuat.getTenNSX());
+			cbNSXTim.addItem(nhaSanXuat.getTenNSX());
+		}
 		table.addMouseListener(new MouseListener() {
 
 			@Override
@@ -412,6 +434,7 @@ public class QuanLyThuoc_UI {
 		((JDateChooser) object_inf[5][1]).setDate(java.sql.Date.valueOf(thuoc.getNgayHetHan()));
 		String pathFile = thuoc.getHinhAnh();
 		File file = new File(pathFile);
+		
 		displayImage(file);
 		((JTextField) object_detail[0][1]).setText(thuoc.getDonVi());
 		((JTextField) object_detail[1][1]).setText(thuoc.getDangBaoChe());
@@ -509,7 +532,7 @@ public class QuanLyThuoc_UI {
 	}
 
 	public void xoaTrang() {
-		jTextMaThuoc.setText("");
+		jTextMaThuoc.setText(generateCode("TH"));
 		jTextTenThuoc.setText("");
 		((JTextField) object_inf[0][1]).setText("");
 		((JTextField) object_inf[1][1]).setText("");
@@ -536,7 +559,7 @@ public class QuanLyThuoc_UI {
 
 		String tenNSX = getValueInComboBox(cbNSXTim);
 		String loaithuoc = getValueInComboBox(cbLoaiThuocTim);
-		if (!tenNSX.equals("") && !loaithuoc.equals("")) {
+	
 
 			ArrayList<Thuoc> list_ThuocTim = list_Thuoc.timThuoc(tenNSX, loaithuoc);
 
@@ -544,14 +567,14 @@ public class QuanLyThuoc_UI {
 			for (Thuoc thuoc : list_ThuocTim) {
 
 				String[] row = { thuoc.getMaThuoc(), thuoc.getTenThuoc(), thuoc.getSoLuong() + "", thuoc.getGia() + "",
-						thuoc.getLoaiThuoc(), thuoc.getTenNhaSanXuat().getTenNSX(), thuoc.getNgaySanXuat() + "",
-						thuoc.getNgayHetHan() + "" };
+						thuoc.getLoaiThuoc(), thuoc.getTenNhaSanXuat().getTenNSX(),formatTime(thuoc.getNgaySanXuat()) +"",
+						formatTime(thuoc.getNgayHetHan() )+ "" };
 
 				model.addRow(row);
 			}
 			table.setModel(model);
 
-		}
+		
 	}
 
 	private boolean regex() {
@@ -615,11 +638,37 @@ public class QuanLyThuoc_UI {
 	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 	            int row, int column) {
 	        Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-	        Object cellValue = table.getValueAt(row, 0); // Lấy giá trị của cột đầu tiên
-	        if (cellValue != null && cellValue.toString().equals("TH001") && column == 0) {
+	        Object cellValue = table.getValueAt(row, 5); // Lấy giá trị của cột đầu tiên
+	        if (cellValue != null && cellValue.toString().equals("Thái Thịnh") && column == 0) {
 	            // Thiết lập màu nền cho cột đầu tiên của dòng "TH001" thành màu vàng
 	            component.setBackground(Color.yellow);
 	        }
+	        Object cellValueNHH = table.getValueAt(row, 7);
+	        if (cellValueNHH != null) {
+	            // Chuyển đổi giá trị thành kiểu dữ liệu ngày tháng
+	            
+	       
+	            try {
+	            	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	                java.util.Date endDate = dateFormat.parse(cellValueNHH.toString());
+	                Date currentDate = Date.valueOf(LocalDate.now());
+	                long diff = endDate.getTime() - currentDate.getTime();
+	                long diffInDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+	                if(diffInDays<0&&column==0) {
+	                	 component.setBackground(Color.RED);
+	                	
+	                }
+	            
+	                
+	            } catch (ParseException e) {
+	                e.printStackTrace();
+	            }finally {
+	            	if(isSelected) {
+                		component.setBackground(new Color(89, 168, 104, 150));
+                	}
+				}
+	        }
+	       
 	        return component;
 	    }
 	}

@@ -13,7 +13,7 @@ import entity.NhaSanXuat;
 
 
 public class NhaSanXuat_DAO {
-	public ArrayList<NhaSanXuat> getThuocDataBase(){
+	public ArrayList<NhaSanXuat> getNhaSanXuatDataBase(){
 		ArrayList<NhaSanXuat> list_nhaSanXuat = new ArrayList<NhaSanXuat>();
 		Connection con = accessDataBase();
 		try {

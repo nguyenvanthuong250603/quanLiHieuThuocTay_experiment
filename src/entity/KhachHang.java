@@ -9,16 +9,12 @@ public class KhachHang {
 	private boolean gioiTinh;
 	private String sDT, diaCHi;
 	private int diemThanhVien;
+	private String xepHang;
 
-	@Override
-	public String toString() {
-		return "KhachHang [maKH=" + maKH + ", tenKH=" + tenKH + ", ngaySinh=" + ngaySinh + ", tuoi=" + tuoi
-				+ ", gioiTinh=" + gioiTinh + ", sDT=" + sDT + ", diaCHi=" + diaCHi + ", diemThanhVien=" + diemThanhVien
-				+ "]";
-	}
+
 
 	public KhachHang(String maKH, String tenKH, LocalDate ngaySinh, int tuoi, boolean gioiTinh, String sDT,
-			String diaCHi, int diemThanhVien) {
+			String diaCHi, int diemThanhVien, String xepHang) {
 		super();
 		this.maKH = maKH;
 		this.tenKH = tenKH;
@@ -28,6 +24,22 @@ public class KhachHang {
 		this.sDT = sDT;
 		this.diaCHi = diaCHi;
 		this.diemThanhVien = diemThanhVien;
+		this.xepHang = xepHang;
+	}
+
+	@Override
+	public String toString() {
+		return "KhachHang [maKH=" + maKH + ", tenKH=" + tenKH + ", ngaySinh=" + ngaySinh + ", tuoi=" + tuoi
+				+ ", gioiTinh=" + gioiTinh + ", sDT=" + sDT + ", diaCHi=" + diaCHi + ", diemThanhVien=" + diemThanhVien
+				+ ", xepHang=" + xepHang + "]";
+	}
+
+	public String getXepHang() {
+		return xepHang;
+	}
+
+	public void setXepHang(String xepHang) {
+		this.xepHang = xepHang;
 	}
 
 	public int getDiemThanhVien() {
