@@ -29,6 +29,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -70,13 +71,14 @@ public class Default_UI {
 		container = new JPanel();
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
-		container.add(createThongKe(), TK);
 		container.add(createHoaDon(), HĐBT);
 		container.add(createKhachHang(), KH);
+		container.add(createQuanLyThuoc(), T);
+		container.add(createBanThuoc(MaNV), BT);
+		container.add(createThongKe(), TK);
 		container.add(createNhanVien(), NV);
 		container.add(createDoiThuoc(), DT);
 		container.add(createBanThuoc(MaNV), BT);
-		container.add(createQuanLyThuoc(), T);
 
 		container.add(createKhachHang(), KH);
 
@@ -108,9 +110,17 @@ public class Default_UI {
 
 		btn.setBackground(new Color(89, 168, 104));
 		btn.setFocusPainted(false);
-		btn.setBorder(new EmptyBorder(0, 20, 0, 10));
+		btn.setBorder(new EmptyBorder(0, 20, 0, 20));
 
-		JLabel lableicon = new JLabel(new ImageIcon(iconLeft));
+		
+		
+		ImageIcon icon = new ImageIcon(iconLeft);
+		Image image = icon.getImage(); // Lấy hình ảnh từ ImageIcon
+		Image newImage = image.getScaledInstance(48, 48, Image.SCALE_DEFAULT); // Thay đổi kích thước hình ảnh
+		ImageIcon newIcon = new ImageIcon(newImage); // Tạo mới ImageIcon với hình ảnh đã thay đổi kích thước
+		JLabel lableicon = new JLabel(newIcon); 
+	
+
 		lableicon.setText(nameButton);
 		lableicon.setBackground(Color.white);
 		lableicon.setIconTextGap(20);
@@ -128,7 +138,7 @@ public class Default_UI {
 					if (selectedButton != null) {
 						selectedButton.setBackground(new Color(89, 168, 104));
 					}
-					btn.setBackground(Color.red);
+					btn.setBackground(Color.GREEN);
 					selectedButton = btn;
 				}
 				switch (nameButton) {
@@ -202,6 +212,14 @@ public class Default_UI {
 					cardLayout.show(container,TK);
 					break;
 				}
+				case ĐX: {
+					int recomment= JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn đăng xuất chứ ?" , "Lưu ý", JOptionPane.YES_NO_OPTION);
+					if(recomment==JOptionPane.YES_OPTION) {
+						jFrame.dispose();
+						new TaiKhoan_UI();
+					}
+					break;
+				}
 				default:
 					throw new IllegalArgumentException("Unexpected value: " + nameButton);
 				}
@@ -222,15 +240,15 @@ public class Default_UI {
 		westt.setBackground(new Color(89, 168, 104));
 		boxx.add(brand(MaNV));
 
-		boxx.add(createCompoment("gift\\thuoc.png", "Bán thuốc", "gift\\thuoc.png", true));
-		boxx.add(createCompoment("gift\\thuoc.png", "Thuốc", "gift\\hoadon.png", true));
-		boxx.add(createCompoment("gift\\upload.png", "Đổi Thuốc", "gift\\hoadon.png", true));
-		boxx.add(createCompoment("gift\\down.png", "Hóa đơn", "gift\\hoadon.png", true));
-		boxx.add(createCompoment("gift\\upload.png", "Khách hàng", "gift\\hoadon.png", true));
-		boxx.add(createCompoment("gift\\thuoc.png", "Nhân viên", "gift\\hoadon.png", true));
-		boxx.add(createCompoment("gift\\thuoc.png", "Thống Kê", "gift\\drug.png", true));
-		boxx.add(createCompoment("gift\\thuoc.png", "Kiểm toán", "gift\\hoadon.png", true));
-		boxx.add(createCompoment("gift\\thuoc.png", "Đăng xuất", "gift\\hoadon.png", true));
+		boxx.add(createCompoment("gift\\thuoc.png", "Bán Thuốc", "gift\\banthuoc.png", true));
+		boxx.add(createCompoment("gift\\thuoc.png", "Thuốc", "gift\\quanlythuoc.png", true));
+		boxx.add(createCompoment("gift\\upload.png", "Đổi Thuốc", "gift\\doitra.png", true));
+		boxx.add(createCompoment("gift\\down.png", "Hóa Đơn", "gift\\bill.png", true));
+		boxx.add(createCompoment("gift\\upload.png", "Khách Hàng", "gift\\khachhang.png", true));
+		boxx.add(createCompoment("gift\\thuoc.png", "Nhân Viên", "gift\\nhanvien.png", true));
+		boxx.add(createCompoment("gift\\thuoc.png", "Thống Kê", "gift\\thongke.png", true));
+//		boxx.add(createCompoment("gift\\thuoc.png", "Kiểm toán", "gift\\hoadon.png", true));
+		boxx.add(createCompoment("gift\\thuoc.png", "Đăng Xuất", "gift\\logout.png", true));
 		westt.add(boxx);
 		return westt;
 	}

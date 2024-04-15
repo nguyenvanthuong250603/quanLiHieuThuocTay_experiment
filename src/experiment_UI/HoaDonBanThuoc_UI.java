@@ -143,7 +143,7 @@ public class HoaDonBanThuoc_UI {
 
 	public JPanel footer() {
 		JPanel footer = new JPanel();
-		Object[][] btn = { { "Xuất danh sách", "" }, { "In hóa đơn", "" } };
+		Object[][] btn = { { "Xuất danh sách", "gift\\list.png" }, { "In hóa đơn", "gift\\excel-file.png" } };
 		for (Object[] objects : btn) {
 			footer.add(createButtonInHoaDonBanHang(objects[0].toString(), objects[1].toString()));
 		}

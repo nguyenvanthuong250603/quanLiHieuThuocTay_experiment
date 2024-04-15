@@ -1,9 +1,6 @@
 package experiment_UI;
 
 import static experiment_UI.Generate_All.*;
-import static experiment_UI.Generate_All.createJcombobox;
-import static experiment_UI.Generate_All.createNameAndTextField;
-import static experiment_UI.Generate_All.createTitle;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Random;
@@ -54,8 +52,10 @@ public class TimKhach_UI {
 	private JTable table;
 	private KhachHang_DAO lKhachHang_DAO = new KhachHang_DAO();
 	private JLabel giam;
-	public void getTimKhach(JTextField maKH, JTextField tenKH, JTextField tuoiKH, JComboBox gioiTinhKH,
-			JTextField sdtKH, JTextField xepHang,JLabel giamgia) {
+	private JComboBox cbXepHang;
+	
+	public void getTimKhach(JTextField maKH, JTextField tenKH, JTextField tuoiKH, JTextField sdtKH,
+			JComboBox gioiTinhKH, JTextField xepHang, JLabel giamgia, JTextField sdtVao) {
 		frame = new JFrame();
 		frame.setTitle("Tìm Kiếm Khách Hàng");
 
@@ -79,6 +79,10 @@ public class TimKhach_UI {
 		this.jText_sdtKH = sdtKH;
 		this.jtextXepHang = xepHang;
 		this.giam = giamgia;
+
+		((JTextField) objects_custommer[5][1]).setText(sdtVao.getText());
+		enterAction();
+
 	}
 
 	public JPanel layOut() {
@@ -104,10 +108,13 @@ public class TimKhach_UI {
 		north.setBorder(new EmptyBorder(30, 50, 30, 80));
 
 		north.setLayout(new BoxLayout(north, BoxLayout.X_AXIS));
-		String[] doTuoi = { "Từ 1-23 tháng tuổi", "Từ 2-11 tuổi", "Từ 12-18 tuổi", "Từ 18 tuổi trở lên" };
-		String[] gioiTinh = { "Nam", "Nữ" };
-		Object[][] trage = { { "Số điện thoại", new JTextField(15) }, { "Độ tuổi", cbTuoi = new JComboBox(doTuoi) },
-				{ "Giới tính ", cbGioiTinh = new JComboBox(gioiTinh) } };
+		
+		String[] gioiTinh = { "","Nam", "Nữ" };
+		
+		String[] xepHang = { "", "Đồng", "Bạc", "Vàng", "Bạch kim", "Kim cương" };
+		Object[][] trage = { { "Số điện thoại", new JTextField(15) },
+				{ "Giới tính ", cbGioiTinh = new JComboBox(gioiTinh) },
+				{ "Xếp hạng", cbXepHang = new JComboBox(xepHang) }, };
 		objects_North = trage;
 		for (Object[] objects : trage) {
 			if (objects[1] instanceof JTextField) {
@@ -142,7 +149,8 @@ public class TimKhach_UI {
 		JPanel managerment = new JPanel();
 		createTitle(managerment, "Danh sách khách hàng");
 		managerment.setLayout(new BorderLayout());
-		String[] column = { "Mã khách hàng", "Tên khách hàng ", "Điểm tích lũy", "Số điện thoại", "Địa chỉ" };
+		String[] column = { "Mã khách hàng", "Tên khách hàng ", "Giới tính", "Điểm tích lũy", "Xếp hạng",
+				"Số điện thoại", "Địa chỉ" };
 		model = new DefaultTableModel(column, 0);
 		table = new JTable(model);
 		table.setShowGrid(false);
@@ -168,10 +176,11 @@ public class TimKhach_UI {
 		inf.setLayout(new BoxLayout(inf, BoxLayout.Y_AXIS));
 
 		String[] gioiTinh = { "Nam", "Nữ" };
+		String[] xepHang = { "Đồng", "Bạc", "Vàng", "Bạch kim", "Kim cương" };
 		Object[][] trage = { { "Mã khách hàng", new JLabel() }, { "Tên khách hàng", new JTextField(20) },
 				{ "Ngày sinh", new JDateChooser() }, { "Tuổi", new JTextField() },
 				{ "Giới tính", cbGioiTinh = new JComboBox(gioiTinh), }, { "Số điện thoại", new JTextField() },
-				{ "Địa chỉ", new JTextField() }, { "Xếp hạng", new JTextField() }, { "Điểm tích lũy", new JLabel() } };
+				{ "Địa chỉ", new JTextField() }, { "Xếp hạng", new JComboBox(xepHang) }, { "Điểm tích lũy", new JLabel() } };
 		objects_custommer = trage;
 		for (Object[] objects : trage) {
 			if (objects[1] instanceof Component) {
@@ -193,7 +202,7 @@ public class TimKhach_UI {
 		JPanel footer = new JPanel();
 
 		JButton btn = null;
-		String[] object = { "Thêm khách hàng", "", "Chọn", "gift\\trash-bin.png", "Thoát", "gift\\excel-file.png" };
+		String[] object = { "Thêm khách hàng", "gift\\add.png", "Chọn", "gift\\check.png", "Thoát", "gift\\exit.png" };
 		for (int i = 0; i < object.length; i += 2) {
 			btn = buttonInPageCustommer(object[i], object[i + 1]);
 			footer.add(btn);
@@ -206,11 +215,11 @@ public class TimKhach_UI {
 		int index = table.getSelectedRow();
 		String ma = table.getValueAt(index, 0).toString();
 		KhachHang kh = lKhachHang_DAO.getKhachHangByID(ma, "");
-		Jtext_maKH.setText(kh.getMaKH());
-		Jtext_tenKH.setText(kh.getTenKH());
-		jText_tuoiKH.setText(kh.getTuoi() + "");
+		Jtext_maKH.setText(kh.getsDT());
+		Jtext_tenKH.setText(kh.getMaKH());
+		jText_tuoiKH.setText(kh.getTenKH());
 		cbGioiTinhKH.setSelectedItem(transGender(kh.isGioiTinh()));
-		jText_sdtKH.setText(kh.getsDT());
+		jText_sdtKH.setText(kh.getTuoi() + "");
 		jtextXepHang.setText(kh.getXepHang());
 		String xh = kh.getXepHang();
 		if (xh.equals("Đồng")) {
@@ -259,15 +268,15 @@ public class TimKhach_UI {
 		String gt = getValueInComboBox((JComboBox) objects_custommer[4][1]);
 		String sdt = getValueStringInJTextField(objects_custommer[5][1]);
 		String diaChi = getValueStringInJTextField(objects_custommer[6][1]);
-		String xepHang = getValueStringInJTextField(objects_custommer[7][1]);
+		String xepHang = getValueInComboBox(cbXepHang);
 
 		KhachHang kh = new KhachHang(maKh, tenKh, ngaySing, tuoi, transGenderToSQL(gt), sdt, diaChi, 0, xepHang);
 		if (lKhachHang_DAO.themKhachHang(kh)) {
 			JOptionPane.showMessageDialog(null, "Thêm khách hàng thành công");
 			String[] row = { maKh, tenKh, 0 + "", sdt, diaChi };
 			model.addRow(row);
-			table.setRowSelectionInterval(model.getRowCount() - 1, model.getRowCount() - 1);
 			xoaTrang();
+			table.setRowSelectionInterval(model.getRowCount() - 1, model.getRowCount() - 1);
 		} else {
 			JOptionPane.showMessageDialog(null, "Số điện thoại này đã có người sử dụng");
 		}
@@ -293,11 +302,93 @@ public class TimKhach_UI {
 		((JComboBox) objects_custommer[4][1]).setSelectedIndex(0);
 		((JTextField) objects_custommer[5][1]).setText("");
 		((JTextField) objects_custommer[6][1]).setText("");
-		((JTextField) objects_custommer[7][1]).setText("");
+		((JComboBox) objects_custommer[7][1]).setSelectedIndex(0);
 		((JLabel) objects_custommer[8][1]).setText("");
 
 	}
+	public void enterAction() {
+		ActionListener enter3 = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+
+					timTheoSdt();
+
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+
+			}
+		};
+		((JTextField) objects_North[0][1]).addActionListener(enter3);
+
+	}
+	public void timTheoSdt() {
+
+		String sdt = getValueStringInJTextField(objects_North[0][1]);
+
+		if (sdt.matches("^(0|\\+84)\\d{9}$")) {
+			KhachHang kh = lKhachHang_DAO.getKhachHangByID("", sdt);
+
+			if (kh.getMaKH() != null) {
+				model.setRowCount(0);
+				hienKhachHang(kh);
+				table.setModel(model);
+				((JLabel) objects_custommer[0][1]).setText(kh.getMaKH());
+				((JTextField) objects_custommer[1][1]).setText(kh.getTenKH());
+				((JDateChooser) objects_custommer[2][1]).setDate(java.sql.Date.valueOf(kh.getNgaySinh()));
+				((JTextField) objects_custommer[3][1]).setText(kh.getTuoi() + "");
+				((JComboBox) objects_custommer[4][1]).setSelectedItem(transGender(kh.isGioiTinh()));
+				((JTextField) objects_custommer[5][1]).setText(kh.getsDT());
+				((JTextField) objects_custommer[6][1]).setText(kh.getDiaCHi());
+				((JComboBox) objects_custommer[7][1]).setSelectedItem(kh.getXepHang());
+				((JLabel) objects_custommer[8][1]).setText(kh.getDiemThanhVien() + "");
+
+			} else {
+				JOptionPane.showMessageDialog(null, "Không tìm thấy khách hàng trong hệ thống");
+			}
+
+		} else
+
+		{
+			xoaTrang();
+			JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ , số phải có 10 số");
+		}
+	}
+	public void hienKhachHang(KhachHang kh) {
+		String gender = kh.isGioiTinh()==true ? "Nam" :"Nữ";
+		Object[] row = { kh.getMaKH(), kh.getTenKH(), gender,kh.getDiemThanhVien(), kh.getXepHang(), kh.getsDT(),
+				kh.getDiaCHi() };
+		model.addRow(row);
+	}
+
+	public void timNangCao() {
+
+		String gt = getValueInComboBox(cbGioiTinh);
+		String xepHang = getValueInComboBox(cbXepHang);
 	
+		if (gt.equals("") && xepHang.equals("")) {
+			JOptionPane.showMessageDialog(null, "Bạn phải chọn ít nhất 1 lựa chọn để lọc khách");
+		
+		} else {
+			ArrayList<KhachHang> list_khach = lKhachHang_DAO.getListKhachHang();
+			model.setRowCount(0);
+			for (KhachHang khachHang : list_khach) {
+				boolean gender= gt.equals("Nam")? true :false;
+				if(gt.equals("")&&khachHang.getXepHang().equals(xepHang)) {
+					hienKhachHang(khachHang);
+				}else if(!gt.equals("")&&xepHang.equals("")&&khachHang.isGioiTinh()==gender) {
+					hienKhachHang(khachHang);		
+				}
+				else if(khachHang.isGioiTinh()==gender&&khachHang.getXepHang().equals(xepHang)) {
+					hienKhachHang(khachHang);
+				}
+			}
+			table.setModel(model);
+
+		}
+	}
 	public JButton buttonInPageCustommer(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(150, 40));
@@ -310,28 +401,7 @@ public class TimKhach_UI {
 			} else if (nameButton.equals("Thêm khách hàng")) {
 				themKhachHang();
 			} else if (nameButton.equals("Lọc")) {
-
-				String sdt = ((JTextField) objects_North[0][1]).getText();
-				KhachHang kh = getKH("", sdt);
-
-				if (kh.getMaKH() != null) {
-					int vt = getIndex(sdt);
-					table.setRowSelectionInterval(vt, vt);
-					String gender = transGender(kh.isGioiTinh());
-					((JLabel) objects_custommer[0][1]).setText(kh.getMaKH());
-					((JTextField) objects_custommer[1][1]).setText(kh.getTenKH());
-					((JDateChooser) objects_custommer[2][1]).setDate(java.sql.Date.valueOf(kh.getNgaySinh()));
-					((JTextField) objects_custommer[3][1]).setText(kh.getTuoi() + "");
-					((JComboBox) objects_custommer[4][1]).setSelectedItem(gender);
-					((JTextField) objects_custommer[5][1]).setText(kh.getsDT());
-					((JTextField) objects_custommer[6][1]).setText(kh.getDiaCHi());
-					((JTextField) objects_custommer[7][1]).setText(kh.getXepHang());
-					((JLabel) objects_custommer[8][1]).setText(kh.getDiemThanhVien() + "");
-
-				} else {
-					JOptionPane.showMessageDialog(null, "Không có số điện thoại nào trùng với mã trên");
-				}
-
+				timNangCao();
 			} else if (nameButton.equals("")) {
 
 				xoaTrang();

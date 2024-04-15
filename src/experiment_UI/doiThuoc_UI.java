@@ -159,7 +159,7 @@ public class DoiThuoc_UI {
 
 		JPanel footer = new JPanel();
 		JButton btn = null;
-		String[] object = { "", "gift\\reset.png", "Xóa Thuốc", "gift\\trash-bin.png", "Thêm thuốc", "gift\\add.png" };
+		String[] object = { "", "gift\\reset.png", "Xóa Thuốc", "gift\\trash-bin.png", "Thêm thuốc", "gift\\them.png" };
 		for (int i = 0; i < object.length; i += 2) {
 			btn = buttonInPageExChange(object[i], object[i + 1]);
 			footer.add(btn);
@@ -186,7 +186,7 @@ public class DoiThuoc_UI {
 		createTitle(inf, "Thông tin khách hàng");
 		inf.setLayout(new BoxLayout(inf, BoxLayout.Y_AXIS));
 		Object[][] trage = { { "Mã KH", new JTextField(20) }, { "Tên KH", new JTextField() },
-				{ "SDT", new JTextField() }, { "Giới Tính", new JTextField() } };
+				{ "SĐT", new JTextField() }, { "Giới Tính", new JTextField() } };
 		object_customer = trage;
 		for (Object[] objects : trage) {
 			inf.add(createNameAndTextField((JTextField) objects[1], objects[0].toString()));
@@ -244,7 +244,7 @@ public class DoiThuoc_UI {
 		JPanel footer = new JPanel();
 
 		JPanel topButton = new JPanel();
-		Object[][] btns = { { "Đổi thuốc", "" }, { "Tạo hóa đơn", "" } };
+		Object[][] btns = { { "Đổi thuốc", "gift\\doithuoc.png" }, { "Tạo hóa đơn", "gift\\thanhtoan.png" } };
 		for (Object[] objects : btns) {
 			JButton btn;
 			footer.add(btn = buttonInPageExChange(objects[0].toString(), objects[1].toString()));

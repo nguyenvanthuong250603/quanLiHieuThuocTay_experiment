@@ -346,5 +346,25 @@ public class HoaDon_DAO {
 		}
 		 return soLuongHoaDon;
 	}
-
+	
+	public int thongKeHoaDonThangNay() {
+		Connection con =accessDataBase();
+		PreparedStatement p = null;
+		int soLuongHoaDon = 0;
+		try {
+			p =con.prepareStatement("SELECT * FROM HoaDon WHERE MONTH(NgayTaoHoaDon) = 4 ");
+			try (ResultSet rs = p.executeQuery()){
+				while (rs.next()) {
+					 soLuongHoaDon = rs.getInt("SoLuong");
+					
+					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		 return soLuongHoaDon;
+	}
 }

@@ -195,11 +195,13 @@ public class HoaDonLuuTam_UI {
 
 			textMaKH.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
 			KhachHang kh = getKH(hd.getMaKh().getMaKH(), "");
-			textMaKH.setText(hd.getMaKh().getMaKH());
-			((JTextField) obj_customer[0][1]).setText(kh.getTenKH());
-			((JTextField) obj_customer[1][1]).setText(kh.getTuoi() + "");
-			((JComboBox) obj_customer[2][1]).setSelectedItem(transGender(kh.isGioiTinh()));
-			((JTextField) obj_customer[3][1]).setText(kh.getsDT());
+			textMaKH.setText(kh.getsDT());
+			
+			((JTextField) obj_customer[0][1]).setText(kh.getMaKH());
+			((JTextField) obj_customer[1][1]).setText(kh.getTenKH());
+			((JTextField) obj_customer[2][1]).setText(kh.getTuoi()+"");
+			((JComboBox) obj_customer[3][1]).setSelectedItem(transGender(kh.isGioiTinh()));
+			
 			
 			((JTextField) obj_customer[4][1]).setText(kh.getXepHang());
 			
@@ -301,7 +303,12 @@ public class HoaDonLuuTam_UI {
 				timTheoSdt();
 			}
 			else if (nameBtn.equals("Xóa tất cả")) {
+			Boolean x =	table.getRowCount()>0?true: false;
+			if(x==true) 
 				xoaTatCa();
+			else 
+				JOptionPane.showMessageDialog(null, "Không có hóa đơn nào để xóa");
+			
 			}
 		});
 		return btn;

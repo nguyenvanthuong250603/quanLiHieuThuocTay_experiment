@@ -59,6 +59,7 @@ public class TimThuoc_UI {
 	private JComboBox cbLoaiThuocTim;
 	private JTextField textFind;
 	private NhaSanXuat_DAO nhaSanXuat_DAO = new NhaSanXuat_DAO();
+	private JTextField tenThuoc;
 
 	public void getTimThuoc(DefaultTableModel modell, JTable tablee) {
 		frame = new JFrame();
@@ -103,23 +104,15 @@ public class TimThuoc_UI {
 
 		JPanel box1 = new JPanel();
 		box1.setBorder(new EmptyBorder(0, 0, 0, 10));
-		box1.setLayout(new GridLayout(2, 2, 10, 10));
+		box1.setLayout(new GridLayout(1, 3, 10, 10));
 
 		JPanel t = new JPanel();
 		t.setLayout(new BoxLayout(t, BoxLayout.X_AXIS));
 		t.add(sampleModel("Tên thuốc"));
-		JTextField tenThuoc = new JTextField();
+		tenThuoc = new JTextField();
 		t.add(tenThuoc);
 
-		JPanel t2 = new JPanel();
-		t2.setLayout(new BoxLayout(t2, BoxLayout.X_AXIS));
-		String[] optionTinhTrang = { "", "sản phẩm hết hạn", "sản phẩm sắp hết hạn", "sản phẩm hết hàng",
-				"sản phẩm sắp hết", "sản phẩm còn hạn" };
-
-		t2.add(createJcombobox("Tình trạng", cbTinhTrang = new JComboBox(optionTinhTrang)));
-
 		box1.add(t);
-		box1.add(t2);
 
 		String[] optionLoaiThuoc = { "", "Thuốc giảm đau, hạ sốt ", "Thuốc đặc trị", "Kháng sinh", "Thuốc tiêu hóa",
 				"Thuốc an thần", "Vitamin", "Thuốc sát khuẩn , khử trùng", "Thuốc chống dị ứng", "Thuốc chống viêm",
@@ -189,7 +182,7 @@ public class TimThuoc_UI {
 		ArrayList<NhaSanXuat> lnsx = nhaSanXuat_DAO.getNhaSanXuatDataBase();
 
 		cbNSXTim.removeAllItems();
-
+		cbNSXTim.addItem("");
 		for (NhaSanXuat nhaSanXuat : lnsx) {
 
 			cbNSXTim.addItem(nhaSanXuat.getTenNSX());
@@ -316,49 +309,35 @@ public class TimThuoc_UI {
 		}
 	}
 
-	public void timNangCao() {
-		String tinhTrangThuoc = getValueInComboBox(cbTinhTrang);
+	public boolean regexThuocLoc() {
 
 		String tenNSX = getValueInComboBox(cbNSXTim);
 		String loaithuoc = getValueInComboBox(cbLoaiThuocTim);
+		String tenThuocc = tenThuoc.getText();
+		if (tenNSX.equals("") && loaithuoc.equals("") && tenThuocc.equals("")) {
+			JOptionPane.showMessageDialog(null, "Bạn cần lựa chọn ít nhất 1 tiêu chí để lọc thuốc");
+			return false;
+		}
+		return true;
+	}
 
-		ArrayList<Thuoc> list_ThuocTim = list_Thuoc.timThuoc(tenNSX, loaithuoc);
+	public void timNangCao() {
 
-		model.setRowCount(0);
-		for (Thuoc thuoc : list_ThuocTim) {
-			if (!tinhTrangThuoc.equals("")) {
-				if (tinhTrangThuoc.equals("sản phẩm còn hạn")) {
-					LocalDate date = thuoc.getNgayHetHan();
-					Long dayDifference = ChronoUnit.DAYS.between(LocalDate.now(), date);
-					if (date.isAfter(LocalDate.now()) && dayDifference > 8)
-						hienBangLocThuoc(thuoc);
+		if (regexThuocLoc()) {
+			String tenNSX = getValueInComboBox(cbNSXTim);
+			String loaithuoc = getValueInComboBox(cbLoaiThuocTim);
+			String tenThuocc = tenThuoc.getText();
+			ArrayList<Thuoc> list_ThuocTim = list_Thuoc.timThuoc(tenNSX, loaithuoc, tenThuocc);
 
-				} else if (tinhTrangThuoc.equals("sản phẩm hết hạn")) {
-					LocalDate date = thuoc.getNgayHetHan();
-					if (date.isBefore(LocalDate.now()))
-						hienBangLocThuoc(thuoc);
+			model.setRowCount(0);
+			for (Thuoc thuoc : list_ThuocTim) {
 
-				} else if (tinhTrangThuoc.equals("sản phẩm sắp hết hạn")) {
-					LocalDate date = thuoc.getNgayHetHan();
-					Long daysDifference = ChronoUnit.DAYS.between(LocalDate.now(), date);
-					if (daysDifference > 0 && daysDifference <= 7)
-						hienBangLocThuoc(thuoc);
-
-				} else if (tinhTrangThuoc.equals("sản phẩm hết hàng")) {
-					if (thuoc.getSoLuong() == 0)
-						hienBangLocThuoc(thuoc);
-				} else if (tinhTrangThuoc.equals("sản phẩm sắp hết")) {
-					if (thuoc.getSoLuong() > 0 && thuoc.getSoLuong() <= 5)
-						hienBangLocThuoc(thuoc);
-				}
-
-			} else {
 				hienBangLocThuoc(thuoc);
+
 			}
+			table.setModel(model);
 
 		}
-		table.setModel(model);
-
 	}
 
 	public void hienBangLocThuoc(Thuoc thuoc) {
@@ -386,6 +365,14 @@ public class TimThuoc_UI {
 		}
 	}
 
+	public void xoaTrang() {
+		textFind.setText("");
+		tenThuoc.setText("");
+		cbNSXTim.setSelectedIndex(0);
+		cbLoaiThuoc.setSelectedIndex(0);
+		hienBangTableThuoc();
+	}
+
 	public JButton buttonInPageSearch(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(120, 40));
@@ -398,6 +385,8 @@ public class TimThuoc_UI {
 				timThuoc();
 			} else if (nameButton.equals("Lọc")) {
 				timNangCao();
+			} else if (nameButton.equals("")) {
+				xoaTrang();
 			}
 
 		});

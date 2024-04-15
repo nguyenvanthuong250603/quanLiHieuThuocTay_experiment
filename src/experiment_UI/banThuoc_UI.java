@@ -197,16 +197,16 @@ public class BanThuoc_UI {
 		input.setLayout(new BoxLayout(input, BoxLayout.Y_AXIS));
 		JPanel t = new JPanel(new BorderLayout());
 		t.setBorder(new EmptyBorder(0, 30, 0, 30));
-		t.add(sampleModel2("Mã KH"), BorderLayout.WEST);
+		t.add(sampleModel2("Số Điện Thoại"), BorderLayout.WEST);
 		t.add(jtextMaKH = new JTextField(15), BorderLayout.CENTER);
-		btnTimKH = buttonInPageSell("Tìm", "");
+		btnTimKH = buttonInPageSell("", "gift\\add.png");
 		btnTimKH.setPreferredSize(new Dimension(80, 30));
 		t.add(btnTimKH, BorderLayout.AFTER_LINE_ENDS);
 		input.add(t);
 
 		String[] gt = { "Nam", "Nữ" };
-		Object[][] trage = { { "Tên KH", new JTextField() }, { "Tuổi", new JTextField() },
-				{ "Giới tính", optionGender = new JComboBox(gt) }, { "SDT", new JTextField() },
+		Object[][] trage = { { "Mã Khách Hàng", new JTextField() }, { "Tên KH", new JTextField() },
+				{ "Tuổi", new JTextField() }, { "Giới tính", optionGender = new JComboBox(gt) },
 				{ "Xếp hạng", new JTextField() } };
 		object_custommer = trage;
 		for (Object[] objects : object_custommer) {
@@ -286,8 +286,8 @@ public class BanThuoc_UI {
 //		footer.setBorder(new EmptyBorder(10, 0, 10, 10));
 		JButton btn = null;
 		String[][] object = { { "", "gift\\reset.png" }, { "Xóa Thuốc", "gift\\trash-bin.png" },
-				{ "Lưu tạm", "gift\\trash-bin.png" }, { "Xử lí hóa đơn tạm", "gift\\excel-file.png" },
-				{ "Thanh toán", "gift\\excel-file.png" } };
+				{ "Lưu tạm", "gift\\luu_tam.png" }, { "Xử lí hóa đơn tạm", "gift\\xuly.png" },
+				{ "Thanh toán", "gift\\thanhtoan.png" } };
 		for (String[] strings : object) {
 			btn = buttonInPageSell(strings[0].toString(), strings[1].toString());
 			footer.add(btn);
@@ -351,6 +351,22 @@ public class BanThuoc_UI {
 
 		((JTextField) object_sell[2][1]).addFocusListener(calculation);
 		((JTextField) object_sell[5][1]).addFocusListener(calculation);
+	
+		ActionListener enter3 = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+
+					timTheoSdt();
+
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+
+			}
+		};
+		jtextMaKH.addActionListener(enter3);
 
 	}
 
@@ -559,8 +575,8 @@ public class BanThuoc_UI {
 		hidden(false);
 		((JTextField) object_custommer[0][1]).setText("");
 		((JTextField) object_custommer[1][1]).setText("");
-		((JComboBox) object_custommer[2][1]).setSelectedIndex(0);
-		((JTextField) object_custommer[3][1]).setText("");
+		((JComboBox) object_custommer[3][1]).setSelectedIndex(0);
+		((JTextField) object_custommer[2][1]).setText("");
 		((JTextField) object_custommer[4][1]).setText("");
 		jtextMaKH.setText("");
 
@@ -613,7 +629,7 @@ public class BanThuoc_UI {
 		String maHD = getValueStringInJlabel(object_sell[0][1]);
 		NhanVien nv = new NhanVien(maNhanVien);
 
-		String tenKh = getValueStringInJTextField(object_custommer[0][1]);
+		String tenKh = getValueStringInJTextField(object_custommer[1][1]);
 		String hinhThucThanhToan = ((JComboBox) object_sell[4][1]).getSelectedItem().toString();
 		Boolean loaiHoaDon;
 
@@ -623,12 +639,12 @@ public class BanThuoc_UI {
 			loaiHoaDon = null;
 		}
 		String tinhTrang;
-		KhachHang kh = new KhachHang(jtextMaKH.getText());
+		KhachHang kh = new KhachHang(getValueStringInJTextField(object_custommer[0][1]));
 		if (loaiHoaDon == null) {
 			tinhTrang = "";
 		} else {
 			if (loaiHoaDon == true) {
-				kh = new KhachHang(jtextMaKH.getText());
+				kh = new KhachHang(getValueStringInJTextField(object_custommer[0][1]));
 			} else {
 				kh = new KhachHang("");
 			}
@@ -694,17 +710,15 @@ public class BanThuoc_UI {
 	public void thanhToan(double tongTien, double khachDua, String khuyenMai) {
 
 		HoaDon hd = getHoaDon("1");
-	
 
 		if (!hDao.themHoaDon(hd)) {
 			Boolean loaiHoaDon = cb.isSelected() ? true : false;
 			if (hDao.themHoaDonVaoLoai(loaiHoaDon, "Bán ra", hd.getMaHD())) {
 				JOptionPane.showMessageDialog(null, "Tạo hóa đơn thành công");
-				if(hd.getMaKh().getMaKH().equals("")) {
-					generateInvoiceBanLe(hd, tongTien, khachDua,result);
-				}
-				else {
-					generateInvoice(hd, tongTien, khachDua, khuyenMai,result);
+				if (hd.getMaKh().getMaKH().equals("")) {
+					generateInvoiceBanLe(hd, tongTien, khachDua, result);
+				} else {
+					generateInvoice(hd, tongTien, khachDua, khuyenMai, result);
 				}
 				thayDoiDiemXepHang();
 				thayDoiSoLuongThuoc();
@@ -716,11 +730,10 @@ public class BanThuoc_UI {
 
 		} else {
 			JOptionPane.showMessageDialog(null, "Tạo hóa đơn thành công");
-			if(hd.getMaKh().getMaKH().equals("")) {
-				generateInvoiceBanLe(hd, tongTien, khachDua,result);
-			}
-			else {
-				generateInvoice(hd, tongTien, khachDua, khuyenMai,result);
+			if (hd.getMaKh().getMaKH().equals("")) {
+				generateInvoiceBanLe(hd, tongTien, khachDua, result);
+			} else {
+				generateInvoice(hd, tongTien, khachDua, khuyenMai, result);
 			}
 			thayDoiDiemXepHang();
 			thayDoiSoLuongThuoc();
@@ -746,13 +759,13 @@ public class BanThuoc_UI {
 		KhachHang kh = khachHang_DAO.getKhachHangByID(maKh, "");
 		int tinhDiem = kh.getDiemThanhVien() + dtl;
 		String xepHang;
-		if (tinhDiem <= 100) {
+		if (tinhDiem <= 500) {
 			xepHang = "Đồng";
-		} else if (tinhDiem > 100 && tinhDiem <= 500) {
+		} else if (tinhDiem > 500 && tinhDiem <= 2000) {
 			xepHang = "Bạc";
-		} else if (tinhDiem > 500 && tinhDiem <= 1500) {
+		} else if (tinhDiem > 2000 && tinhDiem <= 6000) {
 			xepHang = "Vàng";
-		} else if (tinhDiem > 1500 && tinhDiem <= 4000) {
+		} else if (tinhDiem > 6000 && tinhDiem <= 10000) {
 			xepHang = "Bạch kim";
 		} else {
 			xepHang = "Kim cương";
@@ -763,7 +776,48 @@ public class BanThuoc_UI {
 			System.out.println("sai");
 		}
 	}
+	public void timTheoSdt() {
+		String sdt = jtextMaKH.getText();
 
+		if(sdt.matches("0\\d+{9}")) {
+		KhachHang kh = khachHang_DAO.getKhachHangByID("", sdt);
+		
+		if(kh.getMaKH()!=null) {
+		((JTextField) object_custommer[0][1]).setText(kh.getMaKH());
+		((JTextField) object_custommer[1][1]).setText(kh.getTenKH());
+		((JTextField) object_custommer[2][1]).setText(kh.getTuoi()+"");
+		((JComboBox) object_custommer[3][1]).setSelectedItem(transGender(kh.isGioiTinh()));
+		((JTextField) object_custommer[4][1]).setText(kh.getXepHang());
+		String xh = kh.getXepHang();
+		
+		if (xh.equals("Đồng")) {
+			((JLabel) object_sell[3][1]).setText("0%");
+		} else if (xh.equals("Bạc")) {
+			((JLabel) object_sell[3][1]).setText("1%");
+		} else if (xh.equals("Vàng")) {
+			((JLabel) object_sell[3][1]).setText("2%");
+		} else if (xh.equals("Bạch kim")) {
+			((JLabel) object_sell[3][1]).setText("3%");
+		} else if (xh.equals("Kim cương")) {
+			((JLabel) object_sell[3][1]).setText("4.5%");
+		}
+		
+		}else {
+			int value = JOptionPane.showConfirmDialog(null, "Khách hàng chưa có trong hệ thống , bạn có muốn thêm khách","Lưu ý",JOptionPane.YES_NO_OPTION);
+			if(value == JOptionPane.YES_OPTION) {
+				timKhach.getTimKhach(jtextMaKH, (JTextField) object_custommer[0][1],
+						(JTextField) object_custommer[1][1], (JTextField) object_custommer[2][1],
+						(JComboBox) object_custommer[3][1], (JTextField) object_custommer[4][1],
+						(JLabel) object_sell[3][1],jtextMaKH);
+
+			}
+		}
+		}else {
+			xoaTrang();
+			JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ , số phải có 10 số");
+		}
+
+	}
 	public JButton buttonInPageSell(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(150, 40));
@@ -771,26 +825,20 @@ public class BanThuoc_UI {
 			if (nameButton.equals("Tìm kiếm")) {
 
 				timThuoc();
+			} else if (nameButton.equals("") && pathIcon.equals("gift\\add.png")) {
+				timKhach.getTimKhach(jtextMaKH, (JTextField) object_custommer[0][1],
+						(JTextField) object_custommer[1][1], (JTextField) object_custommer[2][1],
+						(JComboBox) object_custommer[3][1], (JTextField) object_custommer[4][1],
+						(JLabel) object_sell[3][1],jtextMaKH);
 
 			} else if (nameButton.equals("")) {
 				xoaTrang();
-			} else if (nameButton.equals("Tìm")) {
-				timKhach.getTimKhach(jtextMaKH, (JTextField) object_custommer[0][1],
-						(JTextField) object_custommer[1][1], (JComboBox) object_custommer[2][1],
-						(JTextField) object_custommer[3][1], (JTextField) object_custommer[4][1],
-						(JLabel) object_sell[3][1]);
-
 			} else if (nameButton.equals("Xóa Thuốc")) {
 				xoaThuoc();
 			} else if (nameButton.equals("Xử lí hóa đơn tạm")) {
 
-//				String ma = ((JLabel) object_sell[0][1]).getText();
-//				System.out.println("Ma Truoc : " + ma);
 				hoaDonLuuTam.getHoaDonLuuTam(jtextMaKH, object_custommer, object_sell, table, cb);
-
-//				String masau = ((JLabel) object_sell[0][1]).getText();
-//				System.out.println("Ma Sau : " + masau);
-
+				hidden(true);
 			} else if (nameButton.equals("Lưu tạm")) {
 				luuTamHoaDON();
 
@@ -798,7 +846,6 @@ public class BanThuoc_UI {
 				if (regexInHoaDon()) {
 					thanhToan(getValueDoubleỊntextField(object_sell[2][1]),
 							getValueDoubleỊntextField(object_sell[5][1]), getValueStringInJlabel(object_sell[3][1]));
-						
 
 				}
 			}

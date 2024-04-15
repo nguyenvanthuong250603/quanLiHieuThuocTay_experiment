@@ -115,7 +115,7 @@ public class Thuoc_DAO {
 			return false;
 		} else {
 			try {
-				if (ma.equals("") && soLuong ==0) {
+				if (ma.equals("") && soLuong == 0) {
 					p = con.prepareStatement(
 							"UPDATE Thuoc SET TenThuoc = ? ,SoLuong = ?,Gia = ?,LoaiThuoc=?,NhaSanXuat=?,"
 									+ "NgaySanXuat=?,NgayHetHan=?,HinhAnh=?,"
@@ -141,7 +141,7 @@ public class Thuoc_DAO {
 					p.setString(15, thuoc.getBaoQuan());
 					p.setString(16, thuoc.getMoTa());
 					p.setString(17, thuoc.getMaThuoc());
-				
+
 				} else {
 					p = con.prepareStatement("UPDATE Thuoc SET SoLuong = ? WHERE MaThuoc = ?");
 					p.setInt(1, soLuong);
@@ -161,32 +161,53 @@ public class Thuoc_DAO {
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
 
 	}
 
-	public ArrayList<Thuoc> timThuoc(String NSX, String loaiThuoc) {
+	public ArrayList<Thuoc> timThuoc(String NSX, String loaiThuoc, String tenNSX) {
 		ArrayList<Thuoc> list_Thuoc = new ArrayList<Thuoc>();
 		Connection con = accessDataBase();
 		PreparedStatement p = null;
 		try {
 
 			String sql;
-			if (!NSX.equals("") && loaiThuoc.equals("")) {
+			if (!NSX.equals("") && loaiThuoc.equals("") && tenNSX.equals("")) {
 				sql = "SELECT *FROM Thuoc WHERE NhaSanXuat = ?";
 				p = con.prepareStatement(sql);
 				p.setString(1, NSX);
 
-			} else if (NSX.equals("") && !loaiThuoc.equals("")) {
+			} else if (NSX.equals("") && !loaiThuoc.equals("") & tenNSX.equals("")) {
 				sql = "SELECT *FROM Thuoc WHERE LoaiThuoc = ?";
 				p = con.prepareStatement(sql);
 				p.setString(1, loaiThuoc);
-			} else {
+			} else if (!NSX.equals("") && !loaiThuoc.equals("") & tenNSX.equals("")) {
 				sql = "SELECT * FROM Thuoc WHERE NhaSanXuat = ? AND LoaiThuoc = ?";
 				p = con.prepareStatement(sql);
 				p.setString(1, NSX);
 				p.setString(2, loaiThuoc);
+			} else if (!NSX.equals("") && !loaiThuoc.equals("") & !tenNSX.equals("")) {
+				sql = "SELECT * FROM Thuoc WHERE NhaSanXuat = ? AND LoaiThuoc = ? AND TenThuoc = ?";
+				p = con.prepareStatement(sql);
+				p.setString(1, NSX);
+				p.setString(2, loaiThuoc);
+				p.setString(3, tenNSX);
+			} else if (!NSX.equals("") && loaiThuoc.equals("") & !tenNSX.equals("")) {
+				sql = "SELECT * FROM Thuoc WHERE NhaSanXuat = ? AND TenThuoc = ?";
+				p = con.prepareStatement(sql);
+				p.setString(1, NSX);
+				p.setString(2, tenNSX);
+			} else if (NSX.equals("") && !loaiThuoc.equals("") & !tenNSX.equals("")) {
+				sql = "SELECT * FROM Thuoc WHERE TenThuoc = ? AND LoaiThuoc = ?";
+				p = con.prepareStatement(sql);
+				p.setString(1, tenNSX);
+				p.setString(2, loaiThuoc);
+			} else if (NSX.equals("") && loaiThuoc.equals("") & !tenNSX.equals("")) {
+				sql = "SELECT * FROM Thuoc WHERE  TenThuoc = ?";
+				p = con.prepareStatement(sql);
+				p.setString(1, tenNSX);
+
 			}
 
 			ResultSet rs = p.executeQuery();
@@ -240,5 +261,30 @@ public class Thuoc_DAO {
 			}
 		}
 		return th;
+	}
+
+	public boolean xoaThuoc(String ma) {
+		Connection con = accessDataBase();
+		PreparedStatement p = null;
+		try {
+			p = con.prepareStatement("DELETE Thuoc WHERE MaThuoc = ?");
+			p.setString(1, ma);
+			p.executeUpdate();
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		 finally {
+				try {
+					if (con != null) {
+						con.close();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
 	}
 }

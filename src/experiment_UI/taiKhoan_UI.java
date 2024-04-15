@@ -47,7 +47,7 @@ public class TaiKhoan_UI  extends JFrame{
 
 	public TaiKhoan_UI() {
 		
-		framee.setTitle("Test Gui ");
+		framee.setTitle("HIỆU THUỐC ÁNH DƯƠNG");
 		framee.setSize(new Dimension(900, 650));
 		framee.add(backGround());
 		forcusListen();
@@ -64,7 +64,7 @@ public class TaiKhoan_UI  extends JFrame{
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
-				ImageIcon imageIcon = new ImageIcon("gift\\ohh.jpg");
+				ImageIcon imageIcon = new ImageIcon("gift\\backgr.jpeg");
 				Image image = imageIcon.getImage();
 				g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 			}
@@ -89,7 +89,7 @@ public class TaiKhoan_UI  extends JFrame{
 		JPanel title = new JPanel();
 		title.add(titleJLabel = new JLabel("Đăng nhập"));
 		titleJLabel.setFont(new Font("Arial", Font.BOLD, 32));
-		titleJLabel.setForeground(Color.BLUE);
+		titleJLabel.setForeground(new Color(89, 168, 104));
 		title.setBackground(new Color(0, 0,0, 0));
 		titleJLabel.setBorder(new EmptyBorder(10,0,10,0));
 		t.add(title,BorderLayout.NORTH);
@@ -106,17 +106,32 @@ public class TaiKhoan_UI  extends JFrame{
 		maNhanVienJtextField.setText("NV12061111");
 		
 		JPanel box2 = new JPanel();
+
 		box2.setBackground(new Color(0, 0,0, 0));
-		box2.add(passwordField = new JPasswordField());
+		box2.add(passwordField = new JPasswordField(""));
 		passwordField.setPreferredSize(new Dimension(300, 40));
+		
 		passwordField.setText("123");
 		passwordField.setEchoChar('*');
 		
+	
 		
 		JPanel hiden = new JPanel();
-		hiden.add(hienMatKhau = new JCheckBox("Hiện mật khẩu"));
+		JLabel quenMK ;
+		hiden.add(quenMK = new JLabel("Quên mật khẩu ?"));
+		quenMK.setBorder(new EmptyBorder(0, 0, 0, 52));
+		quenMK.setFont(new Font("Arial", Font.BOLD, 14));
+		quenMK.setForeground(Color.white);
+		
+		hiden.add(hienMatKhau = new JCheckBox());
+		
+		JLabel textHienMK;
+		hiden.add(textHienMK = new JLabel("Hiện mật khẩu"));
+		
+		textHienMK.setFont(new Font("Arial", Font.BOLD, 14));
+		textHienMK.setForeground(Color.white);
 		hiden.setBackground(new Color(0, 0,0, 0));
-		hiden.setBorder(new EmptyBorder(0, 198, 0, 0));
+		hiden.setBorder(new EmptyBorder(0, 0, 0, 0));
 		
 		center.add(box1);
 		center.add(box2);
@@ -131,10 +146,51 @@ public class TaiKhoan_UI  extends JFrame{
 		
 	
 	}
+
+	public void forcusListen() {
+		
+
+			 maNhanVienJtextField.addMouseListener(new MouseAdapter() {
+		            @Override
+		            public void mouseEntered(MouseEvent e) {
+		            	 isHovering = true ;
+		                // Xóa văn bản khi hover vào JTextField
+		        
+		            	
+		            }
+
+		            @Override
+		            public void mouseExited(MouseEvent e) {
+		            	
+		                
+		                
+		            }
+		            
+		        
+		            @Override
+		            public void mouseClicked(MouseEvent e) {
+//		            	maNhanVienJtextField.setText("");
+//		            	passwordField.setText("");
+		            }
+		            
+		        });
+		
+
+	}
+	public void checkJcheckbox() {
+		hienMatKhau.addActionListener(e->{
+			if(hienMatKhau.isSelected()) {
+				 passwordField.setEchoChar((char) 0);
+			}else {
+				 passwordField.setEchoChar('*');
+			}
+		});
+	}
 	public JButton createButtonInAcc(String nameButton,String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(150, 40));
 		btn.addActionListener((e)->{
+			
 			if (nameButton.equals("Đăng nhập")) {
 				
 //				if(maNhanVienJtextField.getText().equals("admin")&&passwordField.getText().equals("123")) {
@@ -164,39 +220,5 @@ public class TaiKhoan_UI  extends JFrame{
 			
 		});
 		return btn;
-	}
-	public void forcusListen() {
-		
-
-			 maNhanVienJtextField.addMouseListener(new MouseAdapter() {
-		            @Override
-		            public void mouseEntered(MouseEvent e) {
-		            	 isHovering = true ;
-		                // Xóa văn bản khi hover vào JTextField
-		            	if(maNhanVienJtextField.getText().equals("admin"))
-		            		maNhanVienJtextField.setText("");
-		            	
-		            }
-
-		            @Override
-		            public void mouseExited(MouseEvent e) {
-		            	
-		                
-		                if (maNhanVienJtextField.getText().isEmpty()) {
-		                    maNhanVienJtextField.setText("admin");
-		                }
-		            }
-		        });
-		
-
-	}
-	public void checkJcheckbox() {
-		hienMatKhau.addActionListener(e->{
-			if(hienMatKhau.isSelected()) {
-				 passwordField.setEchoChar((char) 0);
-			}else {
-				 passwordField.setEchoChar('*');
-			}
-		});
 	}
 }

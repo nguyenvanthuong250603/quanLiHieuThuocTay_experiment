@@ -140,8 +140,9 @@ public class NhanVien_UI {
 
 	public JPanel service() {
 		JPanel footer = new JPanel();
-		String[][] object = { { "Xóa trắng", "gift//brush.png" }, { "Thêm", "gift//update.png" },
-				{ "Xóa", "gift//add.png" }, { "Cập nhật", "gift//add.png" }, { "In danh sách", "gift//add.png" } };
+		String[][] object = { { "Xóa trắng", "gift//brush.png" }, { "Thêm", "gift//them.png" },
+				{ "Xóa", "gift//trash-bin.png" }, { "Cập nhật", "gift//update.png" },
+				{ "In danh sách", "gift//excel-file.png" } };
 		for (String[] strings : object) {
 			JButton btn = createButtonInPagePesonnel(strings[0].toString(), strings[1].toString());
 
@@ -278,7 +279,7 @@ public class NhanVien_UI {
 					nv.getDiaChi() };
 			model.addRow(row);
 			xoaTrang();
-			
+
 		}
 	}
 
@@ -290,9 +291,9 @@ public class NhanVien_UI {
 					"Chú ý", JOptionPane.YES_NO_OPTION);
 			if (question == JOptionPane.YES_OPTION) {
 				if (nhanVien_DAO.updateNhanVien(nv)) {
-				
+
 					xoaTrang();
-				
+
 				}
 			}
 		} else {
@@ -376,7 +377,7 @@ public class NhanVien_UI {
 					String pathFile = nvVien.getHinhAnh();
 					File file = new File(pathFile);
 					displayImage(file);
-				}else {
+				} else {
 					displayImage(new File(""));
 				}
 
@@ -400,8 +401,8 @@ public class NhanVien_UI {
 	public void xoaNhanVien() {
 		int index = table.getSelectedColumn();
 		if (index > -1) {
-			int question = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa nhân viên hay không ?",
-					"Chú ý", JOptionPane.YES_NO_OPTION);
+			int question = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa nhân viên hay không ?", "Chú ý",
+					JOptionPane.YES_NO_OPTION);
 			if (question == JOptionPane.YES_OPTION && nhanVien_DAO.xoaNhanVien(table.getValueAt(index, 0).toString())) {
 
 				JOptionPane.showMessageDialog(null, "Xóa nhân viên thành công");
@@ -412,25 +413,28 @@ public class NhanVien_UI {
 			JOptionPane.showMessageDialog(null, "Bạn phải chọn nhân viên để xóa");
 		}
 	}
+
 	public void timNhanVien() {
-		String  maNV= jtextMaKH.getText();
-		if(maNV.equals("")) {
+		String maNV = jtextMaKH.getText();
+		if (maNV.equals("")) {
 			JOptionPane.showMessageDialog(null, "Bạn phải nhập mã nhân viên để tìm");
-		}else {
+		} else {
 			NhanVien nhanVien = nhanVien_DAO.getNhanVienFindByID(maNV);
 			System.out.println(nhanVien);
-			if(nhanVien.getMaNV()!=null) {
+			if (nhanVien.getMaNV() != null) {
 				model.setRowCount(0);
-				Object [] row = {nhanVien.getMaNV(), nhanVien.getHoTen(), nhanVien.getSdt(), nhanVien.getChucVu(),
+				Object[] row = { nhanVien.getMaNV(), nhanVien.getHoTen(), nhanVien.getSdt(), nhanVien.getChucVu(),
 						nhanVien.getTinhTrang(), nhanVien.getDiaChi() };
 				model.addRow(row);
 				table.setModel(model);
-				
-			}else {
-				JOptionPane.showMessageDialog(null, "Không tìm thấy nhân viên trong hệ thống vui lòng kiểm tra thông tin tìm");
+
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"Không tìm thấy nhân viên trong hệ thống vui lòng kiểm tra thông tin tìm");
 			}
 		}
 	}
+
 	public JButton createButtonInPagePesonnel(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(130, 40));
@@ -450,8 +454,7 @@ public class NhanVien_UI {
 				locNhanVien();
 			} else if (nameButton.equals("Xóa")) {
 				xoaNhanVien();
-			}
-			else if (nameButton.equals("Tìm")) {
+			} else if (nameButton.equals("Tìm")) {
 				timNhanVien();
 			}
 		});

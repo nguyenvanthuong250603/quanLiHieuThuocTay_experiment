@@ -21,6 +21,8 @@ import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -79,7 +81,7 @@ public class Generate_All {
 	private static ChiTietHoaDon_DAO cTietHoaDon_DAO = new ChiTietHoaDon_DAO();
 	private static KhachHang_DAO khDao = new KhachHang_DAO();
 
-	public static void generateInvoice(HoaDon hd, double tongTien, double khachDua, String khuyenMai,double result) {
+	public static void generateInvoice(HoaDon hd, double tongTien, double khachDua, String khuyenMai, double result) {
 		// Tạo một đối tượng Document
 		Document document = new Document();
 
@@ -186,8 +188,8 @@ public class Generate_All {
 			Paragraph khauTru = new Paragraph("Khấu trừ : " + khuyenMai, fontWord);
 
 			document.add(khauTru);
-			
-			double tt = khachDua-result;
+
+			double tt = khachDua - result;
 			Paragraph thanhtoan = new Paragraph("Tổng tiền : " + tt, fontWord);
 
 			document.add(thanhtoan);
@@ -217,7 +219,7 @@ public class Generate_All {
 		}
 	}
 
-	public static void generateInvoiceBanLe(HoaDon hd, double tongTien, double khachDua,double result) {
+	public static void generateInvoiceBanLe(HoaDon hd, double tongTien, double khachDua, double result) {
 		// Tạo một đối tượng Document
 		Document document = new Document();
 
@@ -271,7 +273,7 @@ public class Generate_All {
 			document.add(new Paragraph("  "));
 			Paragraph ten = new Paragraph();
 			ten.add(new Phrase("Tên khách hàng : ", fontWord));
-		
+
 			ten.add(new Phrase("", fontWord2));
 			ten.add(Chunk.TABBING);
 			ten.add(new Phrase("Mã KH:", fontWord));
@@ -321,8 +323,7 @@ public class Generate_All {
 
 			document.add(khachCanTra);
 
-
-			double tt = khachDua-result;
+			double tt = khachDua - result;
 			Paragraph thanhtoan = new Paragraph("Tổng tiền : " + tt, fontWord);
 
 			document.add(thanhtoan);
@@ -351,9 +352,7 @@ public class Generate_All {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
+
 	public static void writeToExcelWithFileChooser(ArrayList<Thuoc> thuocList) {
 		JFileChooser fileChooser = new JFileChooser() {
 			@Override
@@ -365,22 +364,20 @@ public class Generate_All {
 		};
 		fileChooser.setDialogTitle("Nhập tên file");
 		int userSelection = fileChooser.showSaveDialog(null);
-		// Nếu người dùng chọn nơi lưu trữ và nhấn OK
+
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
 			try {
-				// Lấy đường dẫn đã chọn
+
 				String filePath = fileChooser.getSelectedFile().getAbsolutePath();
-				// Kiểm tra xem có danh sách thuốc không
+
 				if (thuocList.isEmpty()) {
 					System.out.println("Không có dữ liệu để ghi vào file Excel.");
 					return;
 				}
 
-				// Tạo workbook và sheet
 				try (Workbook workbook = new XSSFWorkbook()) {
 					Sheet sheet = workbook.createSheet("Danh sách thuốc");
 
-					// Tạo hàng tiêu đề
 					Row headerRow = sheet.createRow(0);
 					String[] headers = { "Mã thuốc", "Tên thuốc", "Số lượng", "Giá", "Loại thuốc", "Nhà sản xuất",
 							"Ngày sản xuất", "Ngày hết hạn" };
@@ -389,7 +386,6 @@ public class Generate_All {
 						cell.setCellValue(headers[i]);
 					}
 
-					// Ghi thông tin từ danh sách thuốc vào file Excel
 					int rowNum = 1;
 					for (Thuoc thuoc : thuocList) {
 						Row row = sheet.createRow(rowNum++);
@@ -408,7 +404,66 @@ public class Generate_All {
 					String excelFilePath = filePath + ".xlsx";
 					try (FileOutputStream fileOut = new FileOutputStream(excelFilePath)) {
 						workbook.write(fileOut);
-						JOptionPane.showMessageDialog(null, "xuất file thành công");
+
+						Desktop.getDesktop().open(new File(excelFilePath));
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static void writeToExcelKhachHang(ArrayList<KhachHang> listKhachHang) {
+		JFileChooser fileChooser = new JFileChooser() {
+			@Override
+			protected JDialog createDialog(Component parent) throws HeadlessException {
+				JDialog dialog = super.createDialog(parent);
+				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+				return dialog;
+			}
+		};
+		fileChooser.setDialogTitle("Nhập tên file");
+		int userSelection = fileChooser.showSaveDialog(null);
+
+		if (userSelection == JFileChooser.APPROVE_OPTION) {
+			try {
+
+				String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+
+				if (listKhachHang.isEmpty()) {
+					return;
+				}
+
+				try (Workbook workbook = new XSSFWorkbook()) {
+					Sheet sheet = workbook.createSheet("Danh sách thuốc");
+
+					Row headerRow = sheet.createRow(0);
+					String[] headers = { "Mã khách hàng", "Tên khách hàng ", "Điểm tích lũy", "Xếp hạng",
+							"Số điện thoại", "Địa chỉ" };
+					for (int i = 0; i < headers.length; i++) {
+						Cell cell = headerRow.createCell(i);
+						cell.setCellValue(headers[i]);
+					}
+
+					int rowNum = 1;
+					for (KhachHang kh : listKhachHang) {
+						Row row = sheet.createRow(rowNum++);
+
+						row.createCell(0).setCellValue(kh.getMaKH());
+						row.createCell(1).setCellValue(kh.getTenKH());
+						row.createCell(2).setCellValue(kh.getDiemThanhVien());
+						row.createCell(3).setCellValue(kh.getXepHang());
+						row.createCell(4).setCellValue(kh.getsDT());
+						row.createCell(5).setCellValue(kh.getDiaCHi());
+						
+					}
+
+					// Ghi workbook vào file
+					String excelFilePath = filePath + ".xlsx";
+					try (FileOutputStream fileOut = new FileOutputStream(excelFilePath)) {
+						workbook.write(fileOut);
+
 						Desktop.getDesktop().open(new File(excelFilePath));
 					}
 				}
@@ -431,13 +486,19 @@ public class Generate_All {
 
 	public static JButton createJbutton(String nameButton, String pathIcon) {
 		JButton btn = new JButton(nameButton);
+
 		ImageIcon icon = new ImageIcon(pathIcon);
-		btn.setIcon(icon);
+		Image image = icon.getImage(); // Lấy hình ảnh từ ImageIcon
+		// Thay đổi kích thước hình ảnh
+		ImageIcon newIcon = new ImageIcon(image);
+
+		btn.setIcon(newIcon);
 		btn.setIconTextGap(10);
 		btn.setBackground(new Color(89, 168, 104));
 		btn.setFocusPainted(false);
 		btn.setForeground(Color.WHITE);
 		btn.setFont(new Font("Arial", Font.BOLD, 15));
+
 		return btn;
 	}
 
@@ -626,8 +687,9 @@ public class Generate_All {
 
 		ArrayList<KhachHang> lkh = khang.getListKhachHang();
 		for (KhachHang khachHang : lkh) {
-			String[] row = { khachHang.getMaKH(), khachHang.getTenKH(), khachHang.getDiemThanhVien() + "",
-					khachHang.getsDT(), khachHang.getDiaCHi() };
+			String gender = khachHang.isGioiTinh()==true ? "Nam" :"Nữ";
+			Object[] row = { khachHang.getMaKH(), khachHang.getTenKH(),gender, khachHang.getDiemThanhVien() + "",
+					khachHang.getXepHang(), khachHang.getsDT(), khachHang.getDiaCHi() };
 			model.addRow(row);
 
 		}
@@ -674,7 +736,7 @@ public class Generate_All {
 						((JComboBox) objects[4][1]).setSelectedItem(gender);
 						((JTextField) objects[5][1]).setText(khachHang.getsDT());
 						((JTextField) objects[6][1]).setText(khachHang.getDiaCHi());
-						((JTextField) objects[7][1]).setText(khachHang.getXepHang());
+						((JComboBox) objects[7][1]).setSelectedItem(khachHang.getXepHang());;
 						((JLabel) objects[8][1]).setText(khachHang.getDiemThanhVien() + "");
 
 					}

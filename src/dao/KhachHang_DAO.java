@@ -27,7 +27,7 @@ public class KhachHang_DAO {
 				LocalDate localDate_NgaySinh = chageTimeSQL(rs.getDate("NgaySinh"));
 
 				KhachHang kh = new KhachHang(rs.getString(1), rs.getString(2), localDate_NgaySinh, rs.getInt(4), gender,
-						rs.getString(6), rs.getString(7), rs.getInt(8),rs.getString(9));
+						rs.getString(6), rs.getString(7), rs.getInt(8), rs.getString(9));
 
 				lkh.add(kh);
 			}
@@ -54,8 +54,7 @@ public class KhachHang_DAO {
 				p = con.prepareStatement("SELECT *FROM KhachHang WHERE MaKH= ?");
 				p.setString(1, maKh);
 			} else {
-				p = con.prepareStatement(
-						"SELECT *FROM KhachHang WHERE MaKH IN(SELECT MaKH FROM KhachHang WHERE SDT = ?)");
+				p = con.prepareStatement("SELECT *FROM KhachHang  WHERE SDT = ?");
 				p.setString(1, sdt);
 			}
 			try (ResultSet rs = p.executeQuery()) {
@@ -64,7 +63,7 @@ public class KhachHang_DAO {
 					Boolean gender = rs.getInt(5) == 1 ? true : false;
 					LocalDate localDate_NgaySinh = chageTimeSQL(rs.getDate("NgaySinh"));
 					kh = new KhachHang(rs.getString(1), rs.getString(2), localDate_NgaySinh, rs.getInt(4), gender,
-							rs.getString(6), rs.getString(7), rs.getInt(8),rs.getString(9));
+							rs.getString(6), rs.getString(7), rs.getInt(8), rs.getString(9));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -128,9 +127,8 @@ public class KhachHang_DAO {
 		PreparedStatement p = null;
 		try {
 			if (service.equals("Cập nhật")) {
-				
-				p = con.prepareStatement(
-						"UPDATE KhachHang SET TenKH = ?,NgaySinh =?,Tuoi = ?,GioiTinh=?,"
+
+				p = con.prepareStatement("UPDATE KhachHang SET TenKH = ?,NgaySinh =?,Tuoi = ?,GioiTinh=?,"
 						+ "SDT=?,DiaChi =?,DiemThanhVien= ?  WHERE MaKH=?");
 				p.setString(1, kh.getTenKH());
 				p.setDate(2, java.sql.Date.valueOf(kh.getNgaySinh()));
@@ -141,8 +139,8 @@ public class KhachHang_DAO {
 				p.setString(6, kh.getDiaCHi());
 				p.setInt(7, kh.getDiemThanhVien());
 				p.setString(8, kh.getMaKH());
-			}else {
-				
+			} else {
+
 				p = con.prepareStatement("DELETE KhachHang WHERE MaKH = ?");
 				p.setString(1, kh.getMaKH());
 			}
@@ -163,21 +161,19 @@ public class KhachHang_DAO {
 		}
 
 	}
-	public boolean updateKhachHangXepHang(int dtv, String xh,String ma) {
+
+	public boolean updateKhachHangXepHang(int dtv, String xh, String ma) {
 
 		Connection con = connectDataBase.ConnectionData.accessDataBase();
 		PreparedStatement p = null;
 		try {
-			
-				
-				p = con.prepareStatement(
-						"UPDATE KhachHang SET DiemThanhVien= ? ,XepHang = ? WHERE MaKH=?");
-				
 
-				p.setInt(1, dtv);
-				p.setString(2, xh);
-				p.setString(3, ma);
-			
+			p = con.prepareStatement("UPDATE KhachHang SET DiemThanhVien= ? ,XepHang = ? WHERE MaKH=?");
+
+			p.setInt(1, dtv);
+			p.setString(2, xh);
+			p.setString(3, ma);
+
 			p.executeUpdate();
 			return true;
 
@@ -195,5 +191,5 @@ public class KhachHang_DAO {
 		}
 
 	}
-	
+
 }
