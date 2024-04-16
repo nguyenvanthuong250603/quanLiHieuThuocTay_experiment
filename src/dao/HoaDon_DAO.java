@@ -213,21 +213,21 @@ public class HoaDon_DAO {
 				if (LoaiHD !=3 ) {
 				    p.setInt(1, LoaiHD);
 				}
-				System.out.println("hiiiii");
+//				System.out.println("hiiiii");
 
 			}else if(!sdt.equals("")&&LoaiHD==3){
 				p = con.prepareStatement(
 						"SELECT *FROM HoaDon WHERE LoaiHoaDon IS NULL AND  MaKH IN (SELECT MaKH FROM KhachHang WHERE SDT =?)");
 			
 				p.setString(1, sdt);
-				System.out.println("hiii");
+//				System.out.println("hiii");
 			}
 			else if (LoaiHD==4) {
 				System.out.println(LoaiHD);
 				p = con.prepareStatement(
 						"SELECT *FROM HoaDon WHERE  MaKH IN (SELECT MaKH FROM KhachHang WHERE SDT =?)");
 				p.setString(1, sdt);
-				System.out.println("hii");
+//				System.out.println("hii");
 			}
 			
 			else {
@@ -235,7 +235,7 @@ public class HoaDon_DAO {
 						"SELECT *FROM HoaDon WHERE LoaiHoaDon = ? AND  MaKH IN (SELECT MaKH FROM KhachHang WHERE SDT =?)");
 				p.setInt(1, LoaiHD);
 				p.setString(2, sdt);
-				System.out.println("hi");
+//				System.out.println("hi");
 
 			}
 			try (ResultSet rs = p.executeQuery()) {

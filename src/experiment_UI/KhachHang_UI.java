@@ -105,8 +105,8 @@ public class KhachHang_UI {
 		JPanel managerment = new JPanel();
 		createTitle(managerment, "Danh sách khách hàng");
 		managerment.setLayout(new BorderLayout());
-		String[] column = { "Mã khách hàng", "Tên khách hàng ","Giới tính", "Điểm tích lũy", "Xếp hạng", "Số điện thoại",
-				"Địa chỉ" };
+		String[] column = { "Mã khách hàng", "Tên khách hàng ", "Giới tính", "Điểm tích lũy", "Xếp hạng",
+				"Số điện thoại", "Địa chỉ" };
 		model = new DefaultTableModel(column, 0);
 		table = new JTable(model);
 		table.setShowGrid(false);
@@ -136,7 +136,8 @@ public class KhachHang_UI {
 		Object[][] trage = { { "Mã khách hàng", new JLabel() }, { "Tên khách hàng", new JTextField() },
 				{ "Ngày sinh", new JDateChooser() }, { "Tuổi", new JTextField(20) },
 				{ "Giới tính", cbDoTuoi = new JComboBox(gioiTinh), }, { "Số điện thoại", new JTextField() },
-				{ "Địa chỉ", new JTextField() }, { "Xếp hạng", new JComboBox(xepHang) }, { "Điểm tích lũy", new JLabel() } };
+				{ "Địa chỉ", new JTextField() }, { "Xếp hạng", new JComboBox(xepHang) },
+				{ "Điểm tích lũy", new JLabel() } };
 		objects_custommer = trage;
 		for (Object[] objects : objects_custommer) {
 			if (objects[1] instanceof Component) {
@@ -202,7 +203,7 @@ public class KhachHang_UI {
 		((JComboBox) objects_custommer[4][1]).setSelectedIndex(0);
 		((JTextField) objects_custommer[5][1]).setText("");
 		((JTextField) objects_custommer[6][1]).setText("");
-		((JTextField) objects_custommer[7][1]).setText("");
+		((JComboBox) objects_custommer[7][1]).setSelectedIndex(0);
 		((JLabel) objects_custommer[8][1]).setText("");
 
 	}
@@ -221,19 +222,20 @@ public class KhachHang_UI {
 	}
 
 	private void themKhachHang() {
-		if(regexThem()) {
-		KhachHang kh = layKhachHangUI();
-		if (khachHang_DAO.themKhachHang(kh)) {
-			JOptionPane.showMessageDialog(null, "Thêm khách hàng thành công");
-			Object[] row = { kh.getMaKH(), kh.getTenKH(), kh.getDiemThanhVien(), kh.getsDT(), kh.getDiaCHi() };
-			model.addRow(row);
-			table.setRowSelectionInterval(model.getRowCount() - 1, model.getRowCount() - 1);
-			xoaTrang();
-		} else {
-			JOptionPane.showMessageDialog(null, "Số điện thoại này đã có người sử dụng");
+		if (regexThem()) {
+			KhachHang kh = layKhachHangUI();
+			if (khachHang_DAO.themKhachHang(kh)) {
+				JOptionPane.showMessageDialog(null, "Thêm khách hàng thành công");
+				Object[] row = { kh.getMaKH(), kh.getTenKH(), kh.getDiemThanhVien(), kh.getsDT(), kh.getDiaCHi() };
+				model.addRow(row);
+				table.setRowSelectionInterval(model.getRowCount() - 1, model.getRowCount() - 1);
+				xoaTrang();
+			} else {
+				JOptionPane.showMessageDialog(null, "Số điện thoại này đã có người sử dụng");
+			}
 		}
 	}
-	}
+
 	public boolean regexThem() {
 		for (Object[] objects : objects_custommer) {
 			if (objects[1] instanceof JTextField) {
@@ -242,7 +244,7 @@ public class KhachHang_UI {
 					((JTextField) objects[1]).requestFocus();
 					return false;
 				}
-				if (objects[0].toString().equals("Tuổi") ) {
+				if (objects[0].toString().equals("Tuổi")) {
 					if (!((JTextField) objects[1]).getText().matches("\\d+")) {
 						JOptionPane.showMessageDialog(null,
 								"Thông tin của " + objects[0].toString() + " phải là chữ số");
@@ -256,8 +258,7 @@ public class KhachHang_UI {
 						return false;
 					}
 				}
-			}
-			else if (objects[1] instanceof JDateChooser) {
+			} else if (objects[1] instanceof JDateChooser) {
 				if (((JDateChooser) objects[1]).getDate() == null) {
 					JOptionPane.showMessageDialog(null, "Ngày của " + objects[0].toString() + " chưa được nhập");
 
@@ -269,13 +270,14 @@ public class KhachHang_UI {
 
 					return false;
 				}
-			
+
 			}
 
 		}
 		return true;
 
 	}
+
 	private void capNhatKhachHang() {
 		int index = table.getSelectedColumn();
 		if (index > -1) {
@@ -300,11 +302,13 @@ public class KhachHang_UI {
 			int question = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa khách hàng đã chọn hay không ?",
 					"Chú ý", JOptionPane.YES_NO_OPTION);
 			KhachHang kh = new KhachHang(table.getValueAt(index, 0).toString());
+
 			if (question == JOptionPane.YES_OPTION && khachHang_DAO.xoaKhachHang(kh, "")) {
+				if (khachHang_DAO.xoaKhachHang(kh, "")) {
+					JOptionPane.showMessageDialog(null, "Xóa khách hàng thành công");
 
-				JOptionPane.showMessageDialog(null, "Xóa khách hàng thành công");
-
-				xoaTrang();
+					xoaTrang();
+				}
 			}
 		} else {
 			JOptionPane.showMessageDialog(null, "Bạn phải chọn khách hàng để xóa");
@@ -345,8 +349,8 @@ public class KhachHang_UI {
 	}
 
 	public void hienKhachHang(KhachHang kh) {
-		String gender = kh.isGioiTinh()==true ? "Nam" :"Nữ";
-		Object[] row = { kh.getMaKH(), kh.getTenKH(), gender,kh.getDiemThanhVien(), kh.getXepHang(), kh.getsDT(),
+		String gender = kh.isGioiTinh() == true ? "Nam" : "Nữ";
+		Object[] row = { kh.getMaKH(), kh.getTenKH(), gender, kh.getDiemThanhVien(), kh.getXepHang(), kh.getsDT(),
 				kh.getDiaCHi() };
 		model.addRow(row);
 	}
@@ -393,18 +397,17 @@ public class KhachHang_UI {
 		System.out.println(xepHang);
 		if (gt.equals("") && xepHang.equals("")) {
 			JOptionPane.showMessageDialog(null, "Bạn phải chọn ít nhất 1 lựa chọn để lọc khách");
-		
+
 		} else {
 			ArrayList<KhachHang> list_khach = khachHang_DAO.getListKhachHang();
 			model.setRowCount(0);
 			for (KhachHang khachHang : list_khach) {
-				boolean gender= gt.equals("Nam")? true :false;
-				if(gt.equals("")&&khachHang.getXepHang().equals(xepHang)) {
+				boolean gender = gt.equals("Nam") ? true : false;
+				if (gt.equals("") && khachHang.getXepHang().equals(xepHang)) {
 					hienKhachHang(khachHang);
-				}else if(!gt.equals("")&&xepHang.equals("")&&khachHang.isGioiTinh()==gender) {
-					hienKhachHang(khachHang);		
-				}
-				else if(khachHang.isGioiTinh()==gender&&khachHang.getXepHang().equals(xepHang)) {
+				} else if (!gt.equals("") && xepHang.equals("") && khachHang.isGioiTinh() == gender) {
+					hienKhachHang(khachHang);
+				} else if (khachHang.isGioiTinh() == gender && khachHang.getXepHang().equals(xepHang)) {
 					hienKhachHang(khachHang);
 				}
 			}

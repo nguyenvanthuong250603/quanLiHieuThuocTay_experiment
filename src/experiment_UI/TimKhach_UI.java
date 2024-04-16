@@ -126,7 +126,7 @@ public class TimKhach_UI {
 			north.add(Box.createHorizontalStrut(20));
 
 		}
-		JButton btnLoc = buttonInPageCustommer("Lọc", "gift\\\\reset.png");
+		JButton btnLoc = buttonInPageCustommer("Lọc", "gift\\timkhach.png");
 
 		north.add(btnLoc);
 		north.add(Box.createHorizontalStrut(10));

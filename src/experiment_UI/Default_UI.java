@@ -77,7 +77,7 @@ public class Default_UI {
 		container.add(createBanThuoc(MaNV), BT);
 		container.add(createThongKe(), TK);
 		container.add(createNhanVien(), NV);
-		container.add(createDoiThuoc(), DT);
+		container.add(createDoiThuoc(MaNV), DT);
 		container.add(createBanThuoc(MaNV), BT);
 
 		container.add(createKhachHang(), KH);
@@ -285,9 +285,9 @@ public class Default_UI {
 		return banThuocUI.getBanThuoc(maNV);
 	}
 
-	private JPanel createDoiThuoc() {
+	private JPanel createDoiThuoc(String maNV) {
 		DoiThuoc_UI doiThuoc = new DoiThuoc_UI();
-		return doiThuoc.getDoiThuoc();
+		return doiThuoc.getDoiThuoc(maNV);
 	}
 
 	private JPanel createNhapThuoc() {

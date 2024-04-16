@@ -42,6 +42,7 @@ import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.toedter.calendar.JDateChooser;
 
 import dao.NhanVien_DAO;
+import entity.KhachHang;
 import entity.NhanVien;
 import experiment_UI.Generate_All.CustomTableCellRenderer;
 
@@ -82,7 +83,7 @@ public class NhanVien_UI {
 
 		Object[][] trage = { { new JLabel(), "Mã nhân viên" }, { new JTextField(), "Tên nhân viên" },
 				{ new JComboBox(gender), "Giới tính" }, { new JDateChooser(), "Ngày sinh" },
-				{ new JTextField(), "Tuổi" }, { new JTextField(), "SDT" } };
+				{ new JTextField(), "Tuổi" }, { new JTextField(), "SĐT" } };
 		inf_personnel_left = trage;
 		JPanel left = new JPanel();
 		Box box = Box.createVerticalBox();
@@ -251,6 +252,7 @@ public class NhanVien_UI {
 	}
 
 	private NhanVien getNhanVienUI() {
+
 		String ma = ((JLabel) inf_personnel_left[0][0]).getText();
 		String ten = getValueStringInJTextField(inf_personnel_left[1][0]);
 		LocalDate ngaySinh = getDateJDateChoor(inf_personnel_left[3][0]);
@@ -269,9 +271,11 @@ public class NhanVien_UI {
 		NhanVien nv = new NhanVien(ma, ten, transGenderToSQL(gt), ngaySinh, tuoi, sdt, cccd, diaChi, chucVu, trangThai,
 				ngayVaoLam, hinhAnh);
 		return nv;
+
 	}
 
 	public void themNhanVien() {
+
 		NhanVien nv = getNhanVienUI();
 		if (nhanVien_DAO.themNhanVien(nv)) {
 			JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công");
@@ -291,6 +295,7 @@ public class NhanVien_UI {
 					"Chú ý", JOptionPane.YES_NO_OPTION);
 			if (question == JOptionPane.YES_OPTION) {
 				if (nhanVien_DAO.updateNhanVien(nv)) {
+					JOptionPane.showMessageDialog(null, "Cập nhật nhân viên thành công");
 
 					xoaTrang();
 
@@ -420,7 +425,7 @@ public class NhanVien_UI {
 			JOptionPane.showMessageDialog(null, "Bạn phải nhập mã nhân viên để tìm");
 		} else {
 			NhanVien nhanVien = nhanVien_DAO.getNhanVienFindByID(maNV);
-			System.out.println(nhanVien);
+
 			if (nhanVien.getMaNV() != null) {
 				model.setRowCount(0);
 				Object[] row = { nhanVien.getMaNV(), nhanVien.getHoTen(), nhanVien.getSdt(), nhanVien.getChucVu(),
@@ -435,6 +440,70 @@ public class NhanVien_UI {
 		}
 	}
 
+	public boolean regexthemKhachHang() {
+
+		for (Object[] objects : inf_personnel_left) {
+			if (objects[0] instanceof JTextField) {
+				if (((JTextField) objects[0]).getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "Bạn chưa nhập thông tin vào " + objects[1].toString());
+					((JTextField) objects[0]).requestFocus();
+					return false;
+				}
+				if (objects[1].toString().equals("Tuổi")) {
+					if (!((JTextField) objects[0]).getText().matches("\\d+")) {
+						JOptionPane.showMessageDialog(null,
+								"Thông tin của " + objects[1].toString() + " phải là chữ số");
+						((JTextField) objects[1]).requestFocus();
+						return false;
+					}
+					int check = Integer.parseInt(((JTextField) objects[0]).getText());
+					if (check < 18) {
+						JOptionPane.showMessageDialog(null, objects[1].toString() + "tuổi của nhân viên phải >18");
+						((JTextField) objects[0]).requestFocus();
+						return false;
+					}
+				}
+			} else if (objects[0] instanceof JDateChooser) {
+				if (((JDateChooser) objects[0]).getDate() == null) {
+					JOptionPane.showMessageDialog(null, "Ngày của " + objects[1].toString() + " chưa được nhập");
+
+					return false;
+				}
+				if (((JDateChooser) objects[0]).getDate().after(new java.util.Date())) {
+					JOptionPane.showMessageDialog(null,
+							"Ngày của " + objects[1].toString() + " phải là ngày sau hôm nay");
+
+					return false;
+				}
+
+			}
+
+		}
+		for (Object[] object : inf_personnel_right) {
+			if (object[1] instanceof JTextField) {
+				if (((JTextField) object[1]).getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "Bạn chưa nhập thông tin vào " + object[0].toString());
+					((JTextField) object[1]).requestFocus();
+					return false;
+				}
+			}
+
+		}
+
+		return true;
+	}
+	public void xuatExcel() {
+		if (table.getRowCount() > 0) {
+			ArrayList<NhanVien> list_Xuat = new ArrayList<NhanVien>();
+			for (int i = 0; i < table.getRowCount(); i++) {
+				NhanVien nv = nhanVien_DAO.getNhanVienFindByID(table.getValueAt(i, 0).toString());
+				list_Xuat.add(nv);
+			}
+			writeToExcelNhanVien(list_Xuat);
+		} else {
+			JOptionPane.showMessageDialog(null, "Bạn cần có ít nhất 1 khách hàng để in danh sách");
+		}
+	}
 	public JButton createButtonInPagePesonnel(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(130, 40));
@@ -443,10 +512,14 @@ public class NhanVien_UI {
 				chooseImage();
 
 			} else if (nameButton.equals("Thêm")) {
-				themNhanVien();
+				if (regexthemKhachHang()) {
+					themNhanVien();
+				}
 
 			} else if (nameButton.equals("Cập nhật")) {
-				updateNhanVien();
+				if (regexthemKhachHang()) {
+					updateNhanVien();
+				}
 
 			} else if (nameButton.equals("Xóa trắng")) {
 				xoaTrang();
@@ -456,6 +529,10 @@ public class NhanVien_UI {
 				xoaNhanVien();
 			} else if (nameButton.equals("Tìm")) {
 				timNhanVien();
+			} else if (nameButton.equals("In danh sách")) {
+				xuatExcel();
+			} else {
+				System.out.println(nameButton);
 			}
 		});
 		return btn;

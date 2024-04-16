@@ -7,9 +7,12 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.DateFormat;
 //import java.awt.Label;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -30,6 +33,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.DateFormatter;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
@@ -68,14 +72,14 @@ public class DoiThuoc_UI {
 	private ChiTietHoaDon_DAO ctDao = new ChiTietHoaDon_DAO();
 	private Thuoc_DAO thuoc_DAO = new Thuoc_DAO();
 	private HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
-
-	public JPanel getDoiThuoc() {
+	private String maNHanVien;
+	public JPanel getDoiThuoc(String maNV) {
 		JPanel doithuoc = new JPanel(new BorderLayout());
 		createTiTlePage(doithuoc, "QUẢN LÝ ĐỔI TRẢ THUỐC");
 		doithuoc.add(table_Exchange(), BorderLayout.CENTER);
 		doithuoc.add(inputSell(), BorderLayout.EAST);
 		((JTextField) object_sell[2][1]).setText(formatTime(LocalDate.now()));
-
+		maNHanVien = maNV;
 		return doithuoc;
 	}
 
@@ -283,16 +287,16 @@ public class DoiThuoc_UI {
 			String optionHd = getValueInComboBox((JComboBox) object_find[1][1]);
 			int lhd;
 			if (!optionHd.equals("")) {
-				
+
 				lhd = optionHd.equals("Hóa đơn bán hàng") ? 1 : 0;
-			
-			}else {
-				
+
+			} else {
+
 				lhd = 4;
 			}
 			model.setRowCount(0);
 			model_product.setRowCount(0);
-		
+
 			hienTableTrongHoaDon(table, model, table_product, model_product, object_customer, sdt, lhd);
 			hienChungLocVaTim();
 
@@ -465,13 +469,99 @@ public class DoiThuoc_UI {
 				xoaTrang();
 				JOptionPane.showMessageDialog(null, "Tạo hóa đơn đổi thuốc thành công");
 			}
-		}
-		if (((JRadioButton) trageStatus[3]).isSelected()) {
+		} else if (((JRadioButton) trageStatus[3]).isSelected()) {
 			if (taoHoaDonKeLai()) {
-				thayDoiSoLuongThuoc();
+				
+				if(!jtetJTextAreReason.getText().equals("")) {
+					ArrayList<ChiTietHoaDon> cthd = new ArrayList<ChiTietHoaDon>();
+					for (int i = 0; i < table_product.getRowCount(); i++) {
+						String maHD = table.getValueAt(table.getSelectedColumnCount(), 0).toString();
+						String maThuoc = table_product.getValueAt(i, 0).toString();
+						String tenThuoc = table_product.getValueAt(i, 1).toString();
+						String donVi = table_product.getValueAt(i, 2).toString();
+						String sl = table_product.getValueAt(i, 3).toString();
+						int soLuong = Integer.parseInt(sl);
+						String gia = table_product.getValueAt(i, 4).toString();
+						double giaValue = Double.parseDouble(gia);
+						String thanhTien = table_product.getValueAt(i, 5).toString();
+						double thanhTienValue = Double.parseDouble(thanhTien);
 
-				JOptionPane.showMessageDialog(null, "Tạo hóa đơn đổi thuốc thành công");
+						ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(new HoaDon(maHD), new Thuoc(maThuoc), tenThuoc, donVi,
+								soLuong, giaValue, thanhTienValue);
+						cthd.add(chiTietHoaDon);
+
+					}
+					String maHD = table.getValueAt(table.getSelectedRow(), 0).toString();
+					String maNV = maNHanVien;
+					String maKH = table.getValueAt(table.getSelectedRow(), 2).toString();
+					DateTimeFormatter dFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+					
+					LocalDate ngayBan = LocalDate.parse(table.getValueAt(table.getSelectedRow(), 3).toString(), dFormatter);
+					double giaa=0;
+					for (int i = 0; i < table_product.getRowCount(); i++) {
+						double tinh = Double.parseDouble(table_product.getValueAt(i, 5).toString());
+						giaa+=tinh;
+					}
+					labelMoney.setText("Tổng tiền : "+ giaa);
+					double tongTien = giaa;
+					double giacu  = Double.parseDouble(table.getValueAt(table.getSelectedRow(), 4).toString());
+					String lyDo = jtetJTextAreReason.getText();
+					KhachHang kh = getKH(maKH, "");
+					HoaDon hd = new HoaDon(maHD, new NhanVien(maNV), new KhachHang(maKH), kh.getTenKH(), ngayBan, tongTien, lyDo, cthd);
+					JOptionPane.showMessageDialog(null, "Tạo hóa đơn thành công");
+					thayDoiSoLuongThuoc();
+					generateInvoiceKeLaiDon(hd,giacu);
+					boolean loai= table.getValueAt(table.getSelectedRow(), 2).toString().equals("") ? false:true;
+					hoaDon_DAO.themHoaDonVaoLoaiLyDo(loai, "Kê lại đơn", maHD, lyDo);
+					}else {
+						JOptionPane.showMessageDialog(null, "Bạn chưa ghi lí do đổi trả");
+					}
+				
+				
+				
+				
+				
+			
 			}
+		} else if (((JRadioButton) trageStatus[0]).isSelected()) {
+			JOptionPane.showMessageDialog(null, "Không thể tạo hóa đơn bán ra");
+		} else if (((JRadioButton) trageStatus[1]).isSelected()) {
+			if(!jtetJTextAreReason.getText().equals("")) {
+			ArrayList<ChiTietHoaDon> cthd = new ArrayList<ChiTietHoaDon>();
+			for (int i = 0; i < table_product.getRowCount(); i++) {
+				String maHD = table.getValueAt(table.getSelectedColumnCount(), 0).toString();
+				String maThuoc = table_product.getValueAt(i, 0).toString();
+				String tenThuoc = table_product.getValueAt(i, 1).toString();
+				String donVi = table_product.getValueAt(i, 2).toString();
+				String sl = table_product.getValueAt(i, 3).toString();
+				int soLuong = Integer.parseInt(sl);
+				String gia = table_product.getValueAt(i, 4).toString();
+				double giaValue = Double.parseDouble(gia);
+				String thanhTien = table_product.getValueAt(i, 5).toString();
+				double thanhTienValue = Double.parseDouble(thanhTien);
+
+				ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(new HoaDon(maHD), new Thuoc(maThuoc), tenThuoc, donVi,
+						soLuong, giaValue, thanhTienValue);
+				cthd.add(chiTietHoaDon);
+
+			}
+			String maHD = table.getValueAt(table.getSelectedRow(), 0).toString();
+			String maNV = maNHanVien;
+			String maKH = table.getValueAt(table.getSelectedRow(), 2).toString();
+			DateTimeFormatter dFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			LocalDate ngayBan = LocalDate.parse(table.getValueAt(table.getSelectedRow(), 3).toString(), dFormatter);
+			double tongTien =Double.parseDouble(table.getValueAt(table.getSelectedRow(), 4).toString());
+			String lyDo = jtetJTextAreReason.getText();
+			KhachHang kh = getKH(maKH, "");
+			HoaDon hd = new HoaDon(maHD, new NhanVien(maNV), new KhachHang(maKH), kh.getTenKH(), ngayBan, tongTien, lyDo, cthd);
+			JOptionPane.showMessageDialog(null, "Tạo hóa đơn thành công");
+			generateInvoiceHoanTra(hd);
+			boolean loai= table.getValueAt(table.getSelectedRow(), 2).toString().equals("") ? false:true;
+			hoaDon_DAO.themHoaDonVaoLoaiLyDo(loai, "Hoàn trả", maHD, lyDo);
+			}else {
+				JOptionPane.showMessageDialog(null, "Bạn chưa ghi lí do đổi trả");
+			}
+			
 		}
 	}
 
@@ -717,12 +807,7 @@ public class DoiThuoc_UI {
 			} else if (nameButton.equals("Lọc")) {
 				timHoaDonTheoSo();
 			} else if (nameButton.equals("")) {
-
-				if (((JRadioButton) trageStatus[3]).isSelected()) {
-					xoaTrang();
-				} else {
-					JOptionPane.showMessageDialog(null, "Bạn đang trong chức năng xóa thuốc không thể xóa trắng");
-				}
+				xoaTrang();
 			} else if (nameButton.equals("Tìm")) {
 				timHoaDon();
 			} else if (nameButton.equals("Tạo hóa đơn")) {

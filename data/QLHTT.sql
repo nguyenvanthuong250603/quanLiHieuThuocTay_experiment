@@ -110,9 +110,9 @@ INSERT INTO NhanVien VALUES ('NV12061111',N'Nguyễn Văn Thương',1,'2003-06-2
 GO
 INSERT INTO TaiKhoan VALUES('NV12061111','123')
 GO  
-INSERT INTO KhachHang VALUES('KH1204115',N'Nguyễn Văn Nam','2024-03-19','20',1,'01213562326','Đăk lăk',100,N'Đồng')
-INSERT INTO KhachHang VALUES('KH1205798',N'Nguyễn Thị Đào','2024-03-19','20',0,'01213562326','Đăk lăk',570,N'Bạc')
-INSERT INTO KhachHang VALUES('KH1212888',N'Nguyễn Văn Hoàng','2024-03-19','20',1,'0794571318','Đăk lăk',1960,N'Vàng')
+INSERT INTO KhachHang VALUES('KH12041151',N'Nguyễn Văn Nam','2024-03-19','20',1,'01213562326','Đăk lăk',100,N'Đồng')
+INSERT INTO KhachHang VALUES('KH12057982',N'Nguyễn Thị Đào','2024-03-19','20',0,'01213562326','Đăk lăk',570,N'Bạc')
+INSERT INTO KhachHang VALUES('KH12128882',N'Nguyễn Văn Hoàng','2024-03-19','20',1,'0794571318','Đăk lăk',1960,N'Vàng')
 
  ------------------------------------------------------------
 SELECT *FROM KhachHang
@@ -121,16 +121,18 @@ SELECT *FROM ChiTietHoaDon
 SELECT *FROM NhanVien
 SELECT *FROM TaiKhoan
 SELECT *FROM NhaSanXuat
-SELECT *FROM Thuoc
+SELECT *FROM Thuoc WHERE TenThuoc = 'Omeprazole'
 SELECT *FROM HoaDon 
 SELECT *FROM Thuoc WHERE MaThuoc = 'TH04050241';
 
 SELECT COUNT(*) AS SoLuongHoaDon FROM HoaDon WHERE NgayTaoHoaDon > '2024-03-15';
-SELECT * FROM table_name WHERE ngay_column BETWEEN '2024-04-01' AND '2024-04-14';
-SELECT * FROM HoaDon WHERE MONTH(NgayTaoHoaDon) = 4 AND YEAR(NgayTaoHoaDon) = 2024;
+SELECT * FROM HoaDon WHERE NgayTaoHoaDon BETWEEN '2024-04-01' AND '2024-04-14';
+SELECT * FROM HoaDon WHERE MONTH(NgayTaoHoaDon) = 3 AND YEAR(NgayTaoHoaDon) = 2024;
 
 ------------------------------------
 INSERT INTO HoaDon VALUES (N'HĐ1321312',N'NV12061111','KH1205798',N'Nguyễn Thị Đào',N'Tiền mặt','2024-03-1',1,N'Bán ra','200000','')
+
+delete KhachHang where MaKH = 'KH16047464'
 
 
 GO
@@ -301,4 +303,86 @@ INSERT [dbo].[Thuoc] ([MaThuoc], [TenThuoc], [SoLuong], [Gia], [LoaiThuoc], [Nha
 INSERT [dbo].[Thuoc] ([MaThuoc], [TenThuoc], [SoLuong], [Gia], [LoaiThuoc], [NhaSanXuat], [NgaySanXuat], [NgayHetHan], [HinhAnh], [DonVi], [DangBaoChe], [DoTuoi], [ThanhPhan], [ChiDinh], [LieuDung], [BaoQuan], [MoTa]) VALUES (N'TH04120308', N'Thuốc dị ứng A.T Desloratadin', 27, 2000, N'Thuốc chống dị ứng', N'Phát Đạt', CAST(N'2024-04-12' AS Date), CAST(N'2025-06-12' AS Date), N'C:\Users\ADMIN\Downloads\ptud\diung8.jpg', N'Hộp 1 vĩ x 4 ống', N'Dạng siro', N'Từ 18 tuổi trở lên', N'Desloratadin 2,5 mg', N'giảm triệu chứng gồm hắt hơi, sổ mũi, ngứa mũi', N'2 ống/ ngày', N'khô ráo, tránh ẩm ước', N'không')
 INSERT [dbo].[Thuoc] ([MaThuoc], [TenThuoc], [SoLuong], [Gia], [LoaiThuoc], [NhaSanXuat], [NgaySanXuat], [NgayHetHan], [HinhAnh], [DonVi], [DangBaoChe], [DoTuoi], [ThanhPhan], [ChiDinh], [LieuDung], [BaoQuan], [MoTa]) VALUES (N'TH04120309', N'Thuốc dị ứng Bilaxten', 50, 4000, N'Thuốc chống dị ứng', N'Nam Hà', CAST(N'2024-04-12' AS Date), CAST(N'2025-06-12' AS Date), N'C:\Users\ADMIN\Downloads\ptud\diung9.jpg', N'Hộp 1 vĩ x 10 viên ', N'Dạng viên nén', N'Mọi lứa tuổi', N'Bilastine: 20 mg', N'giảm triệu chứng gồm hắt hơi, sổ mũi, ngứa mũi', N'1 lần duy nhất trong ngày', N'khô ráo, tránh ẩm ước', N'không')
 INSERT [dbo].[Thuoc] ([MaThuoc], [TenThuoc], [SoLuong], [Gia], [LoaiThuoc], [NhaSanXuat], [NgaySanXuat], [NgayHetHan], [HinhAnh], [DonVi], [DangBaoChe], [DoTuoi], [ThanhPhan], [ChiDinh], [LieuDung], [BaoQuan], [MoTa]) VALUES (N'TH04120310', N'Thuốc trị dị ứng Prednison', 35, 1500, N'Thuốc chống dị ứng', N'Nam Cao', CAST(N'2024-04-12' AS Date), CAST(N'2025-06-12' AS Date), N'C:\Users\ADMIN\Downloads\ptud\diung10.jpg', N'Hộp 10 vĩ x 10 viên', N'Dạng viên nén', N'Mọi lứa tuổi', N'Prednisolon: 5 mg', N'giảm triệu chứng gồm hắt hơi, sổ mũi, ngứa mũi', N'20 - 40 mg/ ngày ', N'khô ráo, tránh ẩm ước', N'không')
+GO
+
+
+
+
+INSERT INTO KhachHang VALUES('KH14050001',N'Lê Thị Hoài','2003-03-19','21',1,'0123456789','Dac Nong',100,N'Đồng')
+INSERT INTO KhachHang VALUES('KH14050002',N'Nguyễn Văn An','2004-04-25','20',1,'0987654321','TP. Ho Chi Minh',200,N'Đồng');
+INSERT INTO KhachHang VALUES('KH14050003',N'Phạm Thị Hương','1999-05-10','25',1,'0123456789','Ha Noi',300,N'Đồng');
+INSERT INTO KhachHang VALUES('KH14050004',N'Trần Đức Thanh','2002-06-05','22',1,'0909090909','Da Nang',600,N'Bạc');
+INSERT INTO KhachHang VALUES('KH14050005',N'Lê Thị Hằng','1994-07-20','30',1,'0393939393','Quang Binh',800,N'Bạc');
+INSERT INTO KhachHang VALUES('KH14050006',N'Nguyễn Thị Tâm','1996-08-15','28',1,'0777777777','Can Tho',1200,N'Bạc');
+INSERT INTO KhachHang VALUES('KH14050007',N'Hoàng Văn Long','1997-09-01','27',1,'0555555555','TP. Ho Chi Minh',2100,N'Vàng');
+INSERT INTO KhachHang VALUES('KH14050008',N'Trần Thị Thu','2001-10-10','23',1,'0333333333','Ha Noi',2500,N'Vàng');
+INSERT INTO KhachHang VALUES('KH14050009',N'Vũ Đức Anh','1998-11-20','26',1,'0444444444','Hai Phong',6500,N'Bạch Kim');
+INSERT INTO KhachHang VALUES('KH14050010',N'Nguyễn Thị Loan','1995-12-05','29',1,'0666666666','Da Nang',11000,N'Kim Cương');
+GO
+
+SELECT * FROM KhachHang
+
+INSERT INTO NhanVien VALUES ('NV12020006',N'Hoàng Thị Lan',0,'2003-12-10',21,'0111111111','067203000252',N'Hải Phòng',N'Nhân viên',N'Đang làm','2024-03-20','');
+INSERT INTO NhanVien VALUES ('NV12020002',N'Trần Thị Mai',0,'2002-08-15',19,'0222222222','067203000248',N'Đà Nẵng',N'Nhân viên',N'Đang làm','2024-03-25','');
+INSERT INTO NhanVien VALUES ('NV12020003',N'Phạm Văn Đức',1,'2004-01-10',18,'0333333333','067203000249',N'Hồ Chí Minh',N'Nhân viên',N'Đang làm','2024-04-02','');
+INSERT INTO NhanVien VALUES ('NV12020004',N'Lê Thị Hằng',0,'2001-11-20',23,'0444444444','067203000250',N'Hà Nội',N'Nhân viên',N'Đã nghỉ','2024-02-10','');
+INSERT INTO NhanVien VALUES ('NV12020005',N'Nguyễn Văn Đạt',1,'2000-09-05',24,'0555555555','067203000251',N'Quảng Bình',N'Nhân viên',N'Nghỉ phép','2024-04-05','');
+
+
+----------------
+INSERT INTO NhanVien VALUES ('NV09040001',N'Nguyễn Thị Hương',0,'1990-05-15',31,'0912345678','067203000248',N'Hà Nội',N'Nhân viên bán hàng',N'Đang làm','2010-08-12','');
+INSERT INTO NhanVien VALUES ('NV09040002',N'Trần Văn Bình',1,'1985-10-25',36,'0987654321','067203000249',N'Hồ Chí Minh',N'Kế toán',N'Đang làm','2015-02-28','');
+INSERT INTO NhanVien VALUES ('NV09040003',N'Lê Thị Mai',0,'1995-08-07',26,'0978123456','067203000250',N'Đà Nẵng',N'Nhân viên bảo vệ',N'Đang làm','2018-11-05','');
+INSERT INTO NhanVien VALUES ('NV09040004',N'Nguyễn Đức Anh',1,'1980-02-28',41,'0965432789','067203000251',N'Hải Phòng',N'Trưởng phòng',N'Đang làm','2013-04-20','');
+INSERT INTO NhanVien VALUES ('NV09040005',N'Hoàng Văn Hưng',1,'1975-12-10',46,'0912345678','067203000252',N'Cần Thơ',N'Giám đốc',N'Đang làm','2005-10-15','');
+INSERT INTO NhanVien VALUES ('NV09040006',N'Vũ Thị Hương',0,'2000-09-18',23,'0987654321','067203000253',N'Hà Tĩnh',N'Nhân viên kỹ thuật',N'Đang làm','2019-07-10','');
+INSERT INTO NhanVien VALUES ('NV09040007',N'Nguyễn Thị Lan',0,'1988-04-30',33,'0978123456','067203000254',N'Quảng Bình',N'Nhân viên IT',N'Đang làm','2016-09-22','');
+INSERT INTO NhanVien VALUES ('NV09040008',N'Trần Văn Đức',1,'1992-11-22',29,'0965432789','067203000255',N'Bình Định',N'Nhân viên marketing',N'Đang làm','2020-03-15','');
+INSERT INTO NhanVien VALUES ('NV09040009',N'Phạm Thị Loan',0,'1987-07-15',34,'0912345678','067203000256',N'An Giang',N'Nhân viên hành chính',N'Đang làm','2017-12-01','');
+INSERT INTO NhanVien VALUES ('NV09040010',N'Lê Văn Long',1,'1998-03-05',26,'0987654321','067203000257',N'Bắc Ninh',N'Nhân viên kỹ thuật',N'Đang làm','2021-05-20','');
+INSERT INTO NhanVien VALUES ('NV09040011',N'Trần Thị Hồng',0,'1972-01-20',52,'0978123456','067203000258',N'Hải Dương',N'Nhân viên bảo trì',N'Đang làm','2014-08-18','');
+INSERT INTO NhanVien VALUES ('NV09040012',N'Nguyễn Văn Dương',1,'1991-09-10',33,'0912345678','067203000259',N'Phú Yên',N'Nhân viên sản xuất',N'Đã nghĩ','2019-10-30','');
+INSERT INTO NhanVien VALUES ('NV09040013',N'Hoàng Thị Lan',0,'1983-07-20',41,'0987654321','067203000260',N'Bình Phước',N'Tiếp tân',N'Đã nghĩ','2018-06-25','');
+INSERT INTO NhanVien VALUES ('NV09040014',N'Phạm Văn Bảo',1,'1995-05-03',29,'0978123456','067203000261',N'Hà Nam',N'Nhân viên bảo trì',N'Nghỉ phép','2022-04-15','');
+INSERT INTO NhanVien VALUES ('NV09040015',N'Lê Thị Ánh',0,'1986-08-12',35,'0965432789','067203000262',N'Thái Nguyên',N'Kế toán',N'Nghỉ phép','2023-02-28','');
+
+
+GO
+INSERT INTO TaiKhoan VALUES('NV12061111','123')
+GO  
+INSERT INTO KhachHang VALUES('KH12010001', N'Trần Thị Ánh', '1990-05-15', 31, 0, '0912345678', N'Hà Nội', 1500, N'Bạc')
+INSERT INTO KhachHang VALUES('KH12010002', N'Phạm Văn Bình', '1985-10-25', 36, 1, '0987654321', N'Hồ Chí Minh', 3500, N'Vàng')
+INSERT INTO KhachHang VALUES('KH12010003', N'Lê Thị Mai', '1995-08-07', 26, 0, '0978123456', N'Đà Nẵng', 800, N'Bạc')
+INSERT INTO KhachHang VALUES('KH12010004', N'Nguyễn Đức Anh', '1980-02-28', 41, 1, '0965432789', N'Hải Phòng', 4500, N'Vàng')
+INSERT INTO KhachHang VALUES('KH12010005', N'Hoàng Thị Hương', '1975-12-10', 46, 0, '0912345678', N'Cần Thơ', 7000, N'Bạch kim')
+INSERT INTO KhachHang VALUES('KH12010006', N'Vũ Văn Tú', '2000-09-18', 23, 1, '0987654321', N'Hà Tĩnh', 300, N'Đồng')
+INSERT INTO KhachHang VALUES('KH12010007', N'Nguyễn Thị Lan', '1988-04-30', 33, 0, '0978123456', N'Quảng Bình', 2100, N'Bạch kim')
+INSERT INTO KhachHang VALUES('KH12010008', N'Trần Văn Đức', '1992-11-22', 29, 1, '0965432789', N'Bình Định', 8000, N'Kim cương')
+INSERT INTO KhachHang VALUES('KH12010009', N'Phạm Thị Loan', '1987-07-15', 34, 0, '0912345678', N'An Giang', 150, N'Đồng')
+INSERT INTO KhachHang VALUES('KH12010010', N'Lê Văn Long', '1998-03-05', 26, 1, '0987654321', N'Bắc Ninh', 2600, N'Bạch kim')
+INSERT INTO KhachHang VALUES('KH12010011', N'Trần Thị Hồng', '1972-01-20', 52, 0, '0978123456', N'Hải Dương', 10500, N'Kim cương')
+-----------------
+
+INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH001', N'Nguyễn Văn Nam', CAST(N'2024-03-19' AS Date), 20, 1, N'01213562326', N'Ðak lak', NULL, NULL)
+INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH002', N'Nguyễn Thị Đào', CAST(N'2024-03-19' AS Date), 20, 0, N'01213562326', N'Ðak lak', NULL, NULL)
+INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH12040001', N'Nguyên Văn Khánh', CAST(N'2000-10-19' AS Date), 24, 1, N'07666161663', N'Hồ Chí Minh', 250, N'Đồng')
+INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH12040002', N'Lê Thị Thanh', CAST(N'2003-10-12' AS Date), 21, 0, N'01223989879', N'Hồ Chí Minh', 1500, N'Bạc')
+INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH12040003', N'Đinh Hải Văn', CAST(N'2002-09-19' AS Date), 22, 1, N'08194811234', N'Hồ Chí Minh', 3000, N'Vàng')
+INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH12040004', N'Bùi Thị Trang', CAST(N'2001-10-30' AS Date), 23, 0, N'07162736481', N'Bình Dương', 8000, N'Bạch kim')
+INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH12040005', N'Lý Công Định', CAST(N'2004-11-21' AS Date), 20, 1, N'06123141518', N'Điện Biên', 11000, N'Kim cương')
+INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH12040011', N'Lê Thị Thuỷ', CAST(N'2000-10-23' AS Date), 23, 0, N'04123155178', N'Khánh Hoà', 185, N'Đồng')
+INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH12040012', N'Khương Tử Văn', CAST(N'2003-12-21' AS Date), 21, 1, N'09123551235', N'Lai Châu', 1200, N'Bạc')
+INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH12040013', N'Trần Thuỳ Trang', CAST(N'2002-12-19' AS Date), 22, 0, N'09812348912', N'Hà Nội', 4000, N'Vàng')
+INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH12040014', N'Hồ Khánh Toàn', CAST(N'2001-01-20' AS Date), 23, 1, N'07123497980', N'Vinh', 7000, N'Bạch kim')
+INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH12040015', N'Trần Thị Thuỳ Linh', CAST(N'2003-05-25' AS Date), 21, 0, N'08997194791', N'Trà Vinh', 20000, N'Kim cương')
+INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH1204115', N'Nguyễn Văn Nam', CAST(N'2024-03-19' AS Date), 20, 1, N'01213562326', N'Ðak lak', 100, N'Đồng')
+INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH1205798', N'Nguyễn Thị Đào', CAST(N'2024-03-19' AS Date), 20, 0, N'01213562326', N'Ðak lak', 570, N'Bạc')
+INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH1212888', N'Nguyễn Văn Hoàng', CAST(N'2024-03-19' AS Date), 20, 1, N'0794571318', N'Ðak lak', 1960, N'Vàng')
+GO
+INSERT [dbo].[NhanVien] ([MaNV], [HoTen], [GioiTinh], [NgaySinh], [Tuoi], [sdt], [cccd], [DiaChi], [ChucVu], [NgayVaoLam], [trangThai], [Anh]) VALUES (N'NV001', N'Nguyễn Văn Thương', 0, CAST(N'2003-06-25' AS Date), 20, N'0794571318', N'067203000247', N'ĐĂK NÔNG', N'Quản lý', CAST(N'2024-03-20' AS Date), N'Đang làm', N'')
+INSERT [dbo].[NhanVien] ([MaNV], [HoTen], [GioiTinh], [NgaySinh], [Tuoi], [sdt], [cccd], [DiaChi], [ChucVu], [NgayVaoLam], [trangThai], [Anh]) VALUES (N'NV15040001', N'Nguyễn Văn Linh', 0, CAST(N'1999-02-03' AS Date), 24, N'0123456789', N'012345678910', N'Hồ Chí Minh', N'Nhân viên', CAST(N'2024-03-15' AS Date), N'Đang làm', N'')
+INSERT [dbo].[NhanVien] ([MaNV], [HoTen], [GioiTinh], [NgaySinh], [Tuoi], [sdt], [cccd], [DiaChi], [ChucVu], [NgayVaoLam], [trangThai], [Anh]) VALUES (N'NV15040002', N'Lê Thị Huyền', 1, CAST(N'2000-10-10' AS Date), 23, N'0123456771', N'098765432110', N'Bình Dương', N'Quản lý', CAST(N'2024-02-10' AS Date), N'Đang làm', N'')
+INSERT [dbo].[NhanVien] ([MaNV], [HoTen], [GioiTinh], [NgaySinh], [Tuoi], [sdt], [cccd], [DiaChi], [ChucVu], [NgayVaoLam], [trangThai], [Anh]) VALUES (N'NV15040003', N'Bùi Nguyên Văn', 0, CAST(N'2000-08-22' AS Date), 23, N'0223344223', N'098811882839', N'Biên Hoà', N'Nhân viên', CAST(N'2024-04-01' AS Date), N'Đang làm', N'')
+INSERT [dbo].[NhanVien] ([MaNV], [HoTen], [GioiTinh], [NgaySinh], [Tuoi], [sdt], [cccd], [DiaChi], [ChucVu], [NgayVaoLam], [trangThai], [Anh]) VALUES (N'NV15040011', N'Lê Huyền Trân', 1, CAST(N'2002-07-29' AS Date), 22, N'0822334488', N'077788799776', N'An Giang', N'Nhân vien', CAST(N'2024-02-20' AS Date), N'Đã nghỉ', N'')
+INSERT [dbo].[NhanVien] ([MaNV], [HoTen], [GioiTinh], [NgaySinh], [Tuoi], [sdt], [cccd], [DiaChi], [ChucVu], [NgayVaoLam], [trangThai], [Anh]) VALUES (N'NV15042211', N'Đinh Văn Lễ', 0, CAST(N'2001-09-15' AS Date), 21, N'0688998123', N'078891837498', N'Khánh Hoà', N'Quản lý', CAST(N'2024-02-10' AS Date), N'Nghỉ phép', N'')
 GO

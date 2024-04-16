@@ -6,6 +6,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -45,9 +48,10 @@ public class HoaDonBanThuoc_UI {
 		hd.add(north(), BorderLayout.NORTH);
 		hd.add(cenTer(), BorderLayout.CENTER);
 		hienBangDuLieu();
+		enterAction();
 		return hd;
 	}
-	
+
 	private JPanel north() {
 		JPanel north = new JPanel(new BorderLayout());
 		createTitle(north, "Tìm kiếm và lọc hóa đơn");
@@ -243,16 +247,77 @@ public class HoaDonBanThuoc_UI {
 		((JTextField) object_kh[2][1]).setText("");
 		model.setRowCount(0);
 		model_product.setRowCount(0);
-		hienTableTrongHoaDon(table, model, table_product, model_product, object_kh, "", 3);
+		hienBangDuLieu();
 		table.setModel(model);
 	}
+	public void timHoaDonTheoMa() {
+		String ma = ((JTextField)object_search[0][1]).getText();
+		HoaDon hd = hoaDon_DAO.getHoaDonByID(ma);
+		xoaTrang();
+		if (hd.getMaHD() != null) {
+			model.setRowCount(0);
+			NhanVien nv = getNV(hd.getMaNV().getMaNV());
+			Object[] row = { hd.getMaHD(), nv.getHoTen(), hd.getMaKh().getMaKH(), formatTime(hd.getNgayTaoHoaDon()),
+					hd.getTongTien() };
+			model.addRow(row);
+			table.setModel(model);
+			
+			
+			ArrayList<ChiTietHoaDon> lChiTietHoaDons = hd.getListChiTietHoaDon();
+			model_product.setRowCount(0);
+			for (ChiTietHoaDon ct : lChiTietHoaDons) {
+				Object[] row_product = { ct.getMaThuoc().getMaThuoc(), ct.getTenThuoc(), ct.getDonVi(), ct.getSoLuong(),
+						ct.getDonGia(), ct.getThanhTien() };
+				model_product.addRow(row_product);
 
+			}
+			table_product.setModel(model_product);
+			table.setRowSelectionInterval(0, 0);
+			
+			if (hd.getMaKh().getMaKH() != null) {
+				KhachHang kh = getKH(hd.getMaKh().getMaKH(), "");
+				((JTextField) object_kh[0][1]).setText(kh.getTenKH());
+				((JTextField) object_kh[1][1]).setText(kh.getsDT());
+				((JTextField) object_kh[2][1]).setText(table.getValueAt(table.getSelectedRow(), 4).toString());
+			
+
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "Không tìm thấy hóa đơn trong hệ thống");
+		}
+
+	}
+	public void enterAction() {
+		
+		ActionListener enter = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+
+					timHoaDonTheoMa();
+
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+
+			}
+		};
+		((JTextField)object_search[0][1]).addActionListener(enter);
+		
+	}
 	private JButton createButtonInHoaDonBanHang(String nameBtn, String pathIcon) {
 		JButton btn = createJbutton(nameBtn, pathIcon);
 		btn.setPreferredSize(new Dimension(180, 35));
 		btn.addActionListener(e -> {
 			if (nameBtn.equals("")) {
 				xoaTrang();
+			} else if (nameBtn.equals("")) {
+
+			} else if (nameBtn.equals("")) {
+
+			}else {
+				System.out.println(nameBtn);
 			}
 		});
 		return btn;

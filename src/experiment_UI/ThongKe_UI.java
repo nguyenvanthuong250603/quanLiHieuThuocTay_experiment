@@ -151,11 +151,11 @@ public class ThongKe_UI {
 							if (hoaDon.getTinhTrang().equals("Bán ra"))
 								hdbr += 1;
 							else if (hoaDon.getTinhTrang().equals("Hoàn trả"))
-								hdbr += 1;
+								hdht += 1;
 							else if (hoaDon.getTinhTrang().equals("Đổi thuốc"))
-								hdbr += 1;
+								hddt += 1;
 							else if (hoaDon.getTinhTrang().equals("Kê lại đơn"))
-								hdbr += 1;
+								kld += 1;
 
 							if (hoaDon.getLoaiHoaDon() == true)
 								hoaDonBanHang += 1;
@@ -172,11 +172,11 @@ public class ThongKe_UI {
 							if (hoaDon.getTinhTrang().equals("Bán ra"))
 								hdbr += 1;
 							else if (hoaDon.getTinhTrang().equals("Hoàn trả"))
-								hdbr += 1;
+								hdht += 1;
 							else if (hoaDon.getTinhTrang().equals("Đổi thuốc"))
-								hdbr += 1;
+								hddt += 1;
 							else if (hoaDon.getTinhTrang().equals("Kê lại đơn"))
-								hdbr += 1;
+								kld += 1;
 
 							if (hoaDon.getLoaiHoaDon() == true)
 								hoaDonBanHang += 1;
@@ -191,11 +191,11 @@ public class ThongKe_UI {
 							if (hoaDon.getTinhTrang().equals("Bán ra"))
 								hdbr += 1;
 							else if (hoaDon.getTinhTrang().equals("Hoàn trả"))
-								hdbr += 1;
+								hdht += 1;
 							else if (hoaDon.getTinhTrang().equals("Đổi thuốc"))
-								hdbr += 1;
+								hddt += 1;
 							else if (hoaDon.getTinhTrang().equals("Kê lại đơn"))
-								hdbr += 1;
+								kld += 1;
 
 							if (hoaDon.getLoaiHoaDon() == true)
 								hoaDonBanHang += 1;
@@ -216,11 +216,11 @@ public class ThongKe_UI {
 						if (hoaDon.getTinhTrang().equals("Bán ra"))
 							hdbr += 1;
 						else if (hoaDon.getTinhTrang().equals("Hoàn trả"))
-							hdbr += 1;
+							hdht += 1;
 						else if (hoaDon.getTinhTrang().equals("Đổi thuốc"))
-							hdbr += 1;
+							hddt += 1;
 						else if (hoaDon.getTinhTrang().equals("Kê lại đơn"))
-							hdbr += 1;
+							kld += 1;
 
 						if (hoaDon.getLoaiHoaDon() == true)
 							hoaDonBanHang += 1;
