@@ -69,6 +69,7 @@ import dao.ChiTietHoaDon_DAO;
 import dao.HoaDon_DAO;
 import dao.KhachHang_DAO;
 import dao.NhanVien_DAO;
+import dao.Thuoc_DAO;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.KhachHang;
@@ -80,7 +81,7 @@ public class Generate_All {
 	private static HoaDon_DAO hDon_DAO = new HoaDon_DAO();
 	private static NhanVien_DAO nvDao = new NhanVien_DAO();
 	private static ChiTietHoaDon_DAO cTietHoaDon_DAO = new ChiTietHoaDon_DAO();
-	private static KhachHang_DAO khDao = new KhachHang_DAO();
+	private static Thuoc_DAO thuoc_DAO = new Thuoc_DAO();
 
 	public static void generateInvoice(HoaDon hd, double tongTien, double khachDua, String khuyenMai, double result) {
 		// Tạo một đối tượng Document
@@ -169,14 +170,15 @@ public class Generate_All {
 			addCell(table, "Thành tiền", fontWord);
 			int i = 0;
 			for (ChiTietHoaDon chiTietHoaDon : lcthd) {
+				Thuoc th = thuoc_DAO.getThuocByID(chiTietHoaDon.getMaThuoc().getMaThuoc());
 				i += 1;
 				addCell(table, i + "", fontWord2);
 				addCell(table, chiTietHoaDon.getMaThuoc().getMaThuoc(), fontWord2); // Không sử dụng font cho các cell
 																					// khác
-				addCell(table, chiTietHoaDon.getTenThuoc(), fontWord2);
-				addCell(table, chiTietHoaDon.getDonVi(), fontWord2);
-				addCell(table, String.valueOf(chiTietHoaDon.getSoLuong()), fontWord2);
-				addCell(table, String.valueOf(chiTietHoaDon.getDonGia()), fontWord2);
+				addCell(table, th.getTenThuoc(), fontWord2);
+				addCell(table, th.getDonVi(), fontWord2);
+				addCell(table, String.valueOf(chiTietHoaDon.getSoLuongThuoc()), fontWord2);
+				addCell(table, String.valueOf(th.getGia()), fontWord2);
 				addCell(table, String.valueOf(chiTietHoaDon.getThanhTien()), fontWord2);// Chuyển thành tiền thành chuỗi
 			}
 			document.add(table);
@@ -307,14 +309,15 @@ public class Generate_All {
 			addCell(table, "Thành tiền", fontWord);
 			int i = 0;
 			for (ChiTietHoaDon chiTietHoaDon : lcthd) {
+				Thuoc th = thuoc_DAO.getThuocByID(chiTietHoaDon.getMaThuoc().getMaThuoc());
 				i += 1;
 				addCell(table, i + "", fontWord2);
 				addCell(table, chiTietHoaDon.getMaThuoc().getMaThuoc(), fontWord2); // Không sử dụng font cho các cell
 																					// khác
-				addCell(table, chiTietHoaDon.getTenThuoc(), fontWord2);
-				addCell(table, chiTietHoaDon.getDonVi(), fontWord2);
-				addCell(table, String.valueOf(chiTietHoaDon.getSoLuong()), fontWord2);
-				addCell(table, String.valueOf(chiTietHoaDon.getDonGia()), fontWord2);
+				addCell(table, th.getTenThuoc(), fontWord2);
+				addCell(table, th.getDonVi(), fontWord2);
+				addCell(table, String.valueOf(chiTietHoaDon.getSoLuongThuoc()), fontWord2);
+				addCell(table, String.valueOf(th.getGia()), fontWord2);
 				addCell(table, String.valueOf(chiTietHoaDon.getThanhTien()), fontWord2);// Chuyển thành tiền thành chuỗi
 			}
 			document.add(table);
@@ -451,14 +454,15 @@ public class Generate_All {
 			addCell(table, "Thành tiền", fontWord);
 			int i = 0;
 			for (ChiTietHoaDon chiTietHoaDon : lcthd) {
+				Thuoc th = thuoc_DAO.getThuocByID(chiTietHoaDon.getMaThuoc().getMaThuoc());
 				i += 1;
 				addCell(table, i + "", fontWord2);
 				addCell(table, chiTietHoaDon.getMaThuoc().getMaThuoc(), fontWord2); // Không sử dụng font cho các cell
 																					// khác
-				addCell(table, chiTietHoaDon.getTenThuoc(), fontWord2);
-				addCell(table, chiTietHoaDon.getDonVi(), fontWord2);
-				addCell(table, String.valueOf(chiTietHoaDon.getSoLuong()), fontWord2);
-				addCell(table, String.valueOf(chiTietHoaDon.getDonGia()), fontWord2);
+				addCell(table, th.getTenThuoc(), fontWord2);
+				addCell(table, th.getDonVi(), fontWord2);
+				addCell(table, String.valueOf(chiTietHoaDon.getSoLuongThuoc()), fontWord2);
+				addCell(table, String.valueOf(th.getGia()), fontWord2);
 				addCell(table, String.valueOf(chiTietHoaDon.getThanhTien()), fontWord2);// Chuyển thành tiền thành chuỗi
 			}
 			document.add(table);
@@ -586,17 +590,19 @@ public class Generate_All {
 			addCell(table, "Giá", fontWord);
 			addCell(table, "Thành tiền", fontWord);
 			int i = 0;
-			for (ChiTietHoaDon chiTietHoaDon : lcthd) {
-				i += 1;
-				addCell(table, i + "", fontWord2);
-				addCell(table, chiTietHoaDon.getMaThuoc().getMaThuoc(), fontWord2); // Không sử dụng font cho các cell
-																					// khác
-				addCell(table, chiTietHoaDon.getTenThuoc(), fontWord2);
-				addCell(table, chiTietHoaDon.getDonVi(), fontWord2);
-				addCell(table, String.valueOf(chiTietHoaDon.getSoLuong()), fontWord2);
-				addCell(table, String.valueOf(chiTietHoaDon.getDonGia()), fontWord2);
-				addCell(table, String.valueOf(chiTietHoaDon.getThanhTien()), fontWord2);// Chuyển thành tiền thành chuỗi
-			}
+			
+				for (ChiTietHoaDon chiTietHoaDon : lcthd) {
+					Thuoc th = thuoc_DAO.getThuocByID(chiTietHoaDon.getMaThuoc().getMaThuoc());
+					i += 1;
+					addCell(table, i + "", fontWord2);
+					addCell(table, chiTietHoaDon.getMaThuoc().getMaThuoc(), fontWord2); // Không sử dụng font cho các cell
+																						// khác
+					addCell(table, th.getTenThuoc(), fontWord2);
+					addCell(table, th.getDonVi(), fontWord2);
+					addCell(table, String.valueOf(chiTietHoaDon.getSoLuongThuoc()), fontWord2);
+					addCell(table, String.valueOf(th.getGia()), fontWord2);
+					addCell(table, String.valueOf(chiTietHoaDon.getThanhTien()), fontWord2);// Chuyển thành tiền thành chuỗi
+				}
 			document.add(table);
 			document.add(new Paragraph("   "));
 
@@ -1218,8 +1224,9 @@ public class Generate_All {
 		ArrayList<ChiTietHoaDon> lChiTietHoaDons = cTietHoaDon_DAO.getcChiTietHoaDons(maHD);
 
 		for (ChiTietHoaDon ct : lChiTietHoaDons) {
-			Object[] row_product = { ct.getMaThuoc().getMaThuoc(), ct.getTenThuoc(), ct.getDonVi(), ct.getSoLuong(),
-					ct.getDonGia(), ct.getThanhTien() };
+			Thuoc th = thuoc_DAO.getThuocByID(ct.getMaThuoc().getMaThuoc());
+			Object[] row_product = { ct.getMaThuoc().getMaThuoc(), th.getTenThuoc(), th.getDonVi(), ct.getSoLuongThuoc(),
+					th.getGia(), ct.getThanhTien() };
 			model_product.addRow(row_product);
 
 		}

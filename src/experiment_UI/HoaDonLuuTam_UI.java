@@ -26,12 +26,12 @@ import javax.swing.table.DefaultTableModel;
 
 import dao.ChiTietHoaDon_DAO;
 import dao.HoaDon_DAO;
-
+import dao.Thuoc_DAO;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.KhachHang;
 import entity.NhanVien;
-
+import entity.Thuoc;
 import experiment_UI.Generate_All.CustomTableCellRenderer;
 
 public class HoaDonLuuTam_UI {
@@ -54,9 +54,9 @@ public class HoaDonLuuTam_UI {
 	private JCheckBox cBox;
 	private ChiTietHoaDon_DAO ctDao = new ChiTietHoaDon_DAO();
 	private JTextField timSdt;
-
-	public void getHoaDonLuuTam(JTextField textMaKhach, Object[][] customer, Object[][] sell, JTable tablee,
-			JCheckBox cb) {
+	private Thuoc_DAO thuoc_DAO = new Thuoc_DAO();
+	public void getHoaDonLuuTam(JTextField textMaKhach, Object[][] customer, Object[][] sell, JTable tablee
+			) {
 		frame = new JFrame();
 		frame.setTitle("Tìm Kiếm Khách Hàng");
 
@@ -73,7 +73,7 @@ public class HoaDonLuuTam_UI {
 			this.obj_customer = customer;
 			this.obj_sell = sell;
 
-			this.cBox = cb;
+			
 			this.table_trage = tablee;
 		}
 		frame.setVisible(true);
@@ -202,7 +202,7 @@ public class HoaDonLuuTam_UI {
 
 			((JTextField) obj_customer[4][1]).setText(kh.getXepHang());
 
-			cBox.setSelected(true);
+			
 
 			((JTextField) obj_sell[1][1]).setText(formatTime(hd.getNgayTaoHoaDon()));
 			double tong = 0;
@@ -241,8 +241,9 @@ public class HoaDonLuuTam_UI {
 			table.setModel(model);
 			ArrayList<ChiTietHoaDon> lChiTietHoaDons = ctDao.getcChiTietHoaDons(table.getValueAt(0, 0).toString());
 			for (ChiTietHoaDon ct : lChiTietHoaDons) {
-				Object[] row_product = { ct.getMaThuoc().getMaThuoc(), ct.getTenThuoc(), ct.getDonVi(), ct.getSoLuong(),
-						ct.getDonGia(), ct.getThanhTien() };
+				Thuoc th = thuoc_DAO.getThuocByID(ct.getMaThuoc().getMaThuoc());
+				Object[] row_product = { ct.getMaThuoc().getMaThuoc(), th.getTenThuoc(), th.getDonVi(), ct.getSoLuongThuoc(),
+						th.getGia(), ct.getThanhTien() };
 				model_product.addRow(row_product);
 
 			}

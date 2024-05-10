@@ -69,7 +69,7 @@ import java.awt.event.FocusListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class BanThuoc_UI {
+public class BanThuocKeDonMoi_UI {
 
 	private JCheckBox cb;
 	private Object[][] object_custommer, object_sell;
@@ -106,19 +106,22 @@ public class BanThuoc_UI {
 		maNhanVien = maNV;
 
 		enterListen();
-
+		
+		
 		hidden(false);
 		handleActionCheckbox();
 		setDefaultText(maNhanVien);
 
 		sellTotal.add(sellManagement, BorderLayout.CENTER);
-		createTiTlePage(sellTotal, "QUẢN LÍ BÁN THUỐC");
+		createTiTlePage(sellTotal, "BÁN THUỐC THEO ĐƠN MỚI");
 		return sellTotal;
 	}
 
 	public void hidden(boolean value) {
+		cb.setSelected(value);
 		btnTimKH.setEnabled(value);
 		jtextMaKH.setEditable(value);
+
 		for (int i = 0; i < object_custommer.length; i++) {
 			if (object_custommer[i][1] instanceof JTextField) {
 
@@ -218,17 +221,7 @@ public class BanThuoc_UI {
 
 			}
 		}
-//		JPanel DTL = new JPanel();
-//		DTL.setLayout(new BoxLayout(DTL, BoxLayout.X_AXIS));
-//		cbDTL = new JCheckBox();
-//		cbDTL.setBorder(new EmptyBorder(0, 0, 0, 10));
-//		DTL.add(cbDTL);
-//		DTL.setBorder(new EmptyBorder(0, 30, 0, 0));
-//		DTL.add(sampleModel2("Điểm tích lũy"));
-//		labelDTL.setBorder(new EmptyBorder(0, 40, 0, 0));
-//		labelDTL.setFont(new Font("Arial", Font.ITALIC, 18));
-//		labelDTL.setForeground(Color.RED);
-//		DTL.add(labelDTL);
+
 
 		inf.add(check, BorderLayout.NORTH);
 		inf.add(input, BorderLayout.CENTER);
@@ -351,7 +344,7 @@ public class BanThuoc_UI {
 
 		((JTextField) object_sell[2][1]).addFocusListener(calculation);
 		((JTextField) object_sell[5][1]).addFocusListener(calculation);
-	
+
 		ActionListener enter3 = new ActionListener() {
 
 			@Override
@@ -616,12 +609,10 @@ public class BanThuoc_UI {
 		for (int i = 0; i < table.getRowCount(); i++) {
 			HoaDon hd = new HoaDon(getValueStringInJlabel(object_sell[0][1]));
 			Thuoc th = new Thuoc(table.getValueAt(i, 0).toString());
-			String tenThuoc = table.getValueAt(i, 1).toString();
-			String donVi = table.getValueAt(i, 2).toString();
 			int soLuong = Integer.parseInt(table.getValueAt(i, 3).toString());
-			double gia = Double.parseDouble(table.getValueAt(i, 4).toString());
+
 			double thanhTien = Double.parseDouble(table.getValueAt(i, 5).toString());
-			ChiTietHoaDon ct = new ChiTietHoaDon(hd, th, tenThuoc, donVi, soLuong, gia, thanhTien);
+			ChiTietHoaDon ct = new ChiTietHoaDon(hd, th, soLuong, thanhTien);
 
 			listCtHD.add(ct);
 		}
@@ -776,48 +767,53 @@ public class BanThuoc_UI {
 			System.out.println("sai");
 		}
 	}
+
 	public void timTheoSdt() {
 		String sdt = jtextMaKH.getText();
 
-		if(sdt.matches("0\\d+{9}")) {
-		KhachHang kh = khachHang_DAO.getKhachHangByID("", sdt);
-		
-		if(kh.getMaKH()!=null) {
-		((JTextField) object_custommer[0][1]).setText(kh.getMaKH());
-		((JTextField) object_custommer[1][1]).setText(kh.getTenKH());
-		((JTextField) object_custommer[2][1]).setText(kh.getTuoi()+"");
-		((JComboBox) object_custommer[3][1]).setSelectedItem(transGender(kh.isGioiTinh()));
-		((JTextField) object_custommer[4][1]).setText(kh.getXepHang());
-		String xh = kh.getXepHang();
-		
-		if (xh.equals("Đồng")) {
-			((JLabel) object_sell[3][1]).setText("0%");
-		} else if (xh.equals("Bạc")) {
-			((JLabel) object_sell[3][1]).setText("1%");
-		} else if (xh.equals("Vàng")) {
-			((JLabel) object_sell[3][1]).setText("2%");
-		} else if (xh.equals("Bạch kim")) {
-			((JLabel) object_sell[3][1]).setText("3%");
-		} else if (xh.equals("Kim cương")) {
-			((JLabel) object_sell[3][1]).setText("4.5%");
-		}
-		
-		}else {
-			int value = JOptionPane.showConfirmDialog(null, "Khách hàng chưa có trong hệ thống , bạn có muốn thêm khách","Lưu ý",JOptionPane.YES_NO_OPTION);
-			if(value == JOptionPane.YES_OPTION) {
-				timKhach.getTimKhach(jtextMaKH, (JTextField) object_custommer[0][1],
-						(JTextField) object_custommer[1][1], (JTextField) object_custommer[2][1],
-						(JComboBox) object_custommer[3][1], (JTextField) object_custommer[4][1],
-						(JLabel) object_sell[3][1],jtextMaKH);
+		if (sdt.matches("0\\d+{9}")) {
+			KhachHang kh = khachHang_DAO.getKhachHangByID("", sdt);
 
+			if (kh.getMaKH() != null) {
+				((JTextField) object_custommer[0][1]).setText(kh.getMaKH());
+				((JTextField) object_custommer[1][1]).setText(kh.getTenKH());
+				((JTextField) object_custommer[2][1]).setText(kh.getTuoi() + "");
+				((JComboBox) object_custommer[3][1]).setSelectedItem(transGender(kh.isGioiTinh()));
+				((JTextField) object_custommer[4][1]).setText(kh.getXepHang());
+				String xh = kh.getXepHang();
+
+				if (xh.equals("Đồng")) {
+					((JLabel) object_sell[3][1]).setText("0%");
+				} else if (xh.equals("Bạc")) {
+					((JLabel) object_sell[3][1]).setText("1%");
+				} else if (xh.equals("Vàng")) {
+					((JLabel) object_sell[3][1]).setText("2%");
+				} else if (xh.equals("Bạch kim")) {
+					((JLabel) object_sell[3][1]).setText("3%");
+				} else if (xh.equals("Kim cương")) {
+					((JLabel) object_sell[3][1]).setText("4.5%");
+				}
+
+			} else {
+				int value = JOptionPane.showConfirmDialog(null,
+						"Khách hàng chưa có trong hệ thống , bạn có muốn thêm khách", "Lưu ý",
+						JOptionPane.YES_NO_OPTION);
+				if (value == JOptionPane.YES_OPTION) {
+					timKhach.getTimKhach(jtextMaKH, (JTextField) object_custommer[0][1],
+							(JTextField) object_custommer[1][1], (JTextField) object_custommer[2][1],
+							(JComboBox) object_custommer[3][1], (JTextField) object_custommer[4][1],
+							(JLabel) object_sell[3][1], jtextMaKH);
+
+				}
 			}
-		}
-		}else {
+		} else {
 			xoaTrang();
 			JOptionPane.showMessageDialog(null, "Số điện thoại không hợp lệ , số phải có 10 số");
 		}
 
 	}
+
+
 	public JButton buttonInPageSell(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(150, 40));
@@ -829,16 +825,18 @@ public class BanThuoc_UI {
 				timKhach.getTimKhach(jtextMaKH, (JTextField) object_custommer[0][1],
 						(JTextField) object_custommer[1][1], (JTextField) object_custommer[2][1],
 						(JComboBox) object_custommer[3][1], (JTextField) object_custommer[4][1],
-						(JLabel) object_sell[3][1],jtextMaKH);
+						(JLabel) object_sell[3][1], jtextMaKH);
 
-			} else if (nameButton.equals("")) {
+			} else if (nameButton.equals("")&& !pathIcon.equals("gift\\add.png")) {
 				xoaTrang();
 			} else if (nameButton.equals("Xóa Thuốc")) {
 				xoaThuoc();
 			} else if (nameButton.equals("Xử lí hóa đơn tạm")) {
 
-				hoaDonLuuTam.getHoaDonLuuTam(jtextMaKH, object_custommer, object_sell, table, cb);
-				hidden(true);
+				hoaDonLuuTam.getHoaDonLuuTam(jtextMaKH, object_custommer, object_sell, table);
+			cb.setSelected(true);
+			hidden(true);
+				
 			} else if (nameButton.equals("Lưu tạm")) {
 				luuTamHoaDON();
 

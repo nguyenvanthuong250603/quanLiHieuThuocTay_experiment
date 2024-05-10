@@ -19,7 +19,6 @@ CREATE TABLE NhanVien (
 );
 GO
 CREATE TABLE TaiKhoan (
- 
     MaNV NVARCHAR(50) NOT NULL PRIMARY KEY,
     MatKhau NVARCHAR(255),
     FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV)
@@ -74,7 +73,7 @@ CREATE TABLE HoaDon(
 	TenKH NVARCHAR(50),
 	HinhThucThanhToan NVARCHAR(50), 
 	NgayTaoHoaDon DATE,
-	LoaiHoaDon BIT,
+	LoaiHoaDon BIT,	
 	TinhTrang NVARCHAR(255),
 	TongTien FLOAT,
 	Lydo NVARCHAR(255),
@@ -84,12 +83,8 @@ CREATE TABLE HoaDon(
 CREATE TABLE ChiTietHoaDon(
 	MaHD NVARCHAR(50) NOT NULL,
 	MaThuoc NVARCHAR(50) NOT NULL,
-	TenThuoc NVARCHAR(255),
-	DonVi NVARCHAR(50),
-	SoLuong INT,
-	DonGIA FLOAT,
+	SoLuongThuoc INT,
 	ThanhTien FLOAT,
-	
 	 PRIMARY KEY (MaHD, MaThuoc),
     FOREIGN KEY (MaHD) REFERENCES HoaDon(MaHD),
     FOREIGN KEY (MaThuoc) REFERENCES Thuoc(MaThuoc)

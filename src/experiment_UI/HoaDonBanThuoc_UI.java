@@ -28,10 +28,12 @@ import com.toedter.calendar.JDateChooser;
 
 import dao.ChiTietHoaDon_DAO;
 import dao.HoaDon_DAO;
+import dao.Thuoc_DAO;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.KhachHang;
 import entity.NhanVien;
+import entity.Thuoc;
 import experiment_UI.Generate_All.CustomTableCellRenderer;
 
 public class HoaDonBanThuoc_UI {
@@ -40,13 +42,15 @@ public class HoaDonBanThuoc_UI {
 	private JTable table;
 	private DefaultTableModel model_product;
 	private JTable table_product;
-	private HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
+	private HoaDon_DAO hoaDon_DAO;
 	private ChiTietHoaDon_DAO chiTietHoaDon_DAO = new ChiTietHoaDon_DAO();
+	private Thuoc_DAO thuoc_DAO = new Thuoc_DAO();
 
-	public JPanel getHoaDon() {
+	public JPanel getHoaDon(HoaDon_DAO hoaDon_DAO) {
 		JPanel hd = new JPanel(new BorderLayout());
 		hd.add(north(), BorderLayout.NORTH);
 		hd.add(cenTer(), BorderLayout.CENTER);
+		this.hoaDon_DAO = hoaDon_DAO;
 		hienBangDuLieu();
 		enterAction();
 		return hd;
@@ -159,11 +163,12 @@ public class HoaDonBanThuoc_UI {
 
 		ArrayList<HoaDon> hDons = hoaDon_DAO.getHoaDons();
 		for (HoaDon hoaDon : hDons) {
-			NhanVien nv = getNV(hoaDon.getMaNV().getMaNV());
-			Object[] row = { hoaDon.getMaHD(), nv.getHoTen(), hoaDon.getMaKh().getMaKH(),
-					formatTime(hoaDon.getNgayTaoHoaDon()), hoaDon.getTongTien() };
-			model.addRow(row);
-
+			if (!hoaDon.getTinhTrang().equals("")) {
+				NhanVien nv = getNV(hoaDon.getMaNV().getMaNV());
+				Object[] row = { hoaDon.getMaHD(), nv.getHoTen(), hoaDon.getMaKh().getMaKH(),
+						formatTime(hoaDon.getNgayTaoHoaDon()), hoaDon.getTongTien() };
+				model.addRow(row);
+			}
 		}
 
 		if (table.getRowCount() >= 1) {
@@ -218,8 +223,9 @@ public class HoaDonBanThuoc_UI {
 		ArrayList<ChiTietHoaDon> lChiTietHoaDons = chiTietHoaDon_DAO.getcChiTietHoaDons(maHD);
 
 		for (ChiTietHoaDon ct : lChiTietHoaDons) {
-			Object[] row_product = { ct.getMaThuoc().getMaThuoc(), ct.getTenThuoc(), ct.getDonVi(), ct.getSoLuong(),
-					ct.getDonGia(), ct.getThanhTien() };
+			Thuoc th = thuoc_DAO.getThuocByID(ct.getMaThuoc().getMaThuoc());
+			Object[] row_product = { ct.getMaThuoc().getMaThuoc(), th.getTenThuoc(), th.getDonVi(),
+					ct.getSoLuongThuoc(), th.getGia(), ct.getThanhTien() };
 			model_product.addRow(row_product);
 
 		}
@@ -250,8 +256,9 @@ public class HoaDonBanThuoc_UI {
 		hienBangDuLieu();
 		table.setModel(model);
 	}
+
 	public void timHoaDonTheoMa() {
-		String ma = ((JTextField)object_search[0][1]).getText();
+		String ma = ((JTextField) object_search[0][1]).getText();
 		HoaDon hd = hoaDon_DAO.getHoaDonByID(ma);
 		xoaTrang();
 		if (hd.getMaHD() != null) {
@@ -261,25 +268,25 @@ public class HoaDonBanThuoc_UI {
 					hd.getTongTien() };
 			model.addRow(row);
 			table.setModel(model);
-			
-			
+
 			ArrayList<ChiTietHoaDon> lChiTietHoaDons = hd.getListChiTietHoaDon();
 			model_product.setRowCount(0);
 			for (ChiTietHoaDon ct : lChiTietHoaDons) {
-				Object[] row_product = { ct.getMaThuoc().getMaThuoc(), ct.getTenThuoc(), ct.getDonVi(), ct.getSoLuong(),
-						ct.getDonGia(), ct.getThanhTien() };
+
+				Thuoc th = thuoc_DAO.getThuocByID(ct.getMaThuoc().getMaThuoc());
+				Object[] row_product = { ct.getMaThuoc().getMaThuoc(), th.getTenThuoc(), th.getDonVi(),
+						ct.getSoLuongThuoc(), th.getGia(), ct.getThanhTien() };
 				model_product.addRow(row_product);
 
 			}
 			table_product.setModel(model_product);
 			table.setRowSelectionInterval(0, 0);
-			
+
 			if (hd.getMaKh().getMaKH() != null) {
 				KhachHang kh = getKH(hd.getMaKh().getMaKH(), "");
 				((JTextField) object_kh[0][1]).setText(kh.getTenKH());
 				((JTextField) object_kh[1][1]).setText(kh.getsDT());
 				((JTextField) object_kh[2][1]).setText(table.getValueAt(table.getSelectedRow(), 4).toString());
-			
 
 			}
 		} else {
@@ -287,8 +294,9 @@ public class HoaDonBanThuoc_UI {
 		}
 
 	}
+
 	public void enterAction() {
-		
+
 		ActionListener enter = new ActionListener() {
 
 			@Override
@@ -303,9 +311,10 @@ public class HoaDonBanThuoc_UI {
 
 			}
 		};
-		((JTextField)object_search[0][1]).addActionListener(enter);
-		
+		((JTextField) object_search[0][1]).addActionListener(enter);
+
 	}
+
 	private JButton createButtonInHoaDonBanHang(String nameBtn, String pathIcon) {
 		JButton btn = createJbutton(nameBtn, pathIcon);
 		btn.setPreferredSize(new Dimension(180, 35));
@@ -316,7 +325,7 @@ public class HoaDonBanThuoc_UI {
 
 			} else if (nameBtn.equals("")) {
 
-			}else {
+			} else {
 				System.out.println(nameBtn);
 			}
 		});

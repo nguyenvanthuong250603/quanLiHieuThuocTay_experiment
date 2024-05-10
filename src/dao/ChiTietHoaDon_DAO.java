@@ -26,7 +26,7 @@ public class ChiTietHoaDon_DAO {
 			try (ResultSet rs = p.executeQuery()) {
 				while (rs.next()) {
 					ChiTietHoaDon cthd = new ChiTietHoaDon(new HoaDon(rs.getString(1)), new Thuoc(rs.getString(2)),
-							rs.getString(3), rs.getString(4), rs.getInt(5), rs.getDouble(6), rs.getDouble(7));
+							 rs.getInt(3), rs.getDouble(4));
 					lcthd.add(cthd);
 				}
 
@@ -80,10 +80,10 @@ public class ChiTietHoaDon_DAO {
 		PreparedStatement p = null;
 		try {
 
-			String sql = "UPDATE ChiTietHoaDon " + "SET  SoLuong = ?,  ThanhTien = ? " + "WHERE MaHD = ?";
+			String sql = "UPDATE ChiTietHoaDon " + "SET  SoLuongThuoc = ?,  ThanhTien = ? " + "WHERE MaHD = ?";
 			p = con.prepareStatement(sql);
 			for (ChiTietHoaDon chiTietHoaDon : cthd) {
-				p.setInt(1, chiTietHoaDon.getSoLuong());
+				p.setInt(1, chiTietHoaDon.getSoLuongThuoc());
 				p.setDouble(2, chiTietHoaDon.getThanhTien());
 				p.setString(3, chiTietHoaDon.getMaHD().getMaHD());
 				p.executeUpdate();
@@ -112,19 +112,16 @@ public class ChiTietHoaDon_DAO {
 			return false;
 		} else {
 			try {
-				pct = con.prepareStatement("INSERT INTO ChiTietHoaDon VALUES(?,?,?,?,?,?,?)");
+				pct = con.prepareStatement("INSERT INTO ChiTietHoaDon VALUES(?,?,?,?)");
 				pct.setString(1, chiTietHoaDon.getMaHD().getMaHD());
 				pct.setString(2, chiTietHoaDon.getMaThuoc().getMaThuoc());
-				pct.setString(3, chiTietHoaDon.getTenThuoc());
-				pct.setString(4, chiTietHoaDon.getDonVi());
-				pct.setInt(5, chiTietHoaDon.getSoLuong());
-				pct.setDouble(6, chiTietHoaDon.getDonGia());
+				pct.setInt(5, chiTietHoaDon.getSoLuongThuoc());
 				pct.setDouble(7, chiTietHoaDon.getThanhTien());
 				pct.executeUpdate();
 				return true;
 			} catch (SQLException e) {
 
-			
+			e.printStackTrace();
 				return false;
 			}finally {
 				try {

@@ -1,33 +1,58 @@
 package test;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
+public class Main {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Suggestion List");
+        JTextField textField = new JTextField(20);
+        DefaultComboBoxModel<String> suggestionModel = new DefaultComboBoxModel<>();
+        JComboBox<String> suggestionBox = new JComboBox<>(suggestionModel);
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.data.general.PieDataset;
+        // Thêm danh sách gợi ý mẫu
+        suggestionModel.addElement("Apple");
+        suggestionModel.addElement("Banana");
+        suggestionModel.addElement("Cherry");
+        suggestionModel.addElement("Grapes");
 
-/**
- *
- * @author TVD
- */
+        // Sử dụng key listener để lắng nghe sự kiện nhập ký tự
+        textField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (Character.isLetter(c)) {
+                    String prefix = textField.getText() + c;
+                    filterSuggestions(prefix);
+                }
+            }
+        });
 
+        // Phương thức để lọc và cập nhật danh sách gợi ý
+//       public void filterSuggestions(String prefix) {
+//            suggestionModel.removeAllElements();
+//            for (int i = 0; i < suggestionModel.getSize(); i++) {
+//                String suggestion = suggestionModel.getElementAt(i);
+//                if (suggestion.toLowerCase().startsWith(prefix.toLowerCase())) {
+//                    suggestionModel.addElement(suggestion);
+//                }
+//            }
+//        }
 
-	public class Main {
-	    public static void main(String[] args) {
-	        String dateString = "05/01/2025"; // Chuỗi đại diện cho ngày tháng
-	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy"); // Định dạng của chuỗi
-	        LocalDate date = LocalDate.parse(dateString, formatter); // Chuyển đổi chuỗi thành LocalDate
-	        Long diffInYears = ChronoUnit.DAYS.between(LocalDate.now(), date);	
-	        System.out.println(diffInYears);
-	    }
-	
+        JPanel panel = new JPanel();
+        panel.add(textField);
+        panel.add(suggestionBox);
 
+        frame.add(panel);
+        frame.pack();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
 
+	protected static void filterSuggestions(String prefix) {
+		// TODO Auto-generated method stub
+		
+	}
 }

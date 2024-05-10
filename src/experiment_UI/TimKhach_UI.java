@@ -376,12 +376,11 @@ public class TimKhach_UI {
 			model.setRowCount(0);
 			for (KhachHang khachHang : list_khach) {
 				boolean gender= gt.equals("Nam")? true :false;
-				if(gt.equals("")&&khachHang.getXepHang().equals(xepHang)) {
+				if (gt.equals("")&& khachHang.getXepHang()!=null && khachHang.getXepHang().equals(xepHang)) {
 					hienKhachHang(khachHang);
-				}else if(!gt.equals("")&&xepHang.equals("")&&khachHang.isGioiTinh()==gender) {
-					hienKhachHang(khachHang);		
-				}
-				else if(khachHang.isGioiTinh()==gender&&khachHang.getXepHang().equals(xepHang)) {
+				} else if (!gt.equals("") && xepHang.equals("") && khachHang.isGioiTinh() == gender) {
+					hienKhachHang(khachHang);
+				} else if (khachHang.isGioiTinh() == gender && khachHang.getXepHang()!=null&& khachHang.getXepHang().equals(xepHang)) {
 					hienKhachHang(khachHang);
 				}
 			}

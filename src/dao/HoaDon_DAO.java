@@ -30,8 +30,10 @@ public class HoaDon_DAO {
 			Statement s = con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT *FROM HoaDon");
 			while (rs.next()) {
+			
 				HoaDon hd = new HoaDon(rs.getString(1), new NhanVien(rs.getString(2)), new KhachHang(rs.getString(3)),
 						rs.getString(4), rs.getString(5), chageTimeSQL(rs.getDate(6)),
+						
 						changeLoaiThuocToSQLFromUI(rs.getInt(7)), rs.getString(8), rs.getDouble(9),rs.getString(10),
 						lcthd.getcChiTietHoaDons(rs.getString(1)));
 
@@ -94,15 +96,14 @@ public class HoaDon_DAO {
 
 				p.executeUpdate();
 				ArrayList<ChiTietHoaDon> lcthd = hd.getListChiTietHoaDon();
-				pct = con.prepareStatement("INSERT INTO ChiTietHoaDon VALUES(?,?,?,?,?,?,?)");
+				pct = con.prepareStatement("INSERT INTO ChiTietHoaDon VALUES(?,?,?,?)");
 				for (ChiTietHoaDon chiTietHoaDon : lcthd) {
 					pct.setString(1, chiTietHoaDon.getMaHD().getMaHD());
 					pct.setString(2, chiTietHoaDon.getMaThuoc().getMaThuoc());
-					pct.setString(3, chiTietHoaDon.getTenThuoc());
-					pct.setString(4, chiTietHoaDon.getDonVi());
-					pct.setInt(5, chiTietHoaDon.getSoLuong());
-					pct.setDouble(6, chiTietHoaDon.getDonGia());
-					pct.setDouble(7, chiTietHoaDon.getThanhTien());
+	
+					pct.setInt(3, chiTietHoaDon.getSoLuongThuoc());
+				
+					pct.setDouble(4, chiTietHoaDon.getThanhTien());
 					pct.executeUpdate();
 				}
 
@@ -222,8 +223,8 @@ public class HoaDon_DAO {
 				p.setString(1, sdt);
 //				System.out.println("hiii");
 			}
-			else if (LoaiHD==4) {
-				System.out.println(LoaiHD);
+			else if (!sdt.equals("")&&LoaiHD==4) {
+				
 				p = con.prepareStatement(
 						"SELECT *FROM HoaDon WHERE  MaKH IN (SELECT MaKH FROM KhachHang WHERE SDT =?)");
 				p.setString(1, sdt);

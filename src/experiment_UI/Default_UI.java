@@ -39,18 +39,19 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.IconifyAction;
 
+import dao.HoaDon_DAO;
 import dao.NhanVien_DAO;
 import entity.HoaDon;
 import entity.NhanVien;
 
 public class Default_UI {
-	private JPanel sidebar;
+	
 	private JPanel container;
 	private CardLayout cardLayout;
 	private AbstractButton selectedButton = null;
 	private JFrame jFrame;
 	private NhanVien_DAO nv_Dao = new NhanVien_DAO();
-
+	private HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
 	public Default_UI(JFrame jFrame, String MaNV) {
 		this.jFrame = jFrame;
 		jFrame.setTitle("Hiệu Thuốc Ánh Dương");
@@ -71,19 +72,20 @@ public class Default_UI {
 		container = new JPanel();
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
-		container.add(createHoaDon(), HĐBT);
+		container.add(createBanThuocKeLaiDon(MaNV), KLD);
+		container.add(createBanThuocKeDonMoi(MaNV), HDM);
+		container.add(createHoaDon(hoaDon_DAO), HĐBT);
 		container.add(createKhachHang(), KH);
 		container.add(createQuanLyThuoc(), T);
-		container.add(createBanThuoc(MaNV), BT);
 		container.add(createThongKe(), TK);
 		container.add(createNhanVien(), NV);
 		container.add(createDoiThuoc(MaNV), DT);
-		container.add(createBanThuoc(MaNV), BT);
-
+		
+		
+		
 		container.add(createKhachHang(), KH);
 
-		container.add(createQuanLyNhapThuoc(), TDNT);
-		container.add(createNhapThuoc(), HDNT);
+		
 		jFrame.add(sidebar, BorderLayout.WEST);
 		jFrame.add(container, BorderLayout.CENTER);
 		jFrame.setResizable(false);
@@ -94,16 +96,34 @@ public class Default_UI {
 		JPanel compoment = new JPanel(new BorderLayout());
 
 		AbstractButton btn;
-	
+		
+		ImageIcon icon = new ImageIcon(iconLeft);
+		Image image = icon.getImage(); // Lấy hình ảnh từ ImageIcon
+		Image newImage = image.getScaledInstance(48, 48, Image.SCALE_DEFAULT); // Thay đổi kích thước hình ảnh
+		ImageIcon newIcon = new ImageIcon(newImage); // Tạo mới ImageIcon với hình ảnh đã thay đổi kích thước
+		
+		JLabel lableicon = new JLabel(newIcon); 
+		lableicon.setText(nameButton);
+		lableicon.setBackground(Color.white);
+		lableicon.setIconTextGap(20);
+		lableicon.setFont(new Font("Arial", Font.BOLD, 20));
+		lableicon.setForeground(Color.WHITE);
+		
 		if (type) {
-
+			
 			btn = new JButton();
 			btn.setPreferredSize(
 					new Dimension(compoment.getPreferredSize().width + 260, btn.getPreferredSize().height + 60));
+			if(nameButton.equals("Kê lại đơn")|| nameButton.equals("Tạo đơn mới")) {
+				lableicon.setBorder( new EmptyBorder(0, 20, 0, 0));
+			}
+			
 		} else {
+			
 			ImageIcon iconn = new ImageIcon(iconRight);
 			btn = new JToggleButton();
 			btn.setIcon(iconn);
+			btn.setIcon(new ImageIcon("gift//upload.png"));
 			btn.setPreferredSize(
 					new Dimension(compoment.getPreferredSize().width + 260, btn.getPreferredSize().height + 40));
 		}
@@ -114,18 +134,6 @@ public class Default_UI {
 
 		
 		
-		ImageIcon icon = new ImageIcon(iconLeft);
-		Image image = icon.getImage(); // Lấy hình ảnh từ ImageIcon
-		Image newImage = image.getScaledInstance(48, 48, Image.SCALE_DEFAULT); // Thay đổi kích thước hình ảnh
-		ImageIcon newIcon = new ImageIcon(newImage); // Tạo mới ImageIcon với hình ảnh đã thay đổi kích thước
-		JLabel lableicon = new JLabel(newIcon); 
-	
-
-		lableicon.setText(nameButton);
-		lableicon.setBackground(Color.white);
-		lableicon.setIconTextGap(20);
-		lableicon.setFont(new Font("Arial", Font.BOLD, 20));
-		lableicon.setForeground(Color.WHITE);
 
 		btn.add(lableicon);
 
@@ -141,6 +149,7 @@ public class Default_UI {
 					btn.setBackground(Color.GREEN);
 					selectedButton = btn;
 				}
+				
 				switch (nameButton) {
 
 				case T: {
@@ -149,37 +158,33 @@ public class Default_UI {
 					break;
 				}
 				case HD: {
-//					if (btn.isSelected()) {
-//
-//						btn.setIcon(new ImageIcon("gift//upload.png"));
-//
-//						JPanel r = new JPanel();
-//						r.setLayout(new BoxLayout(r, BoxLayout.Y_AXIS));
-//						JPanel v = createCompoment("gift\\upload.png", "Tạo đơn nhập thuốc", "gift\\hoadon.png", true);
-//						JPanel o = createCompoment("gift\\upload.png", "Hóa đơn bán thuốc", "gift\\hoadon.png", true);
-//						JPanel z = createCompoment("gift\\upload.png", "Hóa đơn nhập thuốc", "gift\\hoadon.png", true);
-//						Object[] xx = { v, o, z };
-//						for (Object s : xx) {
-//							r.add((Component) s);
-//						}
-//						compoment.add(r, BorderLayout.AFTER_LAST_LINE);
-//
-//					} else {
-//
-//						btn.setIcon(new ImageIcon("gift//down.png"));
-//						for (int i = 1; i < compoment.getComponentCount(); i++) {
-//							compoment.remove(i);
-//						}
-//					}
 				
-						cardLayout.show(container, HĐBT);
-						
-					
+						cardLayout.show(container, HĐBT);		
 					
 					break;
 				}
 				case BT: {
+					if (btn.isSelected()) {
+						btn.setIcon(new ImageIcon("gift//down.png"));
+									
+						JPanel r = new JPanel();
+						r.setLayout(new BoxLayout(r, BoxLayout.Y_AXIS));
+						JPanel v = createCompoment("gift\\upload.png", "Tạo đơn mới", "gift\\hoadonmoi.png", true);
+						JPanel o = createCompoment("gift\\upload.png", "Kê lại đơn", "gift\\kelaidon.png", true);
+			
+						Object[] xx = { v, o};
+						for (Object s : xx) {
+							r.add((Component) s);
+						}
+						compoment.add(r, BorderLayout.AFTER_LAST_LINE);
 
+					} else {
+
+						btn.setIcon(new ImageIcon("gift//upload.png"));
+						for (int i = 1; i < compoment.getComponentCount(); i++) {
+							compoment.remove(i);
+						}
+					}
 					cardLayout.show(container, BT);
 
 					break;
@@ -188,14 +193,7 @@ public class Default_UI {
 					cardLayout.show(container, DT);
 					break;
 				}
-				case TDNT: {
-					cardLayout.show(container, TDNT);
-					break;
-				}
-				case HDNT: {
-					cardLayout.show(container, HDNT);
-					break;
-				}
+			
 				case KH: {
 					cardLayout.show(container, KH);
 					break;
@@ -210,6 +208,14 @@ public class Default_UI {
 				}
 				case TK: {
 					cardLayout.show(container,TK);
+					break;
+				}
+				case HDM :{
+					cardLayout.show(container, HDM);
+					break;
+				}
+				case KLD :{
+					cardLayout.show(container, KLD);
 					break;
 				}
 				case ĐX: {
@@ -240,7 +246,7 @@ public class Default_UI {
 		westt.setBackground(new Color(89, 168, 104));
 		boxx.add(brand(MaNV));
 
-		boxx.add(createCompoment("gift\\thuoc.png", "Bán Thuốc", "gift\\banthuoc.png", true));
+		boxx.add(createCompoment("gift\\thuoc.png", "Bán Thuốc", "gift\\banthuoc.png", false));
 		boxx.add(createCompoment("gift\\thuoc.png", "Thuốc", "gift\\quanlythuoc.png", true));
 		boxx.add(createCompoment("gift\\upload.png", "Đổi Thuốc", "gift\\doitra.png", true));
 		boxx.add(createCompoment("gift\\down.png", "Hóa Đơn", "gift\\bill.png", true));
@@ -257,9 +263,6 @@ public class Default_UI {
 		JPanel compomet = new JPanel(new BorderLayout());
 		ImageIcon iconn = new ImageIcon("gift\\logo2.png");
 		JLabel text = new JLabel(iconn);
-//		text.setText("ÁNH DƯƠNG");
-//		text.setFont(new Font("Arial", Font.BOLD, 30));
-//		text.setForeground(Color.WHITE);
 		text.setIconTextGap(20);
 		compomet.setBorder(new EmptyBorder(20, 0, 10, 20));
 		compomet.setBackground(new Color(89, 168, 104));
@@ -280,8 +283,8 @@ public class Default_UI {
 		return quanLyThuocUI.getQuanLiThuoc();
 	}
 
-	private JPanel createBanThuoc(String maNV) {
-		BanThuoc_UI banThuocUI = new BanThuoc_UI();
+	private JPanel createBanThuocKeDonMoi(String maNV) {
+		BanThuocKeDonMoi_UI banThuocUI = new BanThuocKeDonMoi_UI();
 		return banThuocUI.getBanThuoc(maNV);
 	}
 
@@ -290,15 +293,7 @@ public class Default_UI {
 		return doiThuoc.getDoiThuoc(maNV);
 	}
 
-	private JPanel createNhapThuoc() {
-		NhapThuoc_UI nhapThuoc = new NhapThuoc_UI();
-		return nhapThuoc.getNhapThuoc();
-	}
 
-	private JPanel createQuanLyNhapThuoc() {
-		QuanLyDonNhapThuoc_UI QLDNT = new QuanLyDonNhapThuoc_UI();
-		return QLDNT.getQuanLyDonNhapThuoc();
-	}
 
 	private JPanel createKhachHang() {
 		KhachHang_UI KH = new KhachHang_UI();
@@ -310,12 +305,17 @@ public class Default_UI {
 		return NV.getNhanVien();
 	}
 
-	private JPanel createHoaDon() {
+	private JPanel createHoaDon(HoaDon_DAO hoaDon_Dao) {
 		HoaDonBanThuoc_UI hd = new HoaDonBanThuoc_UI();
-		return hd.getHoaDon();
+		return hd.getHoaDon(hoaDon_DAO);
 	}
 	private JPanel createThongKe() {
 		ThongKe_UI thongKe_UI = new ThongKe_UI();
 		return thongKe_UI.getThongKe();
+	}
+	private JPanel createBanThuocKeLaiDon(String maNV) {
+		BanThuocKeLaiDon_UI banThuoc =new  BanThuocKeLaiDon_UI();
+		return banThuoc.getBanThuocKeLaiDon(maNV);
+		
 	}
 }
