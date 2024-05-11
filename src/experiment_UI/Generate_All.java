@@ -222,150 +222,6 @@ public class Generate_All {
 		}
 	}
 
-	public static void generateInvoiceKeLaiDon(HoaDon hd, double giacu) {
-		// Tạo một đối tượng Document
-		Document document = new Document();
-
-		try {
-
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			PdfWriter writer = PdfWriter.getInstance(document, outputStream);
-
-			BaseFont baseFont = BaseFont.createFont("library\\Arial Unicode Font.ttf", BaseFont.IDENTITY_H,
-					BaseFont.EMBEDDED);
-			com.itextpdf.text.Font font = new com.itextpdf.text.Font(baseFont, 22, com.itextpdf.text.Font.NORMAL);
-			com.itextpdf.text.Font fontsdt = new com.itextpdf.text.Font(baseFont, 18,
-					com.itextpdf.text.Font.BOLDITALIC);
-			com.itextpdf.text.Font fontHD = new com.itextpdf.text.Font(baseFont, 24, com.itextpdf.text.Font.BOLD);
-			com.itextpdf.text.Font fontWord = new com.itextpdf.text.Font(baseFont, 16, com.itextpdf.text.Font.BOLD);
-			com.itextpdf.text.Font fontWord2 = new com.itextpdf.text.Font(baseFont, 16, com.itextpdf.text.Font.NORMAL);
-			// Mở Document
-			document.open();
-
-			Paragraph title = new Paragraph("NHÀ THUỐC ÁNH DƯƠNG", font);
-			title.setAlignment(Element.ALIGN_CENTER);
-			document.add(title);
-			Paragraph diaChi = new Paragraph("Đ.C: 123- NGUYỄN VĂN C - XYZ - HCM", font);
-			diaChi.setAlignment(Element.ALIGN_CENTER);
-			document.add(diaChi);
-
-			Paragraph SDT = new Paragraph("SĐT: 0968xxxxxxx", fontsdt);
-			SDT.setAlignment(Element.ALIGN_CENTER);
-			document.add(SDT);
-			document.add(new Paragraph(""));
-
-			Paragraph tenHD = new Paragraph("HÓA ĐƠN KÊ LẠI ĐƠN", fontHD);
-			tenHD.setAlignment(Element.ALIGN_CENTER);
-			document.add(tenHD);
-			document.add(new Paragraph(" "));
-			document.add(new Paragraph("  "));
-			Paragraph ngayMua = new Paragraph();
-			ngayMua.add(new Phrase("Ngày mua : ", fontWord));
-			ngayMua.add(new Phrase("" + formatTime(hd.getNgayTaoHoaDon()), fontWord2));
-			ngayMua.add(Chunk.TABBING);
-			ngayMua.add(new Phrase("Mã hóa đơn :", fontWord));
-			ngayMua.add(new Phrase(hd.getMaHD(), fontWord2));
-			document.add(ngayMua);
-
-			document.add(new Paragraph("  "));
-			Paragraph nhanVien = new Paragraph();
-			nhanVien.add(new Phrase("Nhân viên : ", fontWord));
-			nhanVien.add(new Phrase(hd.getMaNV().getMaNV(), fontWord2));
-			document.add(nhanVien);
-
-			document.add(new Paragraph("  "));
-			Paragraph ten = new Paragraph();
-			ten.add(new Phrase("Tên khách hàng : ", fontWord));
-			KhachHang kh = getKH(hd.getMaKh().getMaKH(), "");
-			ten.add(new Phrase(kh.getTenKH(), fontWord2));
-			ten.add(Chunk.TABBING);
-			ten.add(new Phrase("Mã KH:", fontWord));
-			ten.add(new Phrase(hd.getMaKh().getMaKH(), fontWord2));
-
-			document.add(ten);
-
-			document.add(new Paragraph("  "));
-			LocalTime currentTime = LocalTime.now();
-
-			// Định dạng thời gian để in ra
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-
-			// In thời gian hiện tại với định dạng giờ:phút
-			String formattedTime = currentTime.format(formatter);
-			Paragraph thoiGian = new Paragraph(
-					"Thời gian in : " + formatTime(LocalDate.now()) + "      " + formattedTime, fontWord2);
-			thoiGian.setAlignment(Element.ALIGN_CENTER);
-			document.add(thoiGian);
-			document.add(new Paragraph("  "));
-
-			ArrayList<ChiTietHoaDon> lcthd = hd.getListChiTietHoaDon();
-			PdfPTable table = new PdfPTable(7);
-			addCell(table, "STT", fontWord);
-			addCell(table, "Mã thuốc", fontWord);
-			addCell(table, "Tên thuốc", fontWord);
-			addCell(table, "Đơn vị", fontWord);
-			addCell(table, "Số lượng", fontWord);
-			addCell(table, "Giá", fontWord);
-			addCell(table, "Thành tiền", fontWord);
-			int i = 0;
-			for (ChiTietHoaDon chiTietHoaDon : lcthd) {
-				Thuoc th = thuoc_DAO.getThuocByID(chiTietHoaDon.getMaThuoc().getMaThuoc());
-				i += 1;
-				addCell(table, i + "", fontWord2);
-				addCell(table, chiTietHoaDon.getMaThuoc().getMaThuoc(), fontWord2); // Không sử dụng font cho các cell
-																					// khác
-				addCell(table, th.getTenThuoc(), fontWord2);
-				addCell(table, th.getDonVi(), fontWord2);
-				addCell(table, String.valueOf(chiTietHoaDon.getSoLuongThuoc()), fontWord2);
-				addCell(table, String.valueOf(th.getGia()), fontWord2);
-				addCell(table, String.valueOf(chiTietHoaDon.getThanhTien()), fontWord2);// Chuyển thành tiền thành chuỗi
-			}
-			document.add(table);
-			document.add(new Paragraph("   "));
-
-			Paragraph khachCanTra = new Paragraph("Tiền hàng : " + hd.getTongTien(), fontWord);
-
-			document.add(khachCanTra);
-//chưa giải quyết
-			Paragraph khauTru = new Paragraph("Khấu trừ : " , fontWord);
-
-			document.add(khauTru);
-
-			
-			Paragraph thanhtoan = new Paragraph("Tổng tiền : " + hd.getTongTien(), fontWord);
-
-			document.add(thanhtoan);
-
-			Paragraph khachDuaa = new Paragraph("Số tiền trong hóa đơn cũ: " + giacu, fontWord);
-
-			document.add(khachDuaa);
-			
-			double canTraValue = hd.getTongTien()-giacu>0?hd.getTongTien()-giacu:0;
-			Paragraph khachCanTraLan2 = new Paragraph("Số tiền khách cần  trả : " + canTraValue, fontWord);
-
-			document.add(khachCanTraLan2);
-			double canTraValueNhanVien = hd.getTongTien()-giacu>0?0:hd.getTongTien()-giacu;
-			Paragraph canTra = new Paragraph("Số tiền cần  trả lại khách: " + canTraValueNhanVien, fontWord);
-
-			document.add(canTra);
-
-			document.close();
-
-			byte[] pdfBytes = outputStream.toByteArray();
-
-			File tempFile = File.createTempFile("invoice", ".pdf");
-			tempFile.deleteOnExit();
-
-			try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-				fos.write(pdfBytes);
-			}
-
-			Desktop.getDesktop().open(tempFile);
-		} catch (DocumentException | IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	
 	public static void generateInvoiceBanLe(HoaDon hd, double tongTien, double khachDua, double result) {
 		// Tạo một đối tượng Document
@@ -502,7 +358,7 @@ public class Generate_All {
 		}
 	}
 
-	public static void generateInvoiceHoanTra(HoaDon hd) {
+	public static void generateInvoiceHoanTra(HoaDon hd,double tienTra) {
 		// Tạo một đối tượng Document
 		Document document = new Document();
 
@@ -619,7 +475,7 @@ public class Generate_All {
 
 			document.add(khachDuaa);
 
-			Paragraph canTra = new Paragraph("Số tiền cần trả : " + hd.getTongTien(), fontWord);
+			Paragraph canTra = new Paragraph("Số tiền cần trả : " + tienTra, fontWord);
 
 			document.add(canTra);
 
