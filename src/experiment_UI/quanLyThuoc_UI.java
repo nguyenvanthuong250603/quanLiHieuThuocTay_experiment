@@ -196,7 +196,7 @@ public class QuanLyThuoc_UI {
 	public JPanel footer_table() {
 		JPanel footer = new JPanel();
 
-		String[] object = { "", "gift\\reset.png", "Xóa thuốc", "gift\\trash-bin.png", "Xuất Excel",
+		String[] object = { "", "gift\\reset.png", "Xuất Excel",
 				"gift\\excel-file.png" };
 		for (int i = 0; i < object.length; i += 2) {
 			JButton btn = buttonInPage(object[i], object[i + 1]);
@@ -325,7 +325,7 @@ public class QuanLyThuoc_UI {
 //	phần 2 footer
 	public JPanel footer_inf() {
 		JPanel footer = new JPanel();
-		String[][] object = { { "Xóa trắng", "gift//brush.png" }, { "Cập nhật", "gift//update.png" },
+		String[][] object = { { "Xóa thuốc", "gift\\trash-bin.png"}, { "Cập nhật", "gift//update.png" },
 				{ "Thêm", "gift//add.png" } };
 		for (String[] strings : object) {
 			JButton btn = buttonInPage(strings[0].toString(), strings[1].toString());
@@ -694,7 +694,7 @@ public class QuanLyThuoc_UI {
 			Thuoc th = list_Thuoc.getThuocByID(maThuoc);
 			if (th.getMaThuoc() != null) {
 				model.setRowCount(0);
-
+				System.out.println( th.getTenNhaSanXuat());
 				Object[] row = { th.getMaThuoc(), th.getTenThuoc(), th.getSoLuong() + "", th.getGia() + "",
 						th.getLoaiThuoc(), th.getTenNhaSanXuat().getTenNSX(), formatTime(th.getNgaySanXuat()),
 						formatTime(th.getNgayHetHan()) };
@@ -822,7 +822,7 @@ public class QuanLyThuoc_UI {
 	}
 	public JButton buttonInPage(String nameBtn, String pathIcon) {
 		JButton btn = createJbutton(nameBtn, pathIcon);
-		btn.setPreferredSize(new Dimension(120, 40));
+		btn.setPreferredSize(new Dimension(140, 40));
 
 		btn.addActionListener(new ActionListener() {
 
@@ -839,10 +839,7 @@ public class QuanLyThuoc_UI {
 				} else if (nameBtn.equals("Cập nhật")) {
 
 					suaThuoc();
-				} else if (nameBtn.equals("Xóa trắng")) {
-
-					xoaTrang();
-				} else if (nameBtn.equals("")) {
+				}  else if (nameBtn.equals("")) {
 
 					xoaTrang();
 

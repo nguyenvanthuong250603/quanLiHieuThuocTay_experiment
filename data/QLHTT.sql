@@ -111,12 +111,12 @@ INSERT INTO KhachHang VALUES('KH12128882',N'Nguyễn Văn Hoàng','2024-03-19','
 
  ------------------------------------------------------------
 SELECT *FROM KhachHang
-SELECT *FROM HoaDon 
+SELECT *FROM HoaDon where TongTien > 0 and TongTien<120000
 SELECT *FROM ChiTietHoaDon
 SELECT *FROM NhanVien
 SELECT *FROM TaiKhoan
 SELECT *FROM NhaSanXuat
-SELECT *FROM Thuoc WHERE TenThuoc = 'Omeprazole'
+SELECT *FROM Thuoc WHERE MaThuoc = 'TH04130035'
 SELECT *FROM HoaDon 
 SELECT *FROM Thuoc WHERE MaThuoc = 'TH04050241';
 

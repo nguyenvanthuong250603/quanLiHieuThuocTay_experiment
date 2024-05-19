@@ -10,12 +10,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -28,6 +32,7 @@ import com.toedter.calendar.JDateChooser;
 
 import dao.ChiTietHoaDon_DAO;
 import dao.HoaDon_DAO;
+import dao.KhachHang_DAO;
 import dao.Thuoc_DAO;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
@@ -45,13 +50,19 @@ public class HoaDonBanThuoc_UI {
 	private HoaDon_DAO hoaDon_DAO;
 	private ChiTietHoaDon_DAO chiTietHoaDon_DAO = new ChiTietHoaDon_DAO();
 	private Thuoc_DAO thuoc_DAO = new Thuoc_DAO();
+	private KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
 
 	public JPanel getHoaDon(HoaDon_DAO hoaDon_DAO) {
 		JPanel hd = new JPanel(new BorderLayout());
-		hd.add(north(), BorderLayout.NORTH);
-		hd.add(cenTer(), BorderLayout.CENTER);
+		createTiTlePage(hd, "Hóa đơn bán hàng");
+		JPanel center = new JPanel(new BorderLayout());
+
+		center.add(north(), BorderLayout.NORTH);
+		center.add(cenTer(), BorderLayout.CENTER);
+		hd.add(center, BorderLayout.CENTER);
 		this.hoaDon_DAO = hoaDon_DAO;
-		hienBangDuLieu();
+		ArrayList<HoaDon> hDons = hoaDon_DAO.getHoaDons();
+		hienBangDuLieu(hDons);
 		enterAction();
 		return hd;
 	}
@@ -59,12 +70,12 @@ public class HoaDonBanThuoc_UI {
 	private JPanel north() {
 		JPanel north = new JPanel(new BorderLayout());
 		createTitle(north, "Tìm kiếm và lọc hóa đơn");
-
-		JPanel north_center = new JPanel(new GridLayout(2, 4, 10, 10));
+		String[] optionDoanhThu = { "", "Dưới 100k", "Từ 100 - 500k", "500k-1 triệu", "1 triệu trở lên" };
+		String[] optionLoaiHoaDon = { "", "Hóa đơn bán hàng", "Hóa đơn bán lẻ" };
+		JPanel north_center = new JPanel(new GridLayout(2, 3, 10, 10));
 		Object[][] trage = { { "Mã hóa đơn", new JTextField() }, { "Từ ngày", new JDateChooser() },
-				{ "Đến ngày", new JDateChooser() }, { "Doanh thu", new JComboBox() }, { "Mã KH", new JTextField() },
-				{ "Số điện thoại", new JTextField() }, { "Loại hóa đơn", new JComboBox() },
-				{ "Trạng thái", new JComboBox() } };
+				{ "Đến ngày", new JDateChooser() }, { "Số điện thoại", new JTextField() },
+				{ "Doanh thu", new JComboBox(optionDoanhThu) }, { "Loại hóa đơn", new JComboBox(optionLoaiHoaDon) } };
 
 		object_search = trage;
 		for (Object[] objects : object_search) {
@@ -86,7 +97,7 @@ public class HoaDonBanThuoc_UI {
 
 		JPanel north_btn = new JPanel(new GridLayout(2, 1, 10, 10));
 
-		north_btn.add(createButtonInHoaDonBanHang("Tìm kiếm", ""));
+		north_btn.add(createButtonInHoaDonBanHang("Lọc", ""));
 		north_btn.add(createButtonInHoaDonBanHang("", "gift\\reset.png"));
 
 		north.add(north_btn, BorderLayout.EAST);
@@ -159,9 +170,8 @@ public class HoaDonBanThuoc_UI {
 
 	}
 
-	public void hienBangDuLieu() {
+	public void hienBangDuLieu(ArrayList<HoaDon> hDons) {
 
-		ArrayList<HoaDon> hDons = hoaDon_DAO.getHoaDons();
 		for (HoaDon hoaDon : hDons) {
 			if (!hoaDon.getTinhTrang().equals("")) {
 				NhanVien nv = getNV(hoaDon.getMaNV().getMaNV());
@@ -251,9 +261,16 @@ public class HoaDonBanThuoc_UI {
 		((JTextField) object_kh[0][1]).setText("");
 		((JTextField) object_kh[1][1]).setText("");
 		((JTextField) object_kh[2][1]).setText("");
+		((JTextField) object_search[0][1]).setText("");
+		((JDateChooser) object_search[1][1]).setDate(null);
+		((JDateChooser) object_search[2][1]).setDate(null);
+		((JTextField) object_search[3][1]).setText("");
+		((JComboBox) object_search[4][1]).setSelectedIndex(0);
+		((JComboBox) object_search[5][1]).setSelectedIndex(0);
 		model.setRowCount(0);
 		model_product.setRowCount(0);
-		hienBangDuLieu();
+		ArrayList<HoaDon> hDons = hoaDon_DAO.getHoaDons();
+		hienBangDuLieu(hDons);
 		table.setModel(model);
 	}
 
@@ -315,16 +332,99 @@ public class HoaDonBanThuoc_UI {
 
 	}
 
+	public void inLaiHoaDon() {
+		String maHD = table.getValueAt(table.getSelectedRow(), 0).toString();
+		HoaDon hd = hoaDon_DAO.getHoaDonByID(maHD);
+		if (hd.getMaKh().getMaKH() == null) {
+			generateInvoiceBanLe(hd, hd.getTongTien(), 0, 0);
+		} else {
+			KhachHang kh = khachHang_DAO.getKhachHangByID(table.getValueAt(table.getSelectedRow(), 2).toString(), "");
+			String xh = kh.getXepHang();
+			String kmString = "";
+			if (xh.equals("Đồng")) {
+				kmString = "0%";
+			} else if (xh.equals("Bạc")) {
+				kmString = "1%";
+			} else if (xh.equals("Vàng")) {
+				kmString = "2%";
+			} else if (xh.equals("Bạch kim")) {
+				kmString = "3%";
+			} else if (xh.equals("Kim cương")) {
+				kmString = "4.5%";
+			}
+			generateInvoice(hd, hd.getTongTien(), 0, kmString, 0);
+		}
+	}
+
+	public void locNangCao() {
+
+		String doanhThu = getValueInComboBox((JComboBox) object_search[4][1]);
+		ArrayList<HoaDon> lHoaDons = new ArrayList<HoaDon>();
+		if (!doanhThu.equals("")) {
+			LocalDate ngayBatDau =null;
+			LocalDate ngayKetThuc =null;
+			if(((JDateChooser) object_search[1][1]).getDate()!=null&&((JDateChooser) object_search[2][1]).getDate()!=null){
+			ngayBatDau =((JDateChooser) object_search[1][1]).getDate().toInstant().atZone(ZoneId.systemDefault())
+					.toLocalDate();
+			 ngayKetThuc =((JDateChooser) object_search[2][1]).getDate().toInstant().atZone(ZoneId.systemDefault())
+					.toLocalDate();
+			}
+		
+			String sdt = getValueStringInJTextField(object_search[3][1]);
+			String loaiHd =getValueInComboBox((JComboBox)object_search[5][1]);
+			if (doanhThu.equals("Dưới 100k")) {
+				lHoaDons = hoaDon_DAO.getHoaDonDanhSachThongKe(0, 100000);
+			} else if (doanhThu.equals("Từ 100 - 500k")) {
+				lHoaDons = hoaDon_DAO.getHoaDonDanhSachThongKe(100000, 500000);
+			} else if (doanhThu.equals("500k-1 triệu")) {
+				lHoaDons = hoaDon_DAO.getHoaDonDanhSachThongKe(500000, 1000000);
+			} else if (doanhThu.equals("1 triệu trở lên")) {
+				lHoaDons = hoaDon_DAO.getHoaDonDanhSachThongKe(1000000, 10000000);
+			}
+
+			ArrayList<HoaDon> hd = new ArrayList<HoaDon>();
+
+			for (HoaDon hoaDon : lHoaDons) {
+				KhachHang kh = null;
+				if (hoaDon.getMaKh().getMaKH() != null) {
+					kh = khachHang_DAO.getKhachHangByID(hoaDon.getMaKh().getMaKH(), "");
+					
+				}
+				if (!sdt.equals("") && ngayBatDau != null && ngayKetThuc != null&&loaiHd.equals("")) {
+					if ( kh!=null&&kh.getsDT().equals(sdt) && hoaDon.getNgayTaoHoaDon().isAfter(ngayBatDau)
+							&& hoaDon.getNgayTaoHoaDon().isBefore(ngayKetThuc))
+						hd.add(hoaDon);
+				} else if (kh!=null&&!sdt.equals("") && ngayBatDau == null && kh.getsDT().equals(sdt)&&loaiHd.equals("")) {
+					hd.add(hoaDon);
+				} else if (sdt.equals("") && hoaDon.getNgayTaoHoaDon().isAfter(ngayBatDau)
+						&& hoaDon.getNgayTaoHoaDon().isBefore(ngayKetThuc)&&loaiHd.equals("")) {
+					hd.add(hoaDon);
+				}else if (loaiHd.equals("Hoá đơn bán lẻ")&&!sdt.equals("")) {
+					JOptionPane.showMessageDialog(null, "Hóa đơn có số điện thoại là hóa đơn bán hàng không thể lọc cùng lúc");
+				} else if(sdt.equals("")&&!loaiHd.equals("")){
+					
+				}
+			}
+			model.setRowCount(0);
+			model_product.setRowCount(0);
+			hienBangDuLieu(hd);
+
+		} else {
+			lHoaDons = hoaDon_DAO.getHoaDons();
+			
+		}
+	}
+
 	private JButton createButtonInHoaDonBanHang(String nameBtn, String pathIcon) {
 		JButton btn = createJbutton(nameBtn, pathIcon);
 		btn.setPreferredSize(new Dimension(180, 35));
 		btn.addActionListener(e -> {
 			if (nameBtn.equals("")) {
 				xoaTrang();
-			} else if (nameBtn.equals("")) {
-
-			} else if (nameBtn.equals("")) {
-
+			} else if (nameBtn.equals("In hóa đơn")) {
+				inLaiHoaDon();
+			} else if (nameBtn.equals("Lọc")) {
+				locNangCao();
 			} else {
 				System.out.println(nameBtn);
 			}

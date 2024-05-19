@@ -106,8 +106,7 @@ public class BanThuocKeDonMoi_UI {
 		maNhanVien = maNV;
 
 		enterListen();
-		
-		
+
 		hidden(false);
 		handleActionCheckbox();
 		setDefaultText(maNhanVien);
@@ -221,7 +220,6 @@ public class BanThuocKeDonMoi_UI {
 
 			}
 		}
-
 
 		inf.add(check, BorderLayout.NORTH);
 		inf.add(input, BorderLayout.CENTER);
@@ -388,6 +386,20 @@ public class BanThuocKeDonMoi_UI {
 		}
 	}
 
+	public boolean regexGetThuoc(Thuoc th) {
+		LocalDate hanThuoc = th.getNgayHetHan();
+		if (hanThuoc.isBefore(LocalDate.now())) {
+			JOptionPane.showMessageDialog(null, "Thuốc đã hết hạn không thể bán");
+			return false;
+		}
+		int soLuong = th.getSoLuong();
+		if (soLuong <= 0) {
+			JOptionPane.showMessageDialog(null, "Thuốc đã hết trong kho hàng");
+			return false;
+		}
+		return true;
+	}
+
 	public void timThuoc() {
 		if (regex()) {
 			maThuoc = textMaThuocFind.getText();
@@ -397,23 +409,26 @@ public class BanThuocKeDonMoi_UI {
 			if (checkTrung(th.getMaThuoc()) == false) {
 				if (th.getMaThuoc() != null) {
 					// Kiểm tra nếu ô số lượng đã được điền
-					if (isSoLuongFilled()) {
+					if (regexGetThuoc(th)) {
+						if (isSoLuongFilled()) {
 
-						String[] row = { th.getMaThuoc(), th.getTenThuoc(), th.getDonVi(), "", th.getGia() + "", "" };
-						model.addRow(row);
-						int soLuongColumnIndex = 3;
+							String[] row = { th.getMaThuoc(), th.getTenThuoc(), th.getDonVi(), "", th.getGia() + "",
+									"" };
+							model.addRow(row);
+							int soLuongColumnIndex = 3;
 
-						int lastRowIndex = model.getRowCount() - 1;
+							int lastRowIndex = model.getRowCount() - 1;
 
-						table.requestFocus();
-						table.changeSelection(lastRowIndex, soLuongColumnIndex, false, false);
-						table.editCellAt(lastRowIndex, soLuongColumnIndex);
-						Component editor = table.getEditorComponent();
-						testBug(editor);
+							table.requestFocus();
+							table.changeSelection(lastRowIndex, soLuongColumnIndex, false, false);
+							table.editCellAt(lastRowIndex, soLuongColumnIndex);
+							Component editor = table.getEditorComponent();
+							testBug(editor);
 
-					} else {
-						JOptionPane.showMessageDialog(null,
-								"Vui lòng nhập số lượng trước khi tìm kiếm sản phẩm tiếp theo");
+						} else {
+							JOptionPane.showMessageDialog(null,
+									"Vui lòng nhập số lượng trước khi tìm kiếm sản phẩm tiếp theo");
+						}
 					}
 				} else {
 					JOptionPane.showMessageDialog(null, "Không tìm thấy mã thuốc trong hệ thống");
@@ -422,6 +437,7 @@ public class BanThuocKeDonMoi_UI {
 				JOptionPane.showMessageDialog(null, "Thuốc đã có trong danh sách");
 			}
 			textMaThuocFind.setText("");
+
 		}
 	}
 
@@ -813,7 +829,6 @@ public class BanThuocKeDonMoi_UI {
 
 	}
 
-
 	public JButton buttonInPageSell(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(150, 40));
@@ -827,16 +842,16 @@ public class BanThuocKeDonMoi_UI {
 						(JComboBox) object_custommer[3][1], (JTextField) object_custommer[4][1],
 						(JLabel) object_sell[3][1], jtextMaKH);
 
-			} else if (nameButton.equals("")&& !pathIcon.equals("gift\\add.png")) {
+			} else if (nameButton.equals("") && !pathIcon.equals("gift\\add.png")) {
 				xoaTrang();
 			} else if (nameButton.equals("Xóa Thuốc")) {
 				xoaThuoc();
 			} else if (nameButton.equals("Xử lí hóa đơn tạm")) {
 
 				hoaDonLuuTam.getHoaDonLuuTam(jtextMaKH, object_custommer, object_sell, table);
-			cb.setSelected(true);
-			hidden(true);
-				
+				cb.setSelected(true);
+				hidden(true);
+
 			} else if (nameButton.equals("Lưu tạm")) {
 				luuTamHoaDON();
 

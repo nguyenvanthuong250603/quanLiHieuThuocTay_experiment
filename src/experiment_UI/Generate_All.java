@@ -6,6 +6,7 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -192,7 +193,7 @@ public class Generate_All {
 
 			document.add(khauTru);
 
-			double tt = khachDua - result;
+			double tt = hd.getTongTien();
 			Paragraph thanhtoan = new Paragraph("Tổng tiền : " + tt, fontWord);
 
 			document.add(thanhtoan);
@@ -222,7 +223,6 @@ public class Generate_All {
 		}
 	}
 
-	
 	public static void generateInvoiceBanLe(HoaDon hd, double tongTien, double khachDua, double result) {
 		// Tạo một đối tượng Document
 		Document document = new Document();
@@ -358,7 +358,7 @@ public class Generate_All {
 		}
 	}
 
-	public static void generateInvoiceHoanTra(HoaDon hd,double tienTra) {
+	public static void generateInvoiceHoanTra(HoaDon hd, double tienTra) {
 		// Tạo một đối tượng Document
 		Document document = new Document();
 
@@ -410,7 +410,7 @@ public class Generate_All {
 			document.add(nhanVien);
 
 			document.add(new Paragraph("  "));
-		
+
 			Paragraph ten = new Paragraph();
 			ten.add(new Phrase("Tên khách hàng : ", fontWord));
 			KhachHang kh = getKH(hd.getMaKh().getMaKH(), "");
@@ -420,7 +420,6 @@ public class Generate_All {
 			ten.add(new Phrase(hd.getMaKh().getMaKH(), fontWord2));
 
 			document.add(ten);
-			
 
 			document.add(new Paragraph("  "));
 			LocalTime currentTime = LocalTime.now();
@@ -446,19 +445,19 @@ public class Generate_All {
 			addCell(table, "Giá", fontWord);
 			addCell(table, "Thành tiền", fontWord);
 			int i = 0;
-			
-				for (ChiTietHoaDon chiTietHoaDon : lcthd) {
-					Thuoc th = thuoc_DAO.getThuocByID(chiTietHoaDon.getMaThuoc().getMaThuoc());
-					i += 1;
-					addCell(table, i + "", fontWord2);
-					addCell(table, chiTietHoaDon.getMaThuoc().getMaThuoc(), fontWord2); // Không sử dụng font cho các cell
-																						// khác
-					addCell(table, th.getTenThuoc(), fontWord2);
-					addCell(table, th.getDonVi(), fontWord2);
-					addCell(table, String.valueOf(chiTietHoaDon.getSoLuongThuoc()), fontWord2);
-					addCell(table, String.valueOf(th.getGia()), fontWord2);
-					addCell(table, String.valueOf(chiTietHoaDon.getThanhTien()), fontWord2);// Chuyển thành tiền thành chuỗi
-				}
+
+			for (ChiTietHoaDon chiTietHoaDon : lcthd) {
+				Thuoc th = thuoc_DAO.getThuocByID(chiTietHoaDon.getMaThuoc().getMaThuoc());
+				i += 1;
+				addCell(table, i + "", fontWord2);
+				addCell(table, chiTietHoaDon.getMaThuoc().getMaThuoc(), fontWord2); // Không sử dụng font cho các cell
+																					// khác
+				addCell(table, th.getTenThuoc(), fontWord2);
+				addCell(table, th.getDonVi(), fontWord2);
+				addCell(table, String.valueOf(chiTietHoaDon.getSoLuongThuoc()), fontWord2);
+				addCell(table, String.valueOf(th.getGia()), fontWord2);
+				addCell(table, String.valueOf(chiTietHoaDon.getThanhTien()), fontWord2);// Chuyển thành tiền thành chuỗi
+			}
 			document.add(table);
 			document.add(new Paragraph("   "));
 
@@ -466,8 +465,7 @@ public class Generate_All {
 
 			document.add(khachCanTra);
 
-			
-			Paragraph thanhtoan = new Paragraph("Tổng tiền : 0" , fontWord);
+			Paragraph thanhtoan = new Paragraph("Tổng tiền : 0", fontWord);
 
 			document.add(thanhtoan);
 
@@ -478,6 +476,158 @@ public class Generate_All {
 			Paragraph canTra = new Paragraph("Số tiền cần trả : " + tienTra, fontWord);
 
 			document.add(canTra);
+
+			document.close();
+
+			byte[] pdfBytes = outputStream.toByteArray();
+
+			File tempFile = File.createTempFile("invoice", ".pdf");
+			tempFile.deleteOnExit();
+
+			try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+				fos.write(pdfBytes);
+			}
+
+			Desktop.getDesktop().open(tempFile);
+		} catch (DocumentException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void generateInvoiceDoiThuoc(HoaDon hd, ArrayList<ChiTietHoaDon> cthd, String lydo) {
+		// Tạo một đối tượng Document
+		Document document = new Document();
+
+		try {
+
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			PdfWriter writer = PdfWriter.getInstance(document, outputStream);
+
+			BaseFont baseFont = BaseFont.createFont("library\\Arial Unicode Font.ttf", BaseFont.IDENTITY_H,
+					BaseFont.EMBEDDED);
+			com.itextpdf.text.Font font = new com.itextpdf.text.Font(baseFont, 22, com.itextpdf.text.Font.NORMAL);
+			com.itextpdf.text.Font fontsdt = new com.itextpdf.text.Font(baseFont, 18,
+					com.itextpdf.text.Font.BOLDITALIC);
+			com.itextpdf.text.Font fontHD = new com.itextpdf.text.Font(baseFont, 24, com.itextpdf.text.Font.BOLD);
+			com.itextpdf.text.Font fontWord = new com.itextpdf.text.Font(baseFont, 16, com.itextpdf.text.Font.BOLD);
+			com.itextpdf.text.Font fontWord2 = new com.itextpdf.text.Font(baseFont, 16, com.itextpdf.text.Font.NORMAL);
+			// Mở Document
+			document.open();
+
+			Paragraph title = new Paragraph("NHÀ THUỐC ÁNH DƯƠNG", font);
+			title.setAlignment(Element.ALIGN_CENTER);
+			document.add(title);
+			Paragraph diaChi = new Paragraph("Đ.C: 123- NGUYỄN VĂN C - XYZ - HCM", font);
+			diaChi.setAlignment(Element.ALIGN_CENTER);
+			document.add(diaChi);
+
+			Paragraph SDT = new Paragraph("SĐT: 0968xxxxxxx", fontsdt);
+			SDT.setAlignment(Element.ALIGN_CENTER);
+			document.add(SDT);
+			document.add(new Paragraph(""));
+
+			Paragraph tenHD = new Paragraph("HÓA ĐƠN ĐỔI THUỐC", fontHD);
+			tenHD.setAlignment(Element.ALIGN_CENTER);
+			document.add(tenHD);
+			document.add(new Paragraph(" "));
+			document.add(new Paragraph("  "));
+			Paragraph ngayMua = new Paragraph();
+			ngayMua.add(new Phrase("Ngày mua : ", fontWord));
+			ngayMua.add(new Phrase("" + formatTime(hd.getNgayTaoHoaDon()), fontWord2));
+			ngayMua.add(Chunk.TABBING);
+			ngayMua.add(new Phrase("Mã hóa đơn :", fontWord));
+			ngayMua.add(new Phrase(hd.getMaHD(), fontWord2));
+			document.add(ngayMua);
+
+			document.add(new Paragraph("  "));
+			Paragraph nhanVien = new Paragraph();
+			nhanVien.add(new Phrase("Nhân viên : ", fontWord));
+			nhanVien.add(new Phrase(hd.getMaNV().getMaNV(), fontWord2));
+			document.add(nhanVien);
+
+			document.add(new Paragraph("  "));
+
+			Paragraph ten = new Paragraph();
+			ten.add(new Phrase("Tên khách hàng : ", fontWord));
+			KhachHang kh = getKH(hd.getMaKh().getMaKH(), "");
+			ten.add(new Phrase(kh.getTenKH(), fontWord2));
+			ten.add(Chunk.TABBING);
+			ten.add(new Phrase("Mã KH:", fontWord));
+			ten.add(new Phrase(hd.getMaKh().getMaKH(), fontWord2));
+
+			document.add(ten);
+
+			document.add(new Paragraph("  "));
+			LocalTime currentTime = LocalTime.now();
+
+			// Định dạng thời gian để in ra
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+			// In thời gian hiện tại với định dạng giờ:phút
+			String formattedTime = currentTime.format(formatter);
+			Paragraph thoiGian = new Paragraph(
+					"Thời gian in : " + formatTime(LocalDate.now()) + "      " + formattedTime, fontWord2);
+			thoiGian.setAlignment(Element.ALIGN_CENTER);
+			document.add(thoiGian);
+			document.add(new Paragraph("  "));
+
+			document.add(new Phrase("Danh sách thuốc bán", fontWord));
+			ArrayList<ChiTietHoaDon> lcthd = hd.getListChiTietHoaDon();
+			PdfPTable table = new PdfPTable(7);
+			addCell(table, "STT", fontWord);
+			addCell(table, "Mã thuốc", fontWord);
+			addCell(table, "Tên thuốc", fontWord);
+			addCell(table, "Đơn vị", fontWord);
+			addCell(table, "Số lượng", fontWord);
+			addCell(table, "Giá", fontWord);
+			addCell(table, "Thành tiền", fontWord);
+			int i = 0;
+
+			for (ChiTietHoaDon chiTietHoaDon : lcthd) {
+				Thuoc th = thuoc_DAO.getThuocByID(chiTietHoaDon.getMaThuoc().getMaThuoc());
+				i += 1;
+				addCell(table, i + "", fontWord2);
+				addCell(table, chiTietHoaDon.getMaThuoc().getMaThuoc(), fontWord2); // Không sử dụng font cho các cell
+																					// khác
+				addCell(table, th.getTenThuoc(), fontWord2);
+				addCell(table, th.getDonVi(), fontWord2);
+				addCell(table, String.valueOf(chiTietHoaDon.getSoLuongThuoc()), fontWord2);
+				addCell(table, String.valueOf(th.getGia()), fontWord2);
+				addCell(table, String.valueOf(chiTietHoaDon.getThanhTien()), fontWord2);// Chuyển thành tiền thành chuỗi
+			}
+			document.add(table);
+			document.add(new Paragraph("   "));
+			document.add(new Phrase("Danh sách thuốc đổi trả ", fontWord));
+
+			PdfPTable table2 = new PdfPTable(7);
+			addCell(table2, "STT", fontWord);
+			addCell(table2, "Mã thuốc", fontWord);
+			addCell(table2, "Tên thuốc", fontWord);
+			addCell(table2, "Đơn vị", fontWord);
+			addCell(table2, "Số lượng", fontWord);
+			addCell(table2, "Giá", fontWord);
+			addCell(table2, "Thành tiền", fontWord);
+			int z = 0;
+
+			for (ChiTietHoaDon chiTietHoaDon : cthd) {
+				Thuoc th = thuoc_DAO.getThuocByID(chiTietHoaDon.getMaThuoc().getMaThuoc());
+				z += 1;
+				addCell(table2, z + "", fontWord2);
+				addCell(table2, chiTietHoaDon.getMaThuoc().getMaThuoc(), fontWord2); // Không sử dụng font cho các cell
+																						// khác
+				addCell(table2, th.getTenThuoc(), fontWord2);
+				addCell(table2, th.getDonVi(), fontWord2);
+				addCell(table2, String.valueOf(chiTietHoaDon.getSoLuongThuoc()), fontWord2);
+				addCell(table2, String.valueOf(th.getGia()), fontWord2);
+				addCell(table2, String.valueOf(chiTietHoaDon.getThanhTien()), fontWord2);// Chuyển thành tiền thành
+																							// chuỗi
+			}
+			document.add(table2);
+			document.add(new Phrase("   ", fontWord));
+			document.add(new Phrase("Lý do đổi trả: " + lydo, fontWord));
+			Paragraph thank = new Paragraph("Cảm ơn quý khách", font);
+			thank.setAlignment(Element.ALIGN_CENTER);
+			document.add(thank);
 
 			document.close();
 
@@ -871,8 +1021,15 @@ public class Generate_All {
 	}
 
 	public static LocalDate getDateJDateChoor(Object object) {
+		
+		if(object!=null){
 		JDateChooser date = (JDateChooser) object;
+		
 		return date.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		}
+		else {
+			return null;
+		}
 	}
 
 	public static int getValueInlabel(Object object) {
@@ -1011,13 +1168,12 @@ public class Generate_All {
 		for (HoaDon hoaDon : hDons) {
 			LocalDate ngayTao = hoaDon.getNgayTaoHoaDon();
 			Long diffInDays = ChronoUnit.DAYS.between(LocalDate.now(), ngayTao);
-			if (diffInDays > 0 && diffInDays <= 7 && sdt.equals("")&&loai==3) {
+			if (diffInDays > 0 && diffInDays <= 7 && sdt.equals("") && loai == 3) {
 				NhanVien nv = getNV(hoaDon.getMaNV().getMaNV());
 				Object[] row = { hoaDon.getMaHD(), nv.getHoTen(), hoaDon.getMaKh().getMaKH(),
 						formatTime(hoaDon.getNgayTaoHoaDon()), hoaDon.getTongTien() };
 				model.addRow(row);
-			}
-			else {
+			} else {
 				NhanVien nv = getNV(hoaDon.getMaNV().getMaNV());
 				Object[] row = { hoaDon.getMaHD(), nv.getHoTen(), hoaDon.getMaKh().getMaKH(),
 						formatTime(hoaDon.getNgayTaoHoaDon()), hoaDon.getTongTien() };
@@ -1081,8 +1237,8 @@ public class Generate_All {
 
 		for (ChiTietHoaDon ct : lChiTietHoaDons) {
 			Thuoc th = thuoc_DAO.getThuocByID(ct.getMaThuoc().getMaThuoc());
-			Object[] row_product = { ct.getMaThuoc().getMaThuoc(), th.getTenThuoc(), th.getDonVi(), ct.getSoLuongThuoc(),
-					th.getGia(), ct.getThanhTien() };
+			Object[] row_product = { ct.getMaThuoc().getMaThuoc(), th.getTenThuoc(), th.getDonVi(),
+					ct.getSoLuongThuoc(), th.getGia(), ct.getThanhTien() };
 			model_product.addRow(row_product);
 
 		}

@@ -368,4 +368,36 @@ public class HoaDon_DAO {
 		}
 		 return soLuongHoaDon;
 	}
+	public ArrayList<HoaDon> getHoaDonDanhSachThongKe(double gia,double doanhThu) {
+		ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
+		Connection con = accessDataBase();
+		try {
+			Statement s = con.createStatement();
+			ResultSet rs = s.executeQuery("SELECT *FROM HoaDon Where TongTien >=  "+gia + " AND TongTien < " + doanhThu);
+			while (rs.next()) {
+			
+				HoaDon hd = new HoaDon(rs.getString(1), new NhanVien(rs.getString(2)), new KhachHang(rs.getString(3)),
+						rs.getString(4), rs.getString(5), chageTimeSQL(rs.getDate(6)),
+						
+						changeLoaiThuocToSQLFromUI(rs.getInt(7)), rs.getString(8), rs.getDouble(9),rs.getString(10),
+						lcthd.getcChiTietHoaDons(rs.getString(1)));
+
+				lhd.add(hd);
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return lhd;
+	}
 }

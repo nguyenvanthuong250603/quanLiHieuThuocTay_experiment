@@ -33,6 +33,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.poi.hssf.record.HideObjRecord;
+
 import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 import dao.ChiTietHoaDon_DAO;
@@ -332,6 +334,11 @@ public class BanThuocKeLaiDon_UI {
 			table.setRowSelectionInterval(0, 0);
 			String maKH = table.getValueAt(table.getSelectedRow(), 2) == null ? ""
 					: table.getValueAt(table.getSelectedRow(), 2).toString();
+			
+			if(!maKH.equals("")) {
+				cb.setSelected(true);
+				hidden(true);
+			}
 			String maHD = table.getValueAt(table.getSelectedRow(), 0).toString();
 			((JTextField) object_sell[2][1]).setText(table.getValueAt(0, 4).toString());
 			defaultMouse(model_product, table_product, maHD, maKH, table);
@@ -369,6 +376,10 @@ public class BanThuocKeLaiDon_UI {
 				String maKH = table.getValueAt(index, 2) == null ? "" : table.getValueAt(index, 2).toString();
 				String maHD = table.getValueAt(index, 0).toString();
 				defaultMouse(model_product, table_product, maHD, maKH, table);
+				if(!maKH.equals("")) {
+					cb.setSelected(true);
+					hidden(true);
+				}
 
 			}
 		});
@@ -783,13 +794,19 @@ public class BanThuocKeLaiDon_UI {
 		HoaDon hd = getHoaDon();
 		double khachDua = Double.parseDouble(((JTextField) object_sell[5][1]).getText());
 		if (hoaDon_DAO.themHoaDon(hd)) {
-			JOptionPane.showMessageDialog(null, "Tạo hóa đơn thành công");
-			if (hd.getMaKh().getMaKH().equals("")) {
-
+			
+			if (!cb.isSelected()&&hd.getMaKh().getMaKH().equals("")) {
+				JOptionPane.showMessageDialog(null, "Tạo hóa đơn thành công");
 				generateInvoiceBanLe(hd, hd.getTongTien(), khachDua, result);
 			}else {
+				if(cb.isSelected()&&!jtextMaKH.getText().equals("")) {
 				String khuyenMai = ((JLabel) object_sell[3][1]).getText();
+				JOptionPane.showMessageDialog(null, "Tạo hóa đơn thành công");
 				generateInvoice(hd, hd.getTongTien() ,khachDua,khuyenMai,result);
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Bạn chưa nhập thông tin khách hàng");
+				}
 			}
 			thayDoiDiemXepHang();
 			thayDoiSoLuongThuoc();
@@ -800,6 +817,7 @@ public class BanThuocKeLaiDon_UI {
 	}
 	private boolean regexInHoaDon() {
 		String tienDua = ((JTextField) object_sell[5][1]).getText();
+	
 	 if (!tienDua.matches("\\d+")) {
 			if (tienDua.equals("")) {
 				JOptionPane.showMessageDialog(null, "Bạn chưa nhập tiền khách đưa");

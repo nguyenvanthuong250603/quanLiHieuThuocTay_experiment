@@ -11,6 +11,7 @@ import java.text.DateFormat;
 //import java.awt.Label;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -36,6 +37,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DateFormatter;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.HdrDocument;
 
 import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.itextpdf.text.xml.XmlToTxt;
@@ -293,36 +296,40 @@ public class DoiThuoc_UI {
 		HoaDon hd = hoaDon_DAO.getHoaDonByID(ma);
 		xoaTrang();
 		if (hd != null && hd.getMaKh().getMaKH() != null) {
+			LocalDate ngayTao = hd.getNgayTaoHoaDon();
+			Long tinhNgay = ChronoUnit.DAYS.between(LocalDate.now(), ngayTao);
+			if (tinhNgay <= 7) {
+				String tinhTrang = hd.getTinhTrang();
+				radioSelection(tinhTrang);
+				ArrayList<ChiTietHoaDon> lChiTietHoaDons = hd.getListChiTietHoaDon();
 
-			String tinhTrang = hd.getTinhTrang();
-			radioSelection(tinhTrang);
-			ArrayList<ChiTietHoaDon> lChiTietHoaDons = hd.getListChiTietHoaDon();
+				for (ChiTietHoaDon ct : lChiTietHoaDons) {
+					Thuoc th = thuoc_DAO.getThuocByID(ct.getMaThuoc().getMaThuoc());
+					Object[] row_product = { ct.getMaThuoc().getMaThuoc(), th.getTenThuoc(), th.getDonVi(),
+							ct.getSoLuongThuoc(), th.getGia(), ct.getThanhTien() };
+					model_product.addRow(row_product);
 
-			for (ChiTietHoaDon ct : lChiTietHoaDons) {
-				Thuoc th = thuoc_DAO.getThuocByID(ct.getMaThuoc().getMaThuoc());
-				Object[] row_product = { ct.getMaThuoc().getMaThuoc(), th.getTenThuoc(), th.getDonVi(),
-						ct.getSoLuongThuoc(), th.getGia(), ct.getThanhTien() };
-				model_product.addRow(row_product);
+				}
+				table_product.setModel(model_product);
+				((JTextField) object_sell[0][1]).setText(hd.getMaHD());
+				((JTextField) object_sell[1][1]).setText(formatTime(hd.getNgayTaoHoaDon()));
+				((JTextField) object_sell[2][1]).setText(formatTime(LocalDate.now()));
+				String tinhtrang = hd.getTinhTrang();
+				labelMoney.setText("Tổng tiền : " + hd.getTongTien());
 
-			}
-			table_product.setModel(model_product);
-			((JTextField) object_sell[0][1]).setText(hd.getMaHD());
-			((JTextField) object_sell[1][1]).setText(formatTime(hd.getNgayTaoHoaDon()));
-			((JTextField) object_sell[2][1]).setText(formatTime(LocalDate.now()));
-			String tinhtrang = hd.getTinhTrang();
-			labelMoney.setText("Tổng tiền : " + hd.getTongTien());
-
-			jtetJTextAreReason.setText(hd.getLyDo());
-			radioSelection(tinhtrang);
+				jtetJTextAreReason.setText(hd.getLyDo());
+				radioSelection(tinhtrang);
 //
 //			hienChungLocVaTim();
 
-			KhachHang kh = getKH(hd.getMaKh().getMaKH(), "");
-			((JTextField) object_customer[0][1]).setText(kh.getMaKH());
-			((JTextField) object_customer[1][1]).setText(kh.getTenKH());
-			((JTextField) object_customer[2][1]).setText(kh.getsDT());
-			((JTextField) object_customer[3][1]).setText(transGender(kh.isGioiTinh()));
-
+				KhachHang kh = getKH(hd.getMaKh().getMaKH(), "");
+				((JTextField) object_customer[0][1]).setText(kh.getMaKH());
+				((JTextField) object_customer[1][1]).setText(kh.getTenKH());
+				((JTextField) object_customer[2][1]).setText(kh.getsDT());
+				((JTextField) object_customer[3][1]).setText(transGender(kh.isGioiTinh()));
+			} else {
+				JOptionPane.showMessageDialog(null, "Hóa đơn mua thuốc phải đã quá 7 ngày từ ngày mua");
+			}
 		} else {
 			if (hd == null)
 				JOptionPane.showMessageDialog(null, "Không tìm thấy hóa đơn trong hệ thống");
@@ -402,8 +409,24 @@ public class DoiThuoc_UI {
 		if (((JRadioButton) trageStatus[2]).isSelected()) {
 			if (taoHoaDonDoiTHuoc()) {
 				thayDoiSoLuongThuoc();
-				xoaTrang();
+				HoaDon hd = hoaDon_DAO.getHoaDonByID(((JTextField) object_sell[0][1]).getText());
+				ArrayList<ChiTietHoaDon> listCtHD = new ArrayList<ChiTietHoaDon>();
+				for (int i = 0; i < table_change.getRowCount(); i++) {
+					HoaDon hdon = new HoaDon(((JTextField) object_sell[0][1]).getText());
+					Thuoc th = new Thuoc(table_change.getValueAt(i, 0).toString());
+
+					int soLuong = Integer.parseInt(table_change.getValueAt(i, 3).toString());
+
+					double thanhTien = Double.parseDouble(table_change.getValueAt(i, 5).toString());
+					ChiTietHoaDon ct = new ChiTietHoaDon(hdon, th, soLuong, thanhTien);
+
+					listCtHD.add(ct);
+				}
+				
+				
 				JOptionPane.showMessageDialog(null, "Tạo hóa đơn đổi thuốc thành công");
+				generateInvoiceDoiThuoc(hd, listCtHD, jtetJTextAreReason.getText());
+				xoaTrang();
 			}
 		} else if (((JRadioButton) trageStatus[0]).isSelected()) {
 			JOptionPane.showMessageDialog(null, "Không thể tạo hóa đơn bán ra");
@@ -460,17 +483,15 @@ public class DoiThuoc_UI {
 				if (e.getType() == TableModelEvent.UPDATE) {
 					int row = e.getFirstRow();
 					int column = e.getColumn();
-					
-						if (column == 3) {
-							Thuoc th = thuoc_DAO.getThuocByID(
-									table_product.getValueAt(table_product.getSelectedRow(), 0).toString());
-							int newQuantity = Integer.parseInt(model_product.getValueAt(row, column).toString());
-							model_product.setValueAt(th.getGia() * newQuantity, row, 5);
-							labelMoney.setText("Tổng tiền :" + tinhLaiTien() + "");
-						}
-					
-					
-					
+
+					if (column == 3) {
+						Thuoc th = thuoc_DAO
+								.getThuocByID(table_product.getValueAt(table_product.getSelectedRow(), 0).toString());
+						int newQuantity = Integer.parseInt(model_product.getValueAt(row, column).toString());
+						model_product.setValueAt(th.getGia() * newQuantity, row, 5);
+						labelMoney.setText("Tổng tiền :" + tinhLaiTien() + "");
+					}
+
 				}
 
 			}
@@ -514,8 +535,9 @@ public class DoiThuoc_UI {
 			}
 
 			if (ctDao.upDateDoiTra(listCtHD)) {
+				
 				Boolean loaiHD = true;
-				hoaDon_DAO.themHoaDonVaoLoaiLyDo(loaiHD, "Đổi thuốc", textFind.getText(), jtetJTextAreReason.getText());
+				hoaDon_DAO.themHoaDonVaoLoaiLyDo(loaiHD, "Đổi thuốc",((JTextField) object_sell[0][1]).getText(), jtetJTextAreReason.getText());
 			} else {
 				System.out.println("loi");
 			}
