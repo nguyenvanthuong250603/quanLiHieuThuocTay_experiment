@@ -83,7 +83,7 @@ public class Generate_All {
 	private static NhanVien_DAO nvDao = new NhanVien_DAO();
 	private static ChiTietHoaDon_DAO cTietHoaDon_DAO = new ChiTietHoaDon_DAO();
 	private static Thuoc_DAO thuoc_DAO = new Thuoc_DAO();
-
+	
 	public static void generateInvoice(HoaDon hd, double tongTien, double khachDua, String khuyenMai, double result) {
 		// Tạo một đối tượng Document
 		Document document = new Document();
@@ -218,6 +218,17 @@ public class Generate_All {
 			}
 
 			Desktop.getDesktop().open(tempFile);
+			new Thread(() -> {
+				try {
+					// Wait for a short while to ensure the file is opened
+					Thread.sleep(1000); // Wait for 5 seconds
+					if (tempFile.exists()) {
+						tempFile.delete();
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}).start();
 		} catch (DocumentException | IOException e) {
 			e.printStackTrace();
 		}
@@ -729,7 +740,7 @@ public class Generate_All {
 				}
 
 				try (Workbook workbook = new XSSFWorkbook()) {
-					Sheet sheet = workbook.createSheet("Danh sách thuốc");
+					Sheet sheet = workbook.createSheet("Danh sách khách hàng");
 
 					Row headerRow = sheet.createRow(0);
 					String[] headers = { "Mã khách hàng", "Tên khách hàng ", "Điểm tích lũy", "Xếp hạng",
@@ -750,6 +761,63 @@ public class Generate_All {
 						row.createCell(4).setCellValue(kh.getsDT());
 						row.createCell(5).setCellValue(kh.getDiaCHi());
 
+					}
+
+					// Ghi workbook vào file
+					String excelFilePath = filePath + ".xlsx";
+					try (FileOutputStream fileOut = new FileOutputStream(excelFilePath)) {
+						workbook.write(fileOut);
+
+						Desktop.getDesktop().open(new File(excelFilePath));
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static void writeToExcelHoaDon(ArrayList<HoaDon> listKhachHang) {
+		JFileChooser fileChooser = new JFileChooser() {
+			@Override
+			protected JDialog createDialog(Component parent) throws HeadlessException {
+				JDialog dialog = super.createDialog(parent);
+				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+				return dialog;
+			}
+		};
+		fileChooser.setDialogTitle("Nhập tên file");
+		int userSelection = fileChooser.showSaveDialog(null);
+
+		if (userSelection == JFileChooser.APPROVE_OPTION) {
+			try {
+
+				String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+
+				if (listKhachHang.isEmpty()) {
+					return;
+				}
+
+				try (Workbook workbook = new XSSFWorkbook()) {
+					Sheet sheet = workbook.createSheet("Danh sách Hóa đơn");
+
+					Row headerRow = sheet.createRow(0);
+					String[] headers =  { "Mã Hóa Đơn", "Nhân viên", "Mã khách hàng", "Ngày mua", "Tổng tiền" };
+					for (int i = 0; i < headers.length; i++) {
+						Cell cell = headerRow.createCell(i);
+						cell.setCellValue(headers[i]);
+					}
+
+					int rowNum = 1;
+					for (HoaDon kh : listKhachHang) {
+						Row row = sheet.createRow(rowNum++);
+						NhanVien nv = nvDao.getNhanVienFindByID(kh.getMaNV().getMaNV());
+						row.createCell(0).setCellValue(kh.getMaHD());
+						row.createCell(1).setCellValue(nv.getHoTen());
+						row.createCell(2).setCellValue(kh.getMaKh().getMaKH());
+						row.createCell(3).setCellValue(formatTime(kh.getNgayTaoHoaDon()));
+						row.createCell(4).setCellValue(kh.getTongTien());
+						
 					}
 
 					// Ghi workbook vào file
@@ -1021,13 +1089,12 @@ public class Generate_All {
 	}
 
 	public static LocalDate getDateJDateChoor(Object object) {
-		
-		if(object!=null){
-		JDateChooser date = (JDateChooser) object;
-		
-		return date.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		}
-		else {
+
+		if (object != null) {
+			JDateChooser date = (JDateChooser) object;
+
+			return date.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		} else {
 			return null;
 		}
 	}

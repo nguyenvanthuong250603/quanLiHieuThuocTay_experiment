@@ -849,8 +849,16 @@ public class BanThuocKeDonMoi_UI {
 			} else if (nameButton.equals("Xử lí hóa đơn tạm")) {
 
 				hoaDonLuuTam.getHoaDonLuuTam(jtextMaKH, object_custommer, object_sell, table);
-				cb.setSelected(true);
-				hidden(true);
+				new Thread(() -> {
+					try {
+						// Wait for a short while to ensure the file is opened
+						Thread.sleep(3000); // Wait for 5 seconds
+						cb.setSelected(true);
+						hidden(true);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+				}).start();
 
 			} else if (nameButton.equals("Lưu tạm")) {
 				luuTamHoaDON();

@@ -84,7 +84,9 @@ public class BanThuocKeLaiDon_UI {
 		this.maNhanVien = maNV;
 		hidden(false);
 		handleActionCheckbox();
-
+	
+		
+		
 		ArrayList<HoaDon> hDons = hoaDon_DAO.getHoaDons();
 		hienBangDuLieu(hDons);
 		enterTimKhach();
@@ -225,7 +227,7 @@ public class BanThuocKeLaiDon_UI {
 	public JPanel findID() {
 		JPanel find = new JPanel();
 		createTitle(find, "Tìm kiếm hóa đơn");
-		find.setLayout(new GridLayout(2, 1, 5, 5));
+		find.setLayout(new GridLayout(1, 1, 5, 5));
 
 		JPanel jpanelTim = new JPanel();
 		jpanelTim.setLayout(new BorderLayout());
@@ -234,27 +236,12 @@ public class BanThuocKeLaiDon_UI {
 
 		jpanelTim.add(createButtonBanThuocKeLaiDon("Tìm", ""), BorderLayout.EAST);
 
-		JPanel jpanelLoc = new JPanel(new BorderLayout());
+		
 		JPanel jpanelLocChinhSize = new JPanel();
 		jpanelLocChinhSize.setLayout(new BoxLayout(jpanelLocChinhSize, BoxLayout.X_AXIS));
-		String[] optionHoaDon = { "", "Hóa đơn bán hàng", "Hóa đơn bán lẻ" };
-		Object[][] trage = { { "Số điện thoại", new JTextField(10) },
-				{ "Loại hóa đơn", new JComboBox<String>(optionHoaDon) } };
-		object_find = trage;
-		for (Object[] objects : trage) {
-			if (objects[1] instanceof JTextField) {
-				jpanelLocChinhSize.add(createNameAndTextField((JTextField) objects[1], objects[0].toString()));
-			} else {
-				jpanelLocChinhSize.add(createJcombobox(objects[0].toString(), (JComboBox) objects[1]));
-			}
-			jpanelLocChinhSize.add(Box.createHorizontalStrut(5));
-		}
-
-		jpanelLoc.add(jpanelLocChinhSize, BorderLayout.CENTER);
-		jpanelLoc.add(createButtonBanThuocKeLaiDon("Lọc", ""), BorderLayout.EAST);
-
+		
 		find.add(jpanelTim);
-		find.add(jpanelLoc);
+	
 
 		return find;
 	}
@@ -379,6 +366,10 @@ public class BanThuocKeLaiDon_UI {
 				if(!maKH.equals("")) {
 					cb.setSelected(true);
 					hidden(true);
+				}
+				else {
+					cb.setSelected(false);
+					hidden(false);
 				}
 
 			}
@@ -672,7 +663,7 @@ public class BanThuocKeLaiDon_UI {
 
 	public void xoaThuoc() {
 		int index = table_product.getSelectedRow();
-		if (index > 0) {
+		if (index > -1) {
 			int recomment = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa thuốc khỏi đơn thuốc đang tạo",
 					"Lưu ý", JOptionPane.YES_NO_OPTION);
 			if (recomment == JOptionPane.YES_OPTION) {
@@ -848,8 +839,7 @@ public class BanThuocKeLaiDon_UI {
 				xoaTrang();
 			} else if (nameButton.equals("Tìm")) {
 				timHoaDon();
-			} else if (nameButton.equals("Lọc")) {
-				timHoaDonTheoSoDT();
+			
 			} else if (nameButton.equals("") && pathIcon.equals("gift\\add.png")) {
 				timKhach.getTimKhach(jtextMaKH, (JTextField) object_custommer[0][1],
 						(JTextField) object_custommer[1][1], (JTextField) object_custommer[2][1],

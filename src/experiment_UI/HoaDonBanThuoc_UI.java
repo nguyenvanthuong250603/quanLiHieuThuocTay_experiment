@@ -10,10 +10,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -50,7 +53,7 @@ public class HoaDonBanThuoc_UI {
 	private HoaDon_DAO hoaDon_DAO;
 	private ChiTietHoaDon_DAO chiTietHoaDon_DAO = new ChiTietHoaDon_DAO();
 	private Thuoc_DAO thuoc_DAO = new Thuoc_DAO();
-	private KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
+	public KhachHang_DAO khachHang_DAO = new KhachHang_DAO();
 
 	public JPanel getHoaDon(HoaDon_DAO hoaDon_DAO) {
 		JPanel hd = new JPanel(new BorderLayout());
@@ -336,7 +339,12 @@ public class HoaDonBanThuoc_UI {
 		String maHD = table.getValueAt(table.getSelectedRow(), 0).toString();
 		HoaDon hd = hoaDon_DAO.getHoaDonByID(maHD);
 		if (hd.getMaKh().getMaKH() == null) {
-			generateInvoiceBanLe(hd, hd.getTongTien(), 0, 0);
+			int recomment = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn in lại hóa đơn này không ?", "Lưu ý",
+					JOptionPane.YES_NO_OPTION);
+			if (recomment == JOptionPane.YES_OPTION) {
+
+				generateInvoiceBanLe(hd, hd.getTongTien(), 0, 0);
+			}
 		} else {
 			KhachHang kh = khachHang_DAO.getKhachHangByID(table.getValueAt(table.getSelectedRow(), 2).toString(), "");
 			String xh = kh.getXepHang();
@@ -352,66 +360,226 @@ public class HoaDonBanThuoc_UI {
 			} else if (xh.equals("Kim cương")) {
 				kmString = "4.5%";
 			}
-			generateInvoice(hd, hd.getTongTien(), 0, kmString, 0);
+			int recomment = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn in lại hóa đơn này không ?", "Lưu ý",
+					JOptionPane.YES_NO_OPTION);
+			if (recomment == JOptionPane.YES_OPTION) {
+
+				generateInvoice(hd, hd.getTongTien(), 0, kmString, 0);
+			}
 		}
 	}
 
 	public void locNangCao() {
-
+		String sdt = getValueStringInJTextField(object_search[3][1]);
 		String doanhThu = getValueInComboBox((JComboBox) object_search[4][1]);
+		String loaiHoaDon = getValueInComboBox((JComboBox) object_search[5][1]);
 		ArrayList<HoaDon> lHoaDons = new ArrayList<HoaDon>();
-		if (!doanhThu.equals("")) {
-			LocalDate ngayBatDau =null;
-			LocalDate ngayKetThuc =null;
-			if(((JDateChooser) object_search[1][1]).getDate()!=null&&((JDateChooser) object_search[2][1]).getDate()!=null){
-			ngayBatDau =((JDateChooser) object_search[1][1]).getDate().toInstant().atZone(ZoneId.systemDefault())
-					.toLocalDate();
-			 ngayKetThuc =((JDateChooser) object_search[2][1]).getDate().toInstant().atZone(ZoneId.systemDefault())
-					.toLocalDate();
-			}
-		
-			String sdt = getValueStringInJTextField(object_search[3][1]);
-			String loaiHd =getValueInComboBox((JComboBox)object_search[5][1]);
-			if (doanhThu.equals("Dưới 100k")) {
-				lHoaDons = hoaDon_DAO.getHoaDonDanhSachThongKe(0, 100000);
-			} else if (doanhThu.equals("Từ 100 - 500k")) {
-				lHoaDons = hoaDon_DAO.getHoaDonDanhSachThongKe(100000, 500000);
-			} else if (doanhThu.equals("500k-1 triệu")) {
-				lHoaDons = hoaDon_DAO.getHoaDonDanhSachThongKe(500000, 1000000);
-			} else if (doanhThu.equals("1 triệu trở lên")) {
-				lHoaDons = hoaDon_DAO.getHoaDonDanhSachThongKe(1000000, 10000000);
-			}
+		if (doanhThu.equals("Dưới 100k")) {
+			lHoaDons = hoaDon_DAO.getHoaDonDanhSachThongKe(0, 100000);
+		} else if (doanhThu.equals("Từ 100 - 500k")) {
+			lHoaDons = hoaDon_DAO.getHoaDonDanhSachThongKe(100000, 500000);
+		} else if (doanhThu.equals("500k-1 triệu")) {
+			lHoaDons = hoaDon_DAO.getHoaDonDanhSachThongKe(500000, 1000000);
+		} else if (doanhThu.equals("1 triệu trở lên")) {
+			lHoaDons = hoaDon_DAO.getHoaDonDanhSachThongKe(1000000, 10000000);
+		}
 
-			ArrayList<HoaDon> hd = new ArrayList<HoaDon>();
+		if (((JDateChooser) object_search[1][1]).getDate() == null
+				&& ((JDateChooser) object_search[1][1]).getDate() == null) {
+			if (loaiHoaDon.equals("")) {
+				if (sdt.equals("") && !doanhThu.equals("")) {
+					hienBangHoaDonByLoc(lHoaDons);
+				} else if (!sdt.equals("") && !doanhThu.equals("")) {
+					ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
 
-			for (HoaDon hoaDon : lHoaDons) {
-				KhachHang kh = null;
-				if (hoaDon.getMaKh().getMaKH() != null) {
-					kh = khachHang_DAO.getKhachHangByID(hoaDon.getMaKh().getMaKH(), "");
-					
+					if (doanhThu.equals("Dưới 100k")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachSDT(sdt, 0, 100000);
+					} else if (doanhThu.equals("Từ 100 - 500k")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachSDT(sdt, 100000, 500000);
+					} else if (doanhThu.equals("500k-1 triệu")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachSDT(sdt, 500000, 1000000);
+					} else if (doanhThu.equals("1 triệu trở lên")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachSDT(sdt, 1000000, 10000000);
+					}
+
+					hienBangHoaDonByLoc(lhd);
+				} else if (!sdt.equals("") && doanhThu.equals("")) {
+					ArrayList<HoaDon> lhd = hoaDon_DAO.getHoaDonDanhSachSDT(sdt, 0, 1000000000);
+					if (lhd.size() > 0)
+						hienBangHoaDonByLoc(lhd);
+					else {
+						JOptionPane.showConfirmDialog(null, "Không tìm thấy hóa đơn theo số điện thoại");
+					}
+
 				}
-				if (!sdt.equals("") && ngayBatDau != null && ngayKetThuc != null&&loaiHd.equals("")) {
-					if ( kh!=null&&kh.getsDT().equals(sdt) && hoaDon.getNgayTaoHoaDon().isAfter(ngayBatDau)
-							&& hoaDon.getNgayTaoHoaDon().isBefore(ngayKetThuc))
-						hd.add(hoaDon);
-				} else if (kh!=null&&!sdt.equals("") && ngayBatDau == null && kh.getsDT().equals(sdt)&&loaiHd.equals("")) {
-					hd.add(hoaDon);
-				} else if (sdt.equals("") && hoaDon.getNgayTaoHoaDon().isAfter(ngayBatDau)
-						&& hoaDon.getNgayTaoHoaDon().isBefore(ngayKetThuc)&&loaiHd.equals("")) {
-					hd.add(hoaDon);
-				}else if (loaiHd.equals("Hoá đơn bán lẻ")&&!sdt.equals("")) {
-					JOptionPane.showMessageDialog(null, "Hóa đơn có số điện thoại là hóa đơn bán hàng không thể lọc cùng lúc");
-				} else if(sdt.equals("")&&!loaiHd.equals("")){
-					
+
+			} else if (loaiHoaDon.equals("Hóa đơn bán lẻ") && !sdt.equals("")) {
+				JOptionPane.showMessageDialog(null, "Hóa đơn có số điện thoại phải là hóa đơn bán hàng");
+			} else if (sdt.equals("")) {
+				if (!doanhThu.equals("") && !loaiHoaDon.equals("")) {
+					ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
+					int loai = loaiHoaDon.equals("Hóa đơn bán hàng") ? 1 : 0;
+					if (doanhThu.equals("Dưới 100k")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachDoanhThuAndLoaiHd(loai, 0, 100000);
+					} else if (doanhThu.equals("Từ 100 - 500k")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachDoanhThuAndLoaiHd(loai, 100000, 500000);
+					} else if (doanhThu.equals("500k-1 triệu")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachDoanhThuAndLoaiHd(loai, 500000, 1000000);
+					} else if (doanhThu.equals("1 triệu trở lên")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachDoanhThuAndLoaiHd(loai, 1000000, 10000000);
+					}
+					hienBangHoaDonByLoc(lhd);
+				}
+				if (doanhThu.equals("") && !loaiHoaDon.equals("")) {
+					ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
+					int loai = loaiHoaDon.equals("Hóa đơn bán hàng") ? 1 : 0;
+					lhd = hoaDon_DAO.getHoaDonDanhSachByLoaiHd(loai);
+					System.err.println("oj");
+					hienBangHoaDonByLoc(lhd);
 				}
 			}
-			model.setRowCount(0);
-			model_product.setRowCount(0);
-			hienBangDuLieu(hd);
 
+		} else if (((JDateChooser) object_search[1][1]).getDate() != null
+				&& ((JDateChooser) object_search[1][1]).getDate() != null) {
+			LocalDate ngayBD = getDateJDateChoor(object_search[1][1]);
+			LocalDate ngayKT = getDateJDateChoor(object_search[2][1]);
+			if (ngayKT.isBefore(ngayBD)) {
+				JOptionPane.showMessageDialog(null, "Ngày kết thúc phải sau ngày bắt đầu");
+			}
+			if (sdt.equals("") && doanhThu.equals("") && loaiHoaDon.equals("")) {
+				ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
+				lhd = hoaDon_DAO.getHoaDonDanhSachByNgay(ngayBD, ngayKT);
+				hienBangHoaDonByLoc(lhd);
+			} else if (sdt.equals("")) {
+				if (!doanhThu.equals("") && !loaiHoaDon.equals("")) {
+					ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
+					int loai = loaiHoaDon.equals("Hóa đơn bán hàng") ? 1 : 0;
+					if (doanhThu.equals("Dưới 100k")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachByNgayAnddoanhThuAndLoaiHD(loai, ngayBD, ngayKT, 0, 100000);
+					} else if (doanhThu.equals("Từ 100 - 500k")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachByNgayAnddoanhThuAndLoaiHD(loai, ngayBD, ngayKT, 100000,
+								500000);
+					} else if (doanhThu.equals("500k-1 triệu")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachByNgayAnddoanhThuAndLoaiHD(loai, ngayBD, ngayKT, 500000,
+								1000000);
+					} else if (doanhThu.equals("1 triệu trở lên")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachByNgayAnddoanhThuAndLoaiHD(loai, ngayBD, ngayKT, 1000000,
+								10000000);
+					}
+					hienBangHoaDonByLoc(lhd);
+
+				} else if (!doanhThu.equals("") && loaiHoaDon.equals("")) {
+					ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
+
+					if (doanhThu.equals("Dưới 100k")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachByNgayAnddoanhThu(ngayBD, ngayKT, 0, 100000);
+					} else if (doanhThu.equals("Từ 100 - 500k")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachByNgayAnddoanhThu(ngayBD, ngayKT, 100000, 500000);
+					} else if (doanhThu.equals("500k-1 triệu")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachByNgayAnddoanhThu(ngayBD, ngayKT, 500000, 1000000);
+					} else if (doanhThu.equals("1 triệu trở lên")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachByNgayAnddoanhThu(ngayBD, ngayKT, 1000000, 10000000);
+					}
+					hienBangHoaDonByLoc(lhd);
+				} else if (doanhThu.equals("") && !loaiHoaDon.equals("")) {
+					ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
+					int loai = loaiHoaDon.equals("Hóa đơn bán hàng") ? 1 : 0;
+					lhd = hoaDon_DAO.getHoaDonDanhSachByNgayAndLoaiHD(loai, ngayBD, ngayKT);
+					hienBangHoaDonByLoc(lhd);
+				}
+			} else if (loaiHoaDon.equals("")) {
+				if (!sdt.equals("") && !doanhThu.equals("")) {
+					ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
+					if (doanhThu.equals("Dưới 100k")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachByNgayAndSDTandDoanhThu(sdt, ngayBD, ngayKT, 0, 100000);
+					} else if (doanhThu.equals("Từ 100 - 500k")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachByNgayAndSDTandDoanhThu(sdt, ngayBD, ngayKT, 100000, 500000);
+					} else if (doanhThu.equals("500k-1 triệu")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachByNgayAndSDTandDoanhThu(sdt, ngayBD, ngayKT, 500000, 1000000);
+					} else if (doanhThu.equals("1 triệu trở lên")) {
+						lhd = hoaDon_DAO.getHoaDonDanhSachByNgayAndSDTandDoanhThu(sdt, ngayBD, ngayKT, 1000000,
+								10000000);
+					}
+					hienBangHoaDonByLoc(lhd);
+				}
+			}
+		}
+
+	}
+
+	public void hienBangHoaDonByLoc(ArrayList<HoaDon> lhd) {
+		model.setRowCount(0);
+		model_product.setRowCount(0);
+		hienBangDuLieu(lhd);
+	}
+
+	public void enterAcction() {
+		ActionListener enter3 = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+
+					timHoaDon();
+
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+
+			}
+		};
+		((JTextField) object_search[0][0]).addActionListener(enter3);
+	}
+
+	public void timHoaDon() {
+		String ma = ((JTextField) object_search[0][0]).getText();
+		HoaDon hd = hoaDon_DAO.getHoaDonByID(ma);
+		model.setRowCount(0);
+		model_product.setRowCount(0);
+		if (hd != null) {
+			NhanVien nv = getNV(hd.getMaNV().getMaNV());
+			Object[] row = { hd.getMaHD(), nv.getHoTen(), hd.getMaKh().getMaKH(), formatTime(hd.getNgayTaoHoaDon()),
+					hd.getTongTien() };
+			model.addRow(row);
+			table.setModel(model);
+
+			ArrayList<ChiTietHoaDon> lChiTietHoaDons = hd.getListChiTietHoaDon();
+			for (ChiTietHoaDon ct : lChiTietHoaDons) {
+				Thuoc th = thuoc_DAO.getThuocByID(ct.getMaThuoc().getMaThuoc());
+				Object[] row_product = { ct.getMaThuoc().getMaThuoc(), th.getTenThuoc(), th.getDonVi(),
+						ct.getSoLuongThuoc(), th.getGia(), ct.getThanhTien() };
+				model_product.addRow(row_product);
+
+			}
+			table_product.setModel(model_product);
+			table.setRowSelectionInterval(0, 0);
+			if (hd.getMaKh().getMaKH() != null) {
+				KhachHang kh = getKH(hd.getMaKh().getMaKH(), "");
+				((JTextField) object_kh[0][0]).setText(kh.getTenKH());
+				((JTextField) object_kh[1][0]).setText(kh.getTenKH());
+				((JTextField) object_kh[2][0]).setText(hd.getTongTien() + "");
+
+			}
 		} else {
-			lHoaDons = hoaDon_DAO.getHoaDons();
-			
+			JOptionPane.showMessageDialog(null, "Không tìm thấy hóa đơn trong hệ thống");
+			ArrayList<HoaDon> hDons = hoaDon_DAO.getHoaDons();
+			hienBangDuLieu(hDons);
+		}
+
+	}
+
+	public void xuatDanhSach() {
+		ArrayList<HoaDon> listHoaDon = new ArrayList<HoaDon>();
+		for (int i = 0; i < table.getRowCount(); i++) {
+			String maHD = table.getValueAt(i, 0).toString();
+			HoaDon hd = hoaDon_DAO.getHoaDonByID(maHD);
+			listHoaDon.add(hd);
+		}
+		int recomment = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn in danh sách hóa đơn hay không ?",
+				"Lưu ý", JOptionPane.YES_NO_OPTION);
+		if (recomment == JOptionPane.YES_OPTION) {
+
+			writeToExcelHoaDon(listHoaDon);
 		}
 	}
 
@@ -425,7 +593,11 @@ public class HoaDonBanThuoc_UI {
 				inLaiHoaDon();
 			} else if (nameBtn.equals("Lọc")) {
 				locNangCao();
-			} else {
+			} else if (nameBtn.equals("Xuất danh sách")) {
+				xuatDanhSach();
+			}
+
+			else {
 				System.out.println(nameBtn);
 			}
 		});

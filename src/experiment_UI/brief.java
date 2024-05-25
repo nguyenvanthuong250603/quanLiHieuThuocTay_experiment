@@ -13,5 +13,7 @@ public class Brief {
 	public final static String ĐX = "Đăng Xuất";
 	public final static String HDM = "Tạo đơn mới";
 	public final static String KLD = "Kê lại đơn";
-	
+	public final static String TKNV = "Thông kê nhân viên";
+	public final static String TKDT = "Thông kê doanh thu";
+	public final static String KHAC = "Khác";
 }

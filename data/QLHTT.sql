@@ -117,7 +117,7 @@ SELECT *FROM NhanVien
 SELECT *FROM TaiKhoan
 SELECT *FROM NhaSanXuat
 SELECT *FROM Thuoc WHERE MaThuoc = 'TH04130035'
-SELECT *FROM HoaDon 
+SELECT *FROM HoaDon where LoaiHoaDon = 0
 SELECT *FROM Thuoc WHERE MaThuoc = 'TH04050241';
 
 SELECT COUNT(*) AS SoLuongHoaDon FROM HoaDon WHERE NgayTaoHoaDon > '2024-03-15';
@@ -127,8 +127,12 @@ SELECT * FROM HoaDon WHERE MONTH(NgayTaoHoaDon) = 3 AND YEAR(NgayTaoHoaDon) = 20
 ------------------------------------
 INSERT INTO HoaDon VALUES (N'HĐ1321312',N'NV12061111','KH1205798',N'Nguyễn Thị Đào',N'Tiền mặt','2024-03-1',1,N'Bán ra','200000','')
 
+
 delete KhachHang where MaKH = 'KH16047464'
 
+delete ChiTietHoaDon where MaHD = 'HĐ120511119820'
+delete HoaDon Where MaHD = 'HĐ120511119820'
+select *from HoaDon
 
 GO
 

@@ -813,7 +813,12 @@ public class QuanLyThuoc_UI {
 				Thuoc th = list_Thuoc.getThuocByID(table.getValueAt(i, 0).toString());
 				list_Xuat.add(th);
 			}
-			writeToExcelWithFileChooser(list_Xuat);
+			int recomment = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn in danh sách thuốc hay không ?","Lưu ý",JOptionPane.YES_NO_OPTION);
+			if (recomment==JOptionPane.YES_OPTION) {
+				
+				
+				writeToExcelWithFileChooser(list_Xuat);
+			}
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "Bạn cần có ít nhất 1 loại thuốc để in danh sách");

@@ -297,7 +297,8 @@ public class DoiThuoc_UI {
 		xoaTrang();
 		if (hd != null && hd.getMaKh().getMaKH() != null) {
 			LocalDate ngayTao = hd.getNgayTaoHoaDon();
-			Long tinhNgay = ChronoUnit.DAYS.between(LocalDate.now(), ngayTao);
+			Long tinhNgay = ChronoUnit.DAYS.between( ngayTao,LocalDate.now());
+			System.out.println(tinhNgay);
 			if (tinhNgay <= 7) {
 				String tinhTrang = hd.getTinhTrang();
 				radioSelection(tinhTrang);
@@ -328,7 +329,7 @@ public class DoiThuoc_UI {
 				((JTextField) object_customer[2][1]).setText(kh.getsDT());
 				((JTextField) object_customer[3][1]).setText(transGender(kh.isGioiTinh()));
 			} else {
-				JOptionPane.showMessageDialog(null, "Hóa đơn mua thuốc phải đã quá 7 ngày từ ngày mua");
+				JOptionPane.showMessageDialog(null, "Hóa đơn mua thuốc đã quá hạn để đổi ");
 			}
 		} else {
 			if (hd == null)
@@ -452,13 +453,11 @@ public class DoiThuoc_UI {
 				HoaDon hd = hoaDon_DAO.getHoaDonByID(((JTextField) object_sell[0][1]).getText());
 				String maHD = hd.getMaHD();
 				String maNV = maNHanVien;
-//				String maKH = table.getValueAt(table.getSelectedRow(), 2) == null ? ""
-//						: table.getValueAt(table.getSelectedRow(), 2).toString();
+
 				String maKH = hd.getMaKh().getMaKH();
-//				DateTimeFormatter dFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//				LocalDate ngayBan = LocalDate.parse(table.getValueAt(table.getSelectedRow(), 3).toString(), dFormatter);
+
 				LocalDate ngayBan = hd.getNgayTaoHoaDon();
-				double tongTien = Double.parseDouble(labelMoney.getText());
+				double tongTien = Double.parseDouble(tinhLaiTien()+"");
 				String lyDo = jtetJTextAreReason.getText();
 				KhachHang kh = getKH(maKH, "");
 				HoaDon hoaDon = new HoaDon(maHD, new NhanVien(maNV), new KhachHang(maKH), kh.getTenKH(), ngayBan,

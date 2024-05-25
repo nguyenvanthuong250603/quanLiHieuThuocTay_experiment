@@ -82,7 +82,41 @@ public class NhanVien_DAO {
 		}
 		return nv;
 	}
+	public NhanVien getNhanVienFindByName(String name) {
+		NhanVien nv = new NhanVien();
+		Connection con = connectDataBase.ConnectionData.accessDataBase();
+		PreparedStatement p = null;
+		try {
+			p = con.prepareStatement("SELECT *FROM NhanVien WHERE HoTen= ?");
+			p.setString(1, name);
+			try (ResultSet rs = p.executeQuery()) {
+				while (rs.next()) {
+					int change = rs.getInt(3);
+					Boolean gender = change == 1 ? true : false;
+					Date date = rs.getDate("ngaySinh");
+					LocalDate ns = date.toLocalDate();
+					Date dateNVL = rs.getDate("ngayVaoLam");
+					LocalDate nvl = dateNVL.toLocalDate();
+					nv = new NhanVien(rs.getString(1), rs.getString(2), gender, ns, rs.getInt(5), rs.getString(6),
+							rs.getString(7), rs.getString(8), rs.getString(9), rs.getString(10), nvl, rs.getString(12));
+				}
 
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return nv;
+	}
 	public boolean themNhanVien(NhanVien nv) {
 		Connection con = connectDataBase.ConnectionData.accessDataBase();
 		PreparedStatement p = null;

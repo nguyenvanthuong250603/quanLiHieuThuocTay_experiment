@@ -210,7 +210,21 @@ public class HoaDonLuuTam_UI {
 				tong += Double.parseDouble(table_product.getValueAt(i, 5).toString());
 			}
 			((JTextField) obj_sell[2][1]).setText(tong + "");
+			
+			String xh = kh.getXepHang();
 
+			if (xh.equals("Đồng")) {
+				((JLabel) obj_sell[3][1]).setText("0%");
+			} else if (xh.equals("Bạc")) {
+				((JLabel) obj_sell[3][1]).setText("1%");
+			} else if (xh.equals("Vàng")) {
+				((JLabel) obj_sell[3][1]).setText("2%");
+			} else if (xh.equals("Bạch kim")) {
+				((JLabel) obj_sell[3][1]).setText("3%");
+			} else if (xh.equals("Kim cương")) {
+				((JLabel) obj_sell[3][1]).setText("4.5%");
+			}
+			
 			((JComboBox) obj_sell[4][1]).setSelectedItem(hd.getHinhThucThanhToan());
 			((JLabel) obj_sell[0][1]).setText(hd.getMaHD());
 			table_trage.setModel(model_product);
