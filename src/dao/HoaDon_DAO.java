@@ -752,4 +752,51 @@ public class HoaDon_DAO {
 
 		return lhd;
 	}
+	public ArrayList<HoaDon> getHoaDonThongKeByNhanVien(String maNhanVien) {
+	    ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
+	    Connection con = null;
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+	    try {
+	        con = accessDataBase();
+	        String query = "SELECT * FROM HoaDon WHERE MaHD LIKE ?";
+	        ps = con.prepareStatement(query);
+	        ps.setString(1, "%" + maNhanVien + "%");
+	        rs = ps.executeQuery();
+	        while (rs.next()) {
+	            HoaDon hd = new HoaDon(rs.getString(1), 
+	                                   new NhanVien(rs.getString(2)), 
+	                                   new KhachHang(rs.getString(3)),
+	                                   rs.getString(4), 
+	                                   rs.getString(5), 
+	                                   chageTimeSQL(rs.getDate(6)),
+	                                   changeLoaiThuocToSQLFromUI(rs.getInt(7)), 
+	                                   rs.getString(8), 
+	                                   rs.getDouble(9), 
+	                                   rs.getString(10),
+	                                   lcthd.getcChiTietHoaDons(rs.getString(1)));
+
+	            lhd.add(hd);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (rs != null) {
+	                rs.close();
+	            }
+	            if (ps != null) {
+	                ps.close();
+	            }
+	            if (con != null) {
+	                con.close();
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    return lhd;
+	}
+
+	
 }

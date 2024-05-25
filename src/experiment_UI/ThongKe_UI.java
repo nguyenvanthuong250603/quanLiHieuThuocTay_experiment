@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -41,7 +42,7 @@ public class ThongKe_UI {
 
 	public JPanel getThongKe() {
 		JPanel thongKe = new JPanel(new BorderLayout());
-		createTiTlePage(thongKe, "BÁO CÁO THỐNG KÊ");
+		createTiTlePage(thongKe, "BÁO CÁO THỐNG KÊ NHÂN VIÊN");
 
 		thongKe.add(manageMent(), BorderLayout.CENTER);
 
@@ -59,8 +60,8 @@ public class ThongKe_UI {
 	public JPanel getNorth() {
 		JPanel north = new JPanel(new BorderLayout());
 		createTitle(north, "Thống kê");
-		String[] op = { "", "Hôm nay", "7 ngày gần nhất", "Tháng này" };
-		Object[][] trage = { { "Theo", new JComboBox(op) }, { "Từ ngày", new JDateChooser() },
+
+		Object[][] trage = { { "Mã nhân viên", new JTextField() }, { "Từ ngày", new JDateChooser() },
 				{ "Đến ngày", new JDateChooser() } };
 		obj = trage;
 		JPanel dia = new JPanel();
@@ -68,8 +69,8 @@ public class ThongKe_UI {
 			if (objects[1] instanceof Component) {
 				JPanel t = new JPanel(new BorderLayout());
 				t.add(sampleModel(objects[0].toString()), BorderLayout.WEST);
-				t.setBorder(new EmptyBorder(10, 10, 10, 10));
-				((Component) objects[1]).setPreferredSize(new Dimension(150, 40));
+				t.setBorder(new EmptyBorder(10, 5, 10, 5));
+				((Component) objects[1]).setPreferredSize(new Dimension(130, 40));
 				t.add((Component) objects[1], BorderLayout.CENTER);
 
 				dia.add(t);
@@ -81,6 +82,7 @@ public class ThongKe_UI {
 			dia.add(Box.createHorizontalStrut(10));
 		}
 		dia.add(buttonThongKe("Thống kê", ""));
+		dia.add(buttonThongKe("In thống kê", ""));
 		dia.add(buttonThongKe("", "gift\\reset.png"));
 		north.add(dia, BorderLayout.NORTH);
 
@@ -88,7 +90,7 @@ public class ThongKe_UI {
 		Object[][] trage2 = { { "Tổng hóa đơn", new JLabel() }, { "Doanh thu", new JLabel() },
 				{ "Hóa đơn bán hàng", new JLabel() }, { "Hóa đơn bán lẻ", new JLabel() },
 				{ "Hóa đơn bán ra", new JLabel() }, { "Hóa đơn hoàn trả", new JLabel() },
-				{ "Hóa đơn đổi thuốc", new JLabel() }, { "Hóa đơn kê lại đơn", new JLabel() } };
+				{ "Hóa đơn đổi thuốc", new JLabel() } };
 		obj2 = trage2;
 		for (Object[] objects : trage2) {
 			if (objects[1] instanceof JLabel) {
@@ -127,90 +129,26 @@ public class ThongKe_UI {
 	}
 
 	public void thongKe() {
-		String value = getValueInComboBox((JComboBox<String>) obj[0][1]);
 
 		// Tính số ngày giữa hai ngày
 //		long daysBetween = ChronoUnit.DAYS.between(date1, date2);
 		if (regex()) {
+			String value = getValueStringInJTextField(obj[0][1]);
+			String maGui = value.substring(6);
+
 			model.setRowCount(0);
-			ArrayList<HoaDon> lhd = hoaDon_DAO.getHoaDons();
+			ArrayList<HoaDon> lhd = hoaDon_DAO.getHoaDonThongKeByNhanVien(maGui);
 			double doanhThu = 0;
 			int hoaDonBanHang = 0;
 			int hoaDonBanLe = 0;
 			int hdbr = 0;
 			int hddt = 0;
 			int hdht = 0;
-			int kld = 0;
+
 			for (HoaDon hoaDon : lhd) {
-				LocalDate date = hoaDon.getNgayTaoHoaDon();
-				if (!value.equals("")) {
-					if (value.equals("Hôm nay")) {
-						if (date.isEqual(LocalDate.now())) {
-							hienBang(hoaDon);
-							doanhThu += hoaDon.getTongTien();
-							if (hoaDon.getTinhTrang().equals("Bán ra"))
-								hdbr += 1;
-							else if (hoaDon.getTinhTrang().equals("Hoàn trả"))
-								hdht += 1;
-							else if (hoaDon.getTinhTrang().equals("Đổi thuốc"))
-								hddt += 1;
-							else if (hoaDon.getTinhTrang().equals("Kê lại đơn"))
-								kld += 1;
-
-							if (hoaDon.getLoaiHoaDon() == true)
-								hoaDonBanHang += 1;
-							else
-								hoaDonBanLe += 1;
-
-						}
-					} else if (value.equals("7 ngày gần nhất")) {
-						LocalDate currentDate = LocalDate.now();
-						LocalDate sevenDaysAgo = currentDate.minusDays(7);
-						if (date.isBefore(currentDate) && date.isAfter(sevenDaysAgo)) {
-							hienBang(hoaDon);
-							doanhThu += hoaDon.getTongTien();
-							if (hoaDon.getTinhTrang().equals("Bán ra"))
-								hdbr += 1;
-							else if (hoaDon.getTinhTrang().equals("Hoàn trả"))
-								hdht += 1;
-							else if (hoaDon.getTinhTrang().equals("Đổi thuốc"))
-								hddt += 1;
-							else if (hoaDon.getTinhTrang().equals("Kê lại đơn"))
-								kld += 1;
-
-							if (hoaDon.getLoaiHoaDon() == true)
-								hoaDonBanHang += 1;
-							else
-								hoaDonBanLe += 1;
-						}
-					} else if (value.equals("Tháng này")) {
-						int month = LocalDate.now().getMonth().getValue();
-						if (date.getMonth().getValue() == month) {
-							hienBang(hoaDon);
-							doanhThu += hoaDon.getTongTien();
-							if (hoaDon.getTinhTrang().equals("Bán ra"))
-								hdbr += 1;
-							else if (hoaDon.getTinhTrang().equals("Hoàn trả"))
-								hdht += 1;
-							else if (hoaDon.getTinhTrang().equals("Đổi thuốc"))
-								hddt += 1;
-							else if (hoaDon.getTinhTrang().equals("Kê lại đơn"))
-								kld += 1;
-
-							if (hoaDon.getLoaiHoaDon() == true)
-								hoaDonBanHang += 1;
-							else
-								hoaDonBanLe += 1;
-						}
-					}
-				} else if (value.equals("")) {
-					LocalDate date1 = ((JDateChooser) obj[1][1]).getDate().toInstant().atZone(ZoneId.systemDefault())
-							.toLocalDate();
-
-					// Lấy ngày được chọn từ JDateChooser 2
-					LocalDate date2 = ((JDateChooser) obj[2][1]).getDate().toInstant().atZone(ZoneId.systemDefault())
-							.toLocalDate();
-					if (date.isAfter(date1) && date.isBefore(date2)) {
+				if (((JDateChooser) obj[1][1]).getDate() == null && ((JDateChooser) obj[2][1]).getDate() == null) {
+					LocalDate ngayDate = hoaDon.getNgayTaoHoaDon();
+					if (ngayDate.isEqual(LocalDate.now())) {
 						hienBang(hoaDon);
 						doanhThu += hoaDon.getTongTien();
 						if (hoaDon.getTinhTrang().equals("Bán ra"))
@@ -219,14 +157,33 @@ public class ThongKe_UI {
 							hdht += 1;
 						else if (hoaDon.getTinhTrang().equals("Đổi thuốc"))
 							hddt += 1;
-						else if (hoaDon.getTinhTrang().equals("Kê lại đơn"))
-							kld += 1;
-
 						if (hoaDon.getLoaiHoaDon() == true)
 							hoaDonBanHang += 1;
 						else
 							hoaDonBanLe += 1;
 					}
+
+				} else {
+					LocalDate date1 = ((JDateChooser) obj[1][1]).getDate().toInstant().atZone(ZoneId.systemDefault())
+							.toLocalDate();
+					LocalDate date2 = ((JDateChooser) obj[2][1]).getDate().toInstant().atZone(ZoneId.systemDefault())
+							.toLocalDate();
+					LocalDate ngayDate = hoaDon.getNgayTaoHoaDon();
+					if (date1.isBefore(ngayDate) && date2.isAfter(ngayDate)) {
+						hienBang(hoaDon);
+						doanhThu += hoaDon.getTongTien();
+						if (hoaDon.getTinhTrang().equals("Bán ra"))
+							hdbr += 1;
+						else if (hoaDon.getTinhTrang().equals("Hoàn trả"))
+							hdht += 1;
+						else if (hoaDon.getTinhTrang().equals("Đổi thuốc"))
+							hddt += 1;
+						if (hoaDon.getLoaiHoaDon() == true)
+							hoaDonBanHang += 1;
+						else
+							hoaDonBanLe += 1;
+					}
+
 				}
 			}
 			table.setModel(model);
@@ -238,7 +195,6 @@ public class ThongKe_UI {
 			((JLabel) obj2[4][1]).setText(hdbr + "");
 			((JLabel) obj2[5][1]).setText(hdht + "");
 			((JLabel) obj2[6][1]).setText(hddt + "");
-			((JLabel) obj2[7][1]).setText(kld + "");
 
 		}
 	}
@@ -262,23 +218,34 @@ public class ThongKe_UI {
 	}
 
 	public boolean regex() {
-		String value = getValueInComboBox((JComboBox<String>) obj[0][1]);
+		String value = getValueStringInJTextField(obj[0][1]);
 		JDateChooser date1 = ((JDateChooser) obj[1][1]);
 		// Lấy ngày được chọn từ JDateChooser 2
 		JDateChooser date2 = ((JDateChooser) obj[2][1]);
-		if (value.equals("") && date1.getDate() == null && date2.getDate() == null) {
-			JOptionPane.showMessageDialog(null, "Bạn chưa chọn mốc thời gian để thống kê");
+
+		if (value.equals("") && (date1.getDate() != null || date2.getDate() != null)) {
+			JOptionPane.showMessageDialog(null, "Bạn chưa nhập mã nhân viên để thống kê");
+			((JTextField) obj[0][1]).requestFocus();
 			return false;
 		}
-		if (!value.equals("") && (date1.getDate() != null || date2.getDate() != null)) {
-			JOptionPane.showMessageDialog(null, "Bạn chưa chỉ được chọn 1 trong 2 cách thống kê");
-			return false;
-		}
-		if(((date1.getDate() == null || date2.getDate() == null))&&value.equals("")) {
+		if (((date1.getDate() == null || date2.getDate() == null)) && value.equals("")) {
 			JOptionPane.showMessageDialog(null, "Bạn chưa chọn đủ mốc thống kê");
 			return false;
 		}
 		return true;
+	}
+
+	public void xuatThongKe() {
+		ArrayList<HoaDon> list = new ArrayList<HoaDon>();
+		for (int i = 0; i < table.getRowCount(); i++) {
+			String ma = table.getValueAt(i, 0).toString();
+			HoaDon hd = hoaDon_DAO.getHoaDonByID(ma);
+			list.add(hd);
+		}
+		String maNhanVien = getValueStringInJTextField(obj[0][1]);
+
+		generateInvoiceBaoCao(list, maNhanVien);
+
 	}
 
 	public JButton buttonThongKe(String nameBtn, String pathFile) {
@@ -289,6 +256,12 @@ public class ThongKe_UI {
 				thongKe();
 			} else if (nameBtn.equals("")) {
 				xoaTrang();
+
+			} else if (nameBtn.equals("In thống kê")) {
+				xuatThongKe();
+
+			} else  {
+				System.out.println(nameBtn);
 			}
 		});
 		return btn;

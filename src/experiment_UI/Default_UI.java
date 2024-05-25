@@ -52,6 +52,8 @@ public class Default_UI {
 	private JFrame jFrame;
 	private NhanVien_DAO nv_Dao = new NhanVien_DAO();
 	private HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
+	private NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
+	private String maNhanVien;
 	public Default_UI(JFrame jFrame, String MaNV) {
 		this.jFrame = jFrame;
 		jFrame.setTitle("Hiệu Thuốc Ánh Dương");
@@ -72,22 +74,21 @@ public class Default_UI {
 		container = new JPanel();
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
+		
 		container.add(createHoaDon(hoaDon_DAO), HĐBT);
 		container.add(createBanThuocKeLaiDon(MaNV), KLD);
 		container.add(createBanThuocKeDonMoi(MaNV), HDM);
 		container.add(createKhachHang(), KH);
 		container.add(createQuanLyThuoc(), T);
-		container.add(createThongKe(), TK);
+		container.add(createThongKe(), TKNV);
 		container.add(createNhanVien(), NV);
 		container.add(createDoiThuoc(MaNV), DT);
-		
-		
-		
 		container.add(createKhachHang(), KH);
 
 		
 		jFrame.add(sidebar, BorderLayout.WEST);
 		jFrame.add(container, BorderLayout.CENTER);
+		this.maNhanVien = MaNV;
 		jFrame.setResizable(false);
 		jFrame.setVisible(true);
 	}
@@ -114,7 +115,7 @@ public class Default_UI {
 			btn = new JButton();
 			btn.setPreferredSize(
 					new Dimension(compoment.getPreferredSize().width + 260, btn.getPreferredSize().height + 60));
-			if(nameButton.equals("Kê lại đơn")|| nameButton.equals("Tạo đơn mới")) {
+			if(nameButton.equals("Kê lại đơn")|| nameButton.equals("Tạo đơn mới")||nameButton.equals("nhân viên")||nameButton.equals("doanh thu")) {
 				lableicon.setBorder( new EmptyBorder(0, 20, 0, 0));
 			}
 			
@@ -185,7 +186,7 @@ public class Default_UI {
 							compoment.remove(i);
 						}
 					}
-					cardLayout.show(container, BT);
+//					cardLayout.show(container, BT);
 
 					break;
 				}
@@ -207,7 +208,29 @@ public class Default_UI {
 					break;
 				}
 				case TK: {
-					cardLayout.show(container,TK);
+					if (btn.isSelected()) {
+						btn.setIcon(new ImageIcon("gift//down.png"));
+									
+						JPanel r = new JPanel();
+						r.setLayout(new BoxLayout(r, BoxLayout.Y_AXIS));
+						JPanel v = createCompoment("gift\\upload.png", "nhân viên", "gift\\tknv.png", true);
+						JPanel o = createCompoment("gift\\upload.png", "doanh thu", "gift\\tkdt.png", true);
+			
+						Object[] xx = { v, o};
+						for (Object s : xx) {
+							r.add((Component) s);
+						}
+						compoment.add(r, BorderLayout.AFTER_LAST_LINE);
+
+					} else {
+
+						btn.setIcon(new ImageIcon("gift//upload.png"));
+						for (int i = 1; i < compoment.getComponentCount(); i++) {
+							compoment.remove(i);
+						}
+					}
+					
+
 					break;
 				}
 				case HDM :{
@@ -224,6 +247,10 @@ public class Default_UI {
 						jFrame.dispose();
 						new TaiKhoan_UI();
 					}
+					break;
+				}
+				case TKNV : {
+					cardLayout.show(container, TKNV);
 					break;
 				}
 				default:
@@ -252,8 +279,7 @@ public class Default_UI {
 		boxx.add(createCompoment("gift\\down.png", "Hóa Đơn", "gift\\bill.png", true));
 		boxx.add(createCompoment("gift\\upload.png", "Khách Hàng", "gift\\khachhang.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Nhân Viên", "gift\\nhanvien.png", true));
-		boxx.add(createCompoment("gift\\thuoc.png", "Thống Kê", "gift\\thongke.png", true));
-//		boxx.add(createCompoment("gift\\thuoc.png", "Kiểm toán", "gift\\hoadon.png", true));
+		boxx.add(createCompoment("gift\\thuoc.png", "Thống Kê", "gift\\thongke.png", false));
 		boxx.add(createCompoment("gift\\thuoc.png", "Đăng Xuất", "gift\\logout.png", true));
 		westt.add(boxx);
 		return westt;

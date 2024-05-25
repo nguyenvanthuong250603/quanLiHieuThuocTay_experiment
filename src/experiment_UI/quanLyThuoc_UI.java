@@ -597,7 +597,7 @@ public class QuanLyThuoc_UI {
 		jTextTenThuoc.setText("");
 		((JTextField) object_inf[0][1]).setText("");
 		((JTextField) object_inf[1][1]).setText("");
-
+		tenThuoc.setText("");
 		cbLoaiThuoc.setSelectedIndex(0);
 
 		((JDateChooser) object_inf[4][1]).setDate(null);
@@ -612,6 +612,9 @@ public class QuanLyThuoc_UI {
 		((JTextField) object_detail[4][1]).setText("");
 		((JTextField) object_detail[5][1]).setText("");
 		((JTextField) object_detail[6][1]).setText("");
+		cbTinhTrang.setSelectedIndex(0);
+		cbLoaiThuocTim.setSelectedIndex(0);
+		
 		jTextAreaMoTa.setText("");
 		hienBangTableThuoc();
 	}
