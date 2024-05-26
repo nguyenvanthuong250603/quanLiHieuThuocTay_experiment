@@ -58,6 +58,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.commons.math3.genetics.Fitness;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -706,6 +707,207 @@ public class Generate_All {
 	        nhanVienTen.add(new Phrase("Tên nhân viên :   ", fontWord));
 	        nhanVienTen.add(new Phrase(nhanVienn.getHoTen(), fontWord2));
 	        document.add(nhanVienTen);
+
+	        document.add(new Paragraph("  "));
+
+	        LocalTime currentTime = LocalTime.now();
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+	        String formattedTime = currentTime.format(formatter);
+	        Paragraph thoiGian = new Paragraph("Thời gian in : " + formatTime(LocalDate.now()) + "      " + formattedTime, fontWord2);
+	        thoiGian.setAlignment(Element.ALIGN_CENTER);
+	        document.add(thoiGian);
+	        document.add(new Paragraph("  "));
+
+	        document.add(new Phrase("Danh sách hóa đơn ", fontWord));
+
+	        PdfPTable table = new PdfPTable(4);
+	        table.setWidthPercentage(100); // Set width to 100% of the page
+	        table.setSpacingBefore(10f); // Space before the table
+	        table.setSpacingAfter(10f); // Space after the table
+
+	        float[] columnWidths = {2f, 2f, 2f, 2f}; // Adjust column widths if necessary
+	        table.setWidths(columnWidths);
+
+	        addCell(table, "Mã hóa đơn", fontWord);
+	        addCell(table, "Mã khách hàng", fontWord);
+	        addCell(table, "Ngày mua", fontWord);
+	        addCell(table, "Thành tiền", fontWord);
+
+	        int i = 0;
+	        for (HoaDon hd : list) {
+	            i += hd.getTongTien();
+	            addCell(table, hd.getMaHD(), fontWord2);
+	            addCell(table, hd.getMaKh().getMaKH(), fontWord2);
+	            addCell(table, formatTime(hd.getNgayTaoHoaDon()), fontWord2);
+	            addCell(table, String.valueOf(hd.getTongTien()), fontWord2);
+	        }
+
+	        document.add(table);
+	        document.add(new Paragraph("   "));
+
+	        document.add(new Phrase("   ", fontWord));
+	        
+	        Paragraph titlee = new Paragraph("Tổng doanh thu : " + i + " VND", font);
+	        titlee.setAlignment(Element.ALIGN_RIGHT);
+	        document.add(titlee);
+	        document.close();
+
+	        byte[] pdfBytes = outputStream.toByteArray();
+	        File tempFile = File.createTempFile("invoice", ".pdf");
+	        tempFile.deleteOnExit();
+
+	        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+	            fos.write(pdfBytes);
+	        }
+
+	        Desktop.getDesktop().open(tempFile);
+	    } catch (DocumentException | IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	public static void generateInvoiceBaoCaoDoanhThuTheoThuoc(ArrayList<Object[]> list,int ngay,int thang,int nam) {
+	    // Tạo một đối tượng Document
+	    Document document = new Document();
+
+	    try {
+	        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	        PdfWriter writer = PdfWriter.getInstance(document, outputStream);
+
+	        BaseFont baseFont = BaseFont.createFont("library\\Arial Unicode Font.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	        com.itextpdf.text.Font font = new com.itextpdf.text.Font(baseFont, 22, com.itextpdf.text.Font.NORMAL);
+	        com.itextpdf.text.Font fontsdt = new com.itextpdf.text.Font(baseFont, 18, com.itextpdf.text.Font.BOLDITALIC);
+	        com.itextpdf.text.Font fontHD = new com.itextpdf.text.Font(baseFont, 24, com.itextpdf.text.Font.BOLD);
+	        com.itextpdf.text.Font fontWord = new com.itextpdf.text.Font(baseFont, 16, com.itextpdf.text.Font.BOLD);
+	        com.itextpdf.text.Font fontWord2 = new com.itextpdf.text.Font(baseFont, 16, com.itextpdf.text.Font.NORMAL);
+	        
+	        // Mở Document
+	        document.open();
+
+	        Paragraph title = new Paragraph("NHÀ THUỐC ÁNH DƯƠNG", font);
+	        title.setAlignment(Element.ALIGN_CENTER);
+	        document.add(title);
+	        Paragraph diaChi = new Paragraph("Đ.C: 123- NGUYỄN VĂN C - XYZ - HCM", font);
+	        diaChi.setAlignment(Element.ALIGN_CENTER);
+	        document.add(diaChi);
+
+	        document.add(new Paragraph("    "));
+	        Paragraph tenHD = new Paragraph("BÁO CÁO THỐNG KÊ DOANH THU THEO THUỐC", fontHD);
+	        tenHD.setAlignment(Element.ALIGN_CENTER);
+	        document.add(tenHD);
+	        document.add(new Paragraph("         "));
+	        String doanhThuu = "";
+	        if(ngay!=0) {
+	        	doanhThuu+= "ngày "+ ngay;
+	        }
+	        if(thang!=0) {
+	        	doanhThuu+= "tháng "+ thang;
+	        }
+	        if(nam!=0) {
+	        	doanhThuu+= "năm "+ nam;
+	        }
+	        Paragraph title2 = new Paragraph(doanhThuu, fontWord);
+	        title2.setAlignment(Element.ALIGN_RIGHT);
+	        document.add(title2);
+
+	        document.add(new Paragraph("  "));
+
+	        LocalTime currentTime = LocalTime.now();
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+	        String formattedTime = currentTime.format(formatter);
+	        Paragraph thoiGian = new Paragraph("Thời gian in : " + formatTime(LocalDate.now()) + "      " + formattedTime, fontWord2);
+	        thoiGian.setAlignment(Element.ALIGN_CENTER);
+	        document.add(thoiGian);
+	        document.add(new Paragraph("  "));
+
+	        document.add(new Phrase("Danh sách thuốc ", fontWord));
+
+	        PdfPTable table = new PdfPTable(3);
+	        table.setWidthPercentage(100); // Set width to 100% of the page
+	        table.setSpacingBefore(10f); // Space before the table
+	        table.setSpacingAfter(10f); // Space after the table
+
+	        float[] columnWidths = {4f, 3f, 3f}; // Adjust column widths if necessary
+	        table.setWidths(columnWidths);
+
+	        addCell(table, "Mã Thuốc", fontWord);
+	        addCell(table, "Số lượng", fontWord);
+	        addCell(table, "Tổng tiền", fontWord);
+	    
+
+	        int i = 0;
+	        for (Object[] hd : list) {   
+	            addCell(table,hd[0].toString(), fontWord2);
+	            addCell(table, hd[1]+"", fontWord2);
+	            addCell(table, hd[2]+"", fontWord2);  
+	            i+=Double.parseDouble(hd[2].toString());
+	        }
+
+	        document.add(table);
+	        document.add(new Paragraph("   "));
+
+	        document.add(new Phrase("   ", fontWord));
+	        
+	        Paragraph titlee = new Paragraph("Tổng doanh thu : " + i + " VND", font);
+	        titlee.setAlignment(Element.ALIGN_RIGHT);
+	        document.add(titlee);
+	        document.close();
+
+	        byte[] pdfBytes = outputStream.toByteArray();
+	        File tempFile = File.createTempFile("invoice", ".pdf");
+	        tempFile.deleteOnExit();
+
+	        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+	            fos.write(pdfBytes);
+	        }
+
+	        Desktop.getDesktop().open(tempFile);
+	    } catch (DocumentException | IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	public static void generateInvoiceBaoCaoDoanhThu(ArrayList<HoaDon> list,int ngay,int thang,int nam) {
+	    // Tạo một đối tượng Document
+	    Document document = new Document();
+
+	    try {
+	        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	        PdfWriter writer = PdfWriter.getInstance(document, outputStream);
+
+	        BaseFont baseFont = BaseFont.createFont("library\\Arial Unicode Font.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+	        com.itextpdf.text.Font font = new com.itextpdf.text.Font(baseFont, 22, com.itextpdf.text.Font.NORMAL);
+	        com.itextpdf.text.Font fontsdt = new com.itextpdf.text.Font(baseFont, 18, com.itextpdf.text.Font.BOLDITALIC);
+	        com.itextpdf.text.Font fontHD = new com.itextpdf.text.Font(baseFont, 24, com.itextpdf.text.Font.BOLD);
+	        com.itextpdf.text.Font fontWord = new com.itextpdf.text.Font(baseFont, 16, com.itextpdf.text.Font.BOLD);
+	        com.itextpdf.text.Font fontWord2 = new com.itextpdf.text.Font(baseFont, 16, com.itextpdf.text.Font.NORMAL);
+	        
+	        // Mở Document
+	        document.open();
+
+	        Paragraph title = new Paragraph("NHÀ THUỐC ÁNH DƯƠNG", font);
+	        title.setAlignment(Element.ALIGN_CENTER);
+	        document.add(title);
+	        Paragraph diaChi = new Paragraph("Đ.C: 123- NGUYỄN VĂN C - XYZ - HCM", font);
+	        diaChi.setAlignment(Element.ALIGN_CENTER);
+	        document.add(diaChi);
+
+	        document.add(new Paragraph("    "));
+	        Paragraph tenHD = new Paragraph("BÁO CÁO THỐNG KÊ DOANH THU", fontHD);
+	        tenHD.setAlignment(Element.ALIGN_CENTER);
+	        document.add(tenHD);
+	        document.add(new Paragraph("         "));
+	        String doanhThuu = "";
+	        if(ngay!=0) {
+	        	doanhThuu+= "ngày "+ ngay;
+	        }
+	        if(thang!=0) {
+	        	doanhThuu+= "tháng "+ thang;
+	        }
+	        if(nam!=0) {
+	        	doanhThuu+= "năm "+ nam;
+	        }
+	        Paragraph title2 = new Paragraph(doanhThuu, fontWord);
+	        title2.setAlignment(Element.ALIGN_RIGHT);
+	        document.add(title2);
 
 	        document.add(new Paragraph("  "));
 

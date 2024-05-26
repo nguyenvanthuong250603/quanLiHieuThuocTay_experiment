@@ -393,13 +393,30 @@ public class NhanVien_UI {
 	public void locNhanVien() {
 		String trangThai = getValueInComboBox(trangThaiJcombo);
 		String chucVu = getValueInComboBox(chucVuJcombo);
-		model.setRowCount(0);
+	
 		ArrayList<NhanVien> lnv = nhanVien_DAO.locNhanVien(trangThai, chucVu);
-		for (NhanVien nhanVien : lnv) {
-			Object[] row = { nhanVien.getMaNV(), nhanVien.getHoTen(), nhanVien.getSdt(), nhanVien.getChucVu(),
-					nhanVien.getTinhTrang(), nhanVien.getDiaChi() };
-			model.addRow(row);
-		}
+		model.setRowCount(0);
+		((JLabel) inf_personnel_left[0][0]).setText("");
+		((JTextField) inf_personnel_left[1][0]).setText("");
+		((JComboBox) inf_personnel_left[2][0]).setSelectedIndex(0);
+		((JDateChooser) inf_personnel_left[3][0]).setDate(null);
+		;
+		((JTextField) inf_personnel_left[4][0]).setText("");
+		((JTextField) inf_personnel_left[5][0]).setText("");
+		((JTextField) inf_personnel_right[0][0]).setText("");
+		((JTextField) inf_personnel_right[1][0]).setText("");
+		((JComboBox) inf_personnel_right[2][0]).setSelectedIndex(0);
+		((JComboBox) inf_personnel_right[3][0]).setSelectedIndex(0);
+
+		((JLabel) inf_personnel_left[0][0]).setText(generateCode("NV"));
+		((JTextField) inf_personnel_right[4][0]).setText(formatTime(LocalDate.now()));
+			
+			for (NhanVien nhanVien : lnv) {
+				Object[] row = { nhanVien.getMaNV(), nhanVien.getHoTen(), nhanVien.getSdt(), nhanVien.getChucVu(),
+						nhanVien.getTinhTrang(), nhanVien.getDiaChi() };
+				model.addRow(row);
+			}
+		
 		table.setModel(model);
 	}
 
@@ -492,6 +509,7 @@ public class NhanVien_UI {
 
 		return true;
 	}
+
 	public void xuatExcel() {
 		if (table.getRowCount() > 0) {
 			ArrayList<NhanVien> list_Xuat = new ArrayList<NhanVien>();
@@ -504,6 +522,7 @@ public class NhanVien_UI {
 			JOptionPane.showMessageDialog(null, "Bạn cần có ít nhất 1 khách hàng để in danh sách");
 		}
 	}
+
 	public JButton createButtonInPagePesonnel(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(130, 40));
@@ -524,6 +543,7 @@ public class NhanVien_UI {
 			} else if (nameButton.equals("Xóa trắng")) {
 				xoaTrang();
 			} else if (nameButton.equals("Lọc")) {
+				
 				locNhanVien();
 			} else if (nameButton.equals("Xóa")) {
 				xoaNhanVien();

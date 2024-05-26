@@ -202,7 +202,7 @@ public class TimThuoc_UI {
 		String maThuoc = table.getValueAt(table.getSelectedRow(), 0).toString();
 
 		Thuoc th = list_Thuoc.getThuocByID(maThuoc);
-
+		if(regexthoiGian(th)) {
 		Object[] row = { th.getMaThuoc(), th.getTenThuoc(), th.getDonVi(), 0, th.getGia(), "" };
 		modelGetThuoc.addRow(row);
 		tableGetThuoc.setModel(modelGetThuoc);
@@ -248,8 +248,22 @@ public class TimThuoc_UI {
 		});
 
 		frame.dispose();
+		}
 	}
-
+	public boolean regexthoiGian(Thuoc th) {
+		int soLuong =th.getSoLuong();
+		if(soLuong<0) {
+			JOptionPane.showMessageDialog(null, "Thuốc đã hết hàng");
+			return false;
+		}
+		LocalDate ngayHh = th.getNgayHetHan();
+		if(ngayHh.isBefore(LocalDate.now())) {
+			JOptionPane.showMessageDialog(null, "Thuốc đã hết hạn sử dụng");
+			return false;
+		}
+		return true;
+	}
+	
 	private void updateTotalPrice2() {
 
 		int soLuongColumnIndex = 3;
@@ -369,7 +383,7 @@ public class TimThuoc_UI {
 		textFind.setText("");
 		tenThuoc.setText("");
 		cbNSXTim.setSelectedIndex(0);
-		cbLoaiThuoc.setSelectedIndex(0);
+		cbLoaiThuocTim.setSelectedIndex(0);
 		hienBangTableThuoc();
 	}
 

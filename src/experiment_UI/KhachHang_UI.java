@@ -158,7 +158,7 @@ public class KhachHang_UI {
 	public JPanel fotter_East() {
 		JPanel footer = new JPanel();
 
-		String[] object = { "Thêm", "gift\\them.png", "Xóa", "gift\\trash-bin.png", "Cập nhật", "gift\\update.png",
+		String[] object = { "Xóa", "gift\\trash-bin.png", "Cập nhật", "gift\\update.png",
 				"Xuất Execl", "gift\\excel-file.png" };
 		for (int i = 0; i < object.length; i += 2) {
 			footer.add(buttonInPageCustommer(object[i], object[i + 1]));
@@ -297,7 +297,7 @@ public class KhachHang_UI {
 	}
 
 	private void xoaKhachHang() {
-		int index = table.getSelectedColumn();
+		int index = table.getSelectedRow();
 		if (index > -1) {
 			int question = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa khách hàng đã chọn hay không ?",
 					"Chú ý", JOptionPane.YES_NO_OPTION);
@@ -424,7 +424,7 @@ public class KhachHang_UI {
 			if (nameButton.equals("")) {
 				xoaTrang();
 			} else if (nameButton.equals("Thêm")) {
-				themKhachHang();
+//				themKhachHang();
 			} else if (nameButton.equals("Cập nhật")) {
 				capNhatKhachHang();
 			} else if (nameButton.equals("Xóa")) {

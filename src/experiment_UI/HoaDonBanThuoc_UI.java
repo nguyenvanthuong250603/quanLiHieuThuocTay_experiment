@@ -118,7 +118,7 @@ public class HoaDonBanThuoc_UI {
 		JPanel managerment = new JPanel();
 		createTitle(managerment, "Danh sách hóa đơn");
 		managerment.setLayout(new BorderLayout());
-		String[] column = { "Mã Hóa Đơn", "Nhân viên", "Mã khách hàng", "Ngày mua", "Tổng tiền" };
+		String[] column = { "Mã Hóa Đơn", "Nhân viên", "Mã khách hàng", "Tình trạng","Ngày mua", "Tổng tiền" };
 		model = new DefaultTableModel(column, 0);
 		table = new JTable(model);
 		table.setShowGrid(false);
@@ -178,7 +178,7 @@ public class HoaDonBanThuoc_UI {
 		for (HoaDon hoaDon : hDons) {
 			if (!hoaDon.getTinhTrang().equals("")) {
 				NhanVien nv = getNV(hoaDon.getMaNV().getMaNV());
-				Object[] row = { hoaDon.getMaHD(), nv.getHoTen(), hoaDon.getMaKh().getMaKH(),
+				Object[] row = { hoaDon.getMaHD(), nv.getHoTen(), hoaDon.getMaKh().getMaKH(),hoaDon.getTinhTrang(),
 						formatTime(hoaDon.getNgayTaoHoaDon()), hoaDon.getTongTien() };
 				model.addRow(row);
 			}
@@ -363,8 +363,14 @@ public class HoaDonBanThuoc_UI {
 			int recomment = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn in lại hóa đơn này không ?", "Lưu ý",
 					JOptionPane.YES_NO_OPTION);
 			if (recomment == JOptionPane.YES_OPTION) {
-
-				generateInvoice(hd, hd.getTongTien(), 0, kmString, 0);
+				if(table.getValueAt(table.getSelectedRow(), 3).toString().equals("Bán ra")) {
+					generateInvoice(hd, hd.getTongTien(), 0, kmString, 0);
+				}else if(table.getValueAt(table.getSelectedRow(), 3).toString().equals("Đổi thuốc")) {
+					ArrayList<ChiTietHoaDon> cthd = hd.getListChiTietHoaDon();
+					generateInvoiceDoiThuoc(hd, cthd,hd.getLyDo());
+				}else if(table.getValueAt(table.getSelectedRow(), 3).toString().equals("Hòan trả")) {
+						generateInvoiceHoanTra(hd, hd.getTongTien());
+				}
 			}
 		}
 	}

@@ -127,12 +127,13 @@ SELECT * FROM HoaDon WHERE MONTH(NgayTaoHoaDon) = 3 AND YEAR(NgayTaoHoaDon) = 20
 ------------------------------------
 INSERT INTO HoaDon VALUES (N'HĐ1321312',N'NV12061111','KH1205798',N'Nguyễn Thị Đào',N'Tiền mặt','2024-03-1',1,N'Bán ra','200000','')
 
+select *from HoaDon where MaHD like '%1998%'
 
-delete KhachHang where MaKH = 'KH16047464'
+select MaThuoc,sum (ThanhTien) , sum(SoLuongThuoc) from ChiTietHoaDon   group by MaThuoc
 
-delete ChiTietHoaDon where MaHD = 'HĐ120511119820'
-delete HoaDon Where MaHD = 'HĐ120511119820'
-select *from HoaDon
+select count(MaHD) from ChiTietHoaDon group by MaThuoc
+select MaThuoc,sum (ThanhTien) , sum(SoLuongThuoc) from ChiTietHoaDon   c inner join HoaDon h  on c.MaHD = h.MaHD where Day(h.NgayTaoHoaDon) = 10 and MONTH(h.NgayTaoHoaDon) = 5 group by MaThuoc
+
 
 GO
 

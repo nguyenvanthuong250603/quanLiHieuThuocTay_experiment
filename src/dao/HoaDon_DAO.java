@@ -10,8 +10,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.TreeMap;
 
+import com.itextpdf.text.List;
 import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 import entity.ChiTietHoaDon;
@@ -397,60 +400,54 @@ public class HoaDon_DAO {
 		return lhd;
 	}
 
-	 public ArrayList<HoaDon> getHoaDonDanhSachSDT(String sdt, double gia, double doanhThu) {
-	        ArrayList<HoaDon> lhd = new ArrayList<>();
-	        Connection con = null;
-	        PreparedStatement p = null;
-	        ResultSet rs = null;
+	public ArrayList<HoaDon> getHoaDonDanhSachSDT(String sdt, double gia, double doanhThu) {
+		ArrayList<HoaDon> lhd = new ArrayList<>();
+		Connection con = null;
+		PreparedStatement p = null;
+		ResultSet rs = null;
 
-	        try {
-	            // Kết nối tới cơ sở dữ liệu
-	            con = accessDataBase();
+		try {
+			// Kết nối tới cơ sở dữ liệu
+			con = accessDataBase();
 
-	            // Chuẩn bị câu lệnh SQL với các tham số
-	            String sql = "SELECT * FROM HoaDon WHERE MaKH IN (SELECT MaKH FROM KhachHang WHERE SDT = ?) AND TongTien > ? AND TongTien <= ?";
-	            p = con.prepareStatement(sql);
-	            p.setString(1, sdt);
-	            p.setDouble(2, gia);
-	            p.setDouble(3, doanhThu);
+			// Chuẩn bị câu lệnh SQL với các tham số
+			String sql = "SELECT * FROM HoaDon WHERE MaKH IN (SELECT MaKH FROM KhachHang WHERE SDT = ?) AND TongTien > ? AND TongTien <= ?";
+			p = con.prepareStatement(sql);
+			p.setString(1, sdt);
+			p.setDouble(2, gia);
+			p.setDouble(3, doanhThu);
 
-	            // Thực thi câu lệnh SQL và nhận kết quả
-	            rs = p.executeQuery();
+			// Thực thi câu lệnh SQL và nhận kết quả
+			rs = p.executeQuery();
 
-	            // Duyệt qua các kết quả và thêm vào danh sách hóa đơn
-	            while (rs.next()) {
-	                HoaDon hd = new HoaDon(
-	                    rs.getString(1),
-	                    new NhanVien(rs.getString(2)),
-	                    new KhachHang(rs.getString(3)),
-	                    rs.getString(4),
-	                    rs.getString(5),
-	                    chageTimeSQL(rs.getDate(6)),
-	                    changeLoaiThuocToSQLFromUI(rs.getInt(7)),
-	                    rs.getString(8),
-	                    rs.getDouble(9),
-	                    rs.getString(10),
-	                    lcthd.getcChiTietHoaDons(rs.getString(1))
-	                );
+			// Duyệt qua các kết quả và thêm vào danh sách hóa đơn
+			while (rs.next()) {
+				HoaDon hd = new HoaDon(rs.getString(1), new NhanVien(rs.getString(2)), new KhachHang(rs.getString(3)),
+						rs.getString(4), rs.getString(5), chageTimeSQL(rs.getDate(6)),
+						changeLoaiThuocToSQLFromUI(rs.getInt(7)), rs.getString(8), rs.getDouble(9), rs.getString(10),
+						lcthd.getcChiTietHoaDons(rs.getString(1)));
 
-	                lhd.add(hd);
-	            }
+				lhd.add(hd);
+			}
 
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        } finally {
-	            // Đóng các tài nguyên
-	            try {
-	                if (rs != null) rs.close();
-	                if (p != null) p.close();
-	                if (con != null) con.close();
-	            } catch (SQLException e) {
-	                e.printStackTrace();
-	            }
-	        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// Đóng các tài nguyên
+			try {
+				if (rs != null)
+					rs.close();
+				if (p != null)
+					p.close();
+				if (con != null)
+					con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 
-	        return lhd;
-	    }
+		return lhd;
+	}
 
 	public ArrayList<HoaDon> getHoaDonDanhSachDoanhThuAndLoaiHd(int loaiHD, double gia, double doanhThu) {
 		ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
@@ -611,8 +608,9 @@ public class HoaDon_DAO {
 
 		return lhd;
 	}
-	public ArrayList<HoaDon> getHoaDonDanhSachByNgayAnddoanhThu( LocalDate ngayBD, LocalDate ngayKT,
-			double gia, double tongTien) {
+
+	public ArrayList<HoaDon> getHoaDonDanhSachByNgayAnddoanhThu(LocalDate ngayBD, LocalDate ngayKT, double gia,
+			double tongTien) {
 		ArrayList<HoaDon> lhd = new ArrayList<>();
 		Connection con = null;
 		PreparedStatement p = null;
@@ -628,7 +626,6 @@ public class HoaDon_DAO {
 			p.setDate(2, java.sql.Date.valueOf(ngayKT));
 			p.setDouble(3, gia);
 			p.setDouble(4, tongTien);
-		
 
 			rs = p.executeQuery();
 
@@ -658,7 +655,8 @@ public class HoaDon_DAO {
 
 		return lhd;
 	}
-	public ArrayList<HoaDon> getHoaDonDanhSachByNgayAndSDTandDoanhThu(String sdt,LocalDate ngayBD, LocalDate ngayKT,
+
+	public ArrayList<HoaDon> getHoaDonDanhSachByNgayAndSDTandDoanhThu(String sdt, LocalDate ngayBD, LocalDate ngayKT,
 			double gia, double tongTien) {
 		ArrayList<HoaDon> lhd = new ArrayList<>();
 		Connection con = null;
@@ -706,8 +704,8 @@ public class HoaDon_DAO {
 
 		return lhd;
 	}
-	public ArrayList<HoaDon> getHoaDonDanhSachByNgayAndLoaiHD(int loai, LocalDate ngayBD, LocalDate ngayKT
-			) {
+
+	public ArrayList<HoaDon> getHoaDonDanhSachByNgayAndLoaiHD(int loai, LocalDate ngayBD, LocalDate ngayKT) {
 		ArrayList<HoaDon> lhd = new ArrayList<>();
 		Connection con = null;
 		PreparedStatement p = null;
@@ -721,7 +719,7 @@ public class HoaDon_DAO {
 			p = con.prepareStatement(sql);
 			p.setDate(1, java.sql.Date.valueOf(ngayBD));
 			p.setDate(2, java.sql.Date.valueOf(ngayKT));
-		
+
 			p.setInt(5, loai);
 
 			rs = p.executeQuery();
@@ -752,49 +750,151 @@ public class HoaDon_DAO {
 
 		return lhd;
 	}
+
 	public ArrayList<HoaDon> getHoaDonThongKeByNhanVien(String maNhanVien) {
-	    ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
-	    Connection con = null;
+		ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			con = accessDataBase();
+			String query = "SELECT * FROM HoaDon WHERE MaHD LIKE ?";
+			ps = con.prepareStatement(query);
+			ps.setString(1, "%" + maNhanVien + "%");
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				HoaDon hd = new HoaDon(rs.getString(1), new NhanVien(rs.getString(2)), new KhachHang(rs.getString(3)),
+						rs.getString(4), rs.getString(5), chageTimeSQL(rs.getDate(6)),
+						changeLoaiThuocToSQLFromUI(rs.getInt(7)), rs.getString(8), rs.getDouble(9), rs.getString(10),
+						lcthd.getcChiTietHoaDons(rs.getString(1)));
+
+				lhd.add(hd);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (ps != null) {
+					ps.close();
+				}
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return lhd;
+	}
+
+	public ArrayList<HoaDon> getHoaDonDanhSachDoanhThuByNgayThangNam(int ngay, int thang, int nam) {
+		ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
+		Connection con = accessDataBase();
+		try {
+			StringBuilder query = new StringBuilder("SELECT * FROM HoaDon WHERE 1=1");
+
+			if (nam != 0) {
+				query.append(" AND YEAR(NgayTaoHoaDon) = ").append(nam);
+			}
+			if (thang != 0) {
+				query.append(" AND MONTH(NgayTaoHoaDon) = ").append(thang);
+			}
+			if (ngay != 0) {
+				query.append(" AND DAY(NgayTaoHoaDon) = ").append(ngay);
+			}
+
+			Statement s = con.createStatement();
+			ResultSet rs = s.executeQuery(query.toString());
+
+			while (rs.next()) {
+				HoaDon hd = new HoaDon(rs.getString(1), new NhanVien(rs.getString(2)), new KhachHang(rs.getString(3)),
+						rs.getString(4), rs.getString(5), chageTimeSQL(rs.getDate(6)),
+						changeLoaiThuocToSQLFromUI(rs.getInt(7)), rs.getString(8), rs.getDouble(9), rs.getString(10),
+						lcthd.getcChiTietHoaDons(rs.getString(1)));
+
+				lhd.add(hd);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (con != null) {
+					con.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return lhd;
+	}
+
+	public ArrayList<Object[]> getHoaDonDoanhThuTheoThuoc(String maThuoc, int ngay, int thang, int nam) {
+	    ArrayList<Object[]> lhd = new ArrayList<>();
+	    Connection con = accessDataBase();
 	    PreparedStatement ps = null;
 	    ResultSet rs = null;
-	    try {
-	        con = accessDataBase();
-	        String query = "SELECT * FROM HoaDon WHERE MaHD LIKE ?";
-	        ps = con.prepareStatement(query);
-	        ps.setString(1, "%" + maNhanVien + "%");
-	        rs = ps.executeQuery();
-	        while (rs.next()) {
-	            HoaDon hd = new HoaDon(rs.getString(1), 
-	                                   new NhanVien(rs.getString(2)), 
-	                                   new KhachHang(rs.getString(3)),
-	                                   rs.getString(4), 
-	                                   rs.getString(5), 
-	                                   chageTimeSQL(rs.getDate(6)),
-	                                   changeLoaiThuocToSQLFromUI(rs.getInt(7)), 
-	                                   rs.getString(8), 
-	                                   rs.getDouble(9), 
-	                                   rs.getString(10),
-	                                   lcthd.getcChiTietHoaDons(rs.getString(1)));
 
-	            lhd.add(hd);
+	    try {
+	        StringBuilder query = new StringBuilder(
+	                "SELECT MaThuoc, SUM(SoLuongThuoc), SUM(ThanhTien) " +
+	                "FROM ChiTietHoaDon c INNER JOIN HoaDon h ON c.MaHD = h.MaHD WHERE 1=1");
+
+	        if (nam != 0) {
+	            query.append(" AND YEAR(h.NgayTaoHoaDon) = ?");
+	        }
+	        if (thang != 0) {
+	            query.append(" AND MONTH(h.NgayTaoHoaDon) = ?");
+	        }
+	        if (ngay != 0) {
+	            query.append(" AND DAY(h.NgayTaoHoaDon) = ?");
+	        }
+	        if (!maThuoc.equals("")) {
+	            query.append(" AND c.MaThuoc = ?");
+	        }
+	        query.append(" GROUP BY MaThuoc");
+
+	        ps = con.prepareStatement(query.toString());
+
+	        int paramIndex = 1;
+	        if (nam != 0) {
+	            ps.setInt(paramIndex++, nam);
+	        }
+	        if (thang != 0) {
+	            ps.setInt(paramIndex++, thang);
+	        }
+	        if (ngay != 0) {
+	            ps.setInt(paramIndex++, ngay);
+	        }
+	        if (!maThuoc.equals("")) {
+	            ps.setString(paramIndex++, maThuoc);
+	        }
+
+	        rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            String maThuocc = rs.getString(1);
+	            int soLuong = rs.getInt(2);
+	            double thanhTien = rs.getDouble(3);
+	            Object[] obj = new Object[] { maThuocc, soLuong, thanhTien };
+	            lhd.add(obj);
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    } finally {
 	        try {
-	            if (rs != null) {
-	                rs.close();
-	            }
-	            if (ps != null) {
-	                ps.close();
-	            }
-	            if (con != null) {
-	                con.close();
-	            }
+	            if (rs != null) rs.close();
+	            if (ps != null) ps.close();
+	            if (con != null) con.close();
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
 	    }
+
 	    return lhd;
 	}
 

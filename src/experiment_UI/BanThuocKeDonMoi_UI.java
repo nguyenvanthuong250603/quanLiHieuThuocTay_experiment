@@ -1,6 +1,6 @@
 package experiment_UI;
 
-import javax.print.attribute.PrintJobAttribute;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -405,7 +405,7 @@ public class BanThuocKeDonMoi_UI {
 			maThuoc = textMaThuocFind.getText();
 
 			Thuoc th = th_DAO.getThuocByID(maThuoc);
-
+			if(regexthoiGian(th)) {
 			if (checkTrung(th.getMaThuoc()) == false) {
 				if (th.getMaThuoc() != null) {
 					// Kiểm tra nếu ô số lượng đã được điền
@@ -437,7 +437,7 @@ public class BanThuocKeDonMoi_UI {
 				JOptionPane.showMessageDialog(null, "Thuốc đã có trong danh sách");
 			}
 			textMaThuocFind.setText("");
-
+			}
 		}
 	}
 
@@ -495,7 +495,19 @@ public class BanThuocKeDonMoi_UI {
 		}
 		return true; // Nếu tất cả ô số lượng đã được điền, trả về true
 	}
-
+	public boolean regexthoiGian(Thuoc th) {
+		int soLuong =th.getSoLuong();
+		if(soLuong<0) {
+			JOptionPane.showMessageDialog(null, "Thuốc đã hết hàng");
+			return false;
+		}
+		LocalDate ngayHh = th.getNgayHetHan();
+		if(ngayHh.isBefore(LocalDate.now())) {
+			JOptionPane.showMessageDialog(null, "Thuốc đã hết hạn sử dụng");
+			return false;
+		}
+		return true;
+	}
 	private void updateTotalPrice() {
 		int soLuongColumnIndex = 3;
 		int lastRowIndex = model.getRowCount() - 1;

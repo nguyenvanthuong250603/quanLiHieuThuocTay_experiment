@@ -541,6 +541,7 @@ public class QuanLyThuoc_UI {
 	}
 
 	public void suaThuoc() {
+		if(table.getSelectedRow()<0) {
 		String ma = jTextMaThuoc.getText();
 		String ten = jTextTenThuoc.getText();
 		int soLuong = getValueIntỊntextField(object_inf[0][1]);
@@ -587,7 +588,9 @@ public class QuanLyThuoc_UI {
 			}
 
 		}
-
+		}else {
+			JOptionPane.showMessageDialog(table, "Bạn chưa chọn thuốc để sửa");
+		}
 	}
 
 	public void xoaTrang() {

@@ -74,7 +74,8 @@ public class Default_UI {
 		container = new JPanel();
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
-		
+		container.add(createThongKeDoanhThuTheoThuoc(),TKDTT);
+		container.add(createThongKeDoanhThu(),TKDT);
 		container.add(createHoaDon(hoaDon_DAO), HĐBT);
 		container.add(createBanThuocKeLaiDon(MaNV), KLD);
 		container.add(createBanThuocKeDonMoi(MaNV), HDM);
@@ -115,7 +116,7 @@ public class Default_UI {
 			btn = new JButton();
 			btn.setPreferredSize(
 					new Dimension(compoment.getPreferredSize().width + 260, btn.getPreferredSize().height + 60));
-			if(nameButton.equals("Kê lại đơn")|| nameButton.equals("Tạo đơn mới")||nameButton.equals("nhân viên")||nameButton.equals("doanh thu")) {
+			if(nameButton.equals("Kê lại đơn")|| nameButton.equals("Tạo đơn mới")||nameButton.equals("nhân viên")||nameButton.equals("doanh thu")||nameButton.equals("thuốc")) {
 				lableicon.setBorder( new EmptyBorder(0, 20, 0, 0));
 			}
 			
@@ -214,9 +215,10 @@ public class Default_UI {
 						JPanel r = new JPanel();
 						r.setLayout(new BoxLayout(r, BoxLayout.Y_AXIS));
 						JPanel v = createCompoment("gift\\upload.png", "nhân viên", "gift\\tknv.png", true);
+						JPanel t = createCompoment("gift\\upload.png", "thuốc", "gift\\tktt.png", true);
 						JPanel o = createCompoment("gift\\upload.png", "doanh thu", "gift\\tkdt.png", true);
 			
-						Object[] xx = { v, o};
+						Object[] xx = { v,t, o};
 						for (Object s : xx) {
 							r.add((Component) s);
 						}
@@ -251,6 +253,14 @@ public class Default_UI {
 				}
 				case TKNV : {
 					cardLayout.show(container, TKNV);
+					break;
+				}
+				case TKDT : {
+					cardLayout.show(container, TKDT);
+					break;
+				}
+				case TKDTT : {
+					cardLayout.show(container, TKDTT);
 					break;
 				}
 				default:
@@ -343,5 +353,13 @@ public class Default_UI {
 		BanThuocKeLaiDon_UI banThuoc =new  BanThuocKeLaiDon_UI();
 		return banThuoc.getBanThuocKeLaiDon(maNV);
 		
+	}
+	private JPanel createThongKeDoanhThu() {
+		ThongKeDoanhThu_UI tKDT = new ThongKeDoanhThu_UI();
+		return tKDT.getThongKeDoanhThu();
+	}
+	private JPanel createThongKeDoanhThuTheoThuoc() {
+		ThongKeDoanhThuTheoThuoc_UI tKDTT = new ThongKeDoanhThuTheoThuoc_UI();
+		return tKDTT.getThongKeDoanhThuTheoThuoc();
 	}
 }

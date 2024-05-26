@@ -20,34 +20,38 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JYearChooser;
 
 import dao.HoaDon_DAO;
-import dao.NhanVien_DAO;
 import entity.HoaDon;
 import entity.NhanVien;
 import experiment_UI.Generate_All.CustomTableCellRenderer;
 
 import static experiment_UI.Generate_All.*;
 
-public class ThongKe_UI {
+public class ThongKeDoanhThu_UI {
 	private Object[][] obj, obj2;
 	private DefaultTableModel model;
 	private JTable table;
 	private HoaDon_DAO hoaDon_DAO = new HoaDon_DAO();
-	private NhanVien_DAO nhanVien_DAO = new NhanVien_DAO();
-	public JPanel getThongKe() {
+
+	public JPanel getThongKeDoanhThu() {
 		JPanel thongKe = new JPanel(new BorderLayout());
-		createTiTlePage(thongKe, "BÁO CÁO THỐNG KÊ NHÂN VIÊN");
+		createTiTlePage(thongKe, "BÁO CÁO THỐNG KÊ DOANH THU");
 
 		thongKe.add(manageMent(), BorderLayout.CENTER);
-		
+		setValueInThongKe();
+		thongKe(LocalDate.now().getDayOfMonth(), LocalDate.now().getMonthValue(), LocalDate.now().getYear());
 		return thongKe;
 
 	}
@@ -62,11 +66,36 @@ public class ThongKe_UI {
 	public JPanel getNorth() {
 		JPanel north = new JPanel(new BorderLayout());
 		createTitle(north, "Thống kê");
-
-		Object[][] trage = { { "Mã nhân viên", new JTextField() }, { "Từ ngày", new JDateChooser() },
-				{ "Đến ngày", new JDateChooser() } };
-		obj = trage;
 		JPanel dia = new JPanel();
+		SpinnerModel model = new SpinnerNumberModel(0, 0, 31, 1) {
+			@Override
+			public Object getNextValue() {
+				int currentValue = (Integer) getValue();
+				return (currentValue >= 31) ? 0 : currentValue + 1;
+			}
+
+			@Override
+			public Object getPreviousValue() {
+				int currentValue = (Integer) getValue();
+				return (currentValue <= 0) ? 31 : currentValue - 1;
+			}
+		};
+		SpinnerModel model2 = new SpinnerNumberModel(0, 0, 12, 1) {
+			@Override
+			public Object getNextValue() {
+				int currentValue = (Integer) getValue();
+				return (currentValue >= 12) ? 0 : currentValue + 1;
+			}
+
+			@Override
+			public Object getPreviousValue() {
+				int currentValue = (Integer) getValue();
+				return (currentValue <= 0) ? 12 : currentValue - 1;
+			}
+		};
+		Object[][] trage = { { "Ngày", new JSpinner(model) }, { "Tháng", new JSpinner(model2) },
+				{ "Năm", new JYearChooser() } };
+		obj = trage;
 		for (Object[] objects : trage) {
 			if (objects[1] instanceof Component) {
 				JPanel t = new JPanel(new BorderLayout());
@@ -77,12 +106,10 @@ public class ThongKe_UI {
 
 				dia.add(t);
 
-			} else {
-				dia.add(createJcombobox(objects[0].toString(), (JComboBox) objects[1]));
-
 			}
 			dia.add(Box.createHorizontalStrut(10));
 		}
+
 		dia.add(buttonThongKe("Thống kê", ""));
 		dia.add(buttonThongKe("In thống kê", ""));
 		dia.add(buttonThongKe("", "gift\\reset.png"));
@@ -99,7 +126,7 @@ public class ThongKe_UI {
 			if (objects[1] instanceof JLabel) {
 				JPanel tt = new JPanel();
 				tt.setLayout(new BoxLayout(tt, BoxLayout.X_AXIS));
-				
+
 				JPanel t = new JPanel();
 				t.setLayout(new BoxLayout(t, BoxLayout.Y_AXIS));
 				JLabel x;
@@ -109,14 +136,13 @@ public class ThongKe_UI {
 				JPanel m = new JPanel();
 				m.setLayout(new BoxLayout(m, BoxLayout.Y_AXIS));
 				m.add((JLabel) objects[1]);
-				
+
 				((JLabel) objects[1]).setFont(new Font("Arial", Font.BOLD, 18));
 				((JLabel) objects[1]).setBorder(new EmptyBorder(0, 60, 0, 0));
 				((JLabel) objects[1]).setForeground(Color.red);
 				tt.setBorder(new EmptyBorder(0, 10, 0, 10));
 				tt.add(t);
 				tt.add(m);
-				
 
 				cacMuc.add(tt);
 			}
@@ -141,89 +167,45 @@ public class ThongKe_UI {
 		return managerment;
 	}
 
-	public void thongKe() {
+	public void thongKe(int ngay, int thang, int nam) {
 
-		// Tính số ngày giữa hai ngày
-//		long daysBetween = ChronoUnit.DAYS.between(date1, date2);
-		if (regex()) {
-			String value = getValueStringInJTextField(obj[0][1]);
-			String maGui = value.substring(6);
+		double doanhThu = 0;
+		int hoaDonBanHang = 0;
+		int hoaDonBanLe = 0;
+		int hdbr = 0;
+		int hddt = 0;
+		int hdht = 0;
+		ArrayList<HoaDon> lhd = new ArrayList<HoaDon>();
+		model.setRowCount(0);
 
-			model.setRowCount(0);
-			ArrayList<HoaDon> lhd = hoaDon_DAO.getHoaDonThongKeByNhanVien(maGui);
-			double doanhThu = 0;
-			int hoaDonBanHang = 0;
-			int hoaDonBanLe = 0;
-			int hdbr = 0;
-			int hddt = 0;
-			int hdht = 0;
+		lhd = hoaDon_DAO.getHoaDonDanhSachDoanhThuByNgayThangNam(ngay, thang, nam);
+		for (HoaDon hoaDon : lhd) {
 
-			for (HoaDon hoaDon : lhd) {
-				if (((JDateChooser) obj[1][1]).getDate() == null && ((JDateChooser) obj[2][1]).getDate() == null) {
-					LocalDate ngayDate = hoaDon.getNgayTaoHoaDon();
-					if (ngayDate.isEqual(LocalDate.now())) {
-						hienBang(hoaDon);
-						doanhThu += hoaDon.getTongTien();
-						if (hoaDon.getTinhTrang().equals("Bán ra"))
-							hdbr += 1;
-						else if (hoaDon.getTinhTrang().equals("Hoàn trả"))
-							hdht += 1;
-						else if (hoaDon.getTinhTrang().equals("Đổi thuốc"))
-							hddt += 1;
-						if (hoaDon.getLoaiHoaDon() == true)
-							hoaDonBanHang += 1;
-						else
-							hoaDonBanLe += 1;
-					}
-
-				} else {
-					LocalDate date1 = ((JDateChooser) obj[1][1]).getDate().toInstant().atZone(ZoneId.systemDefault())
-							.toLocalDate();
-					LocalDate date2 = ((JDateChooser) obj[2][1]).getDate().toInstant().atZone(ZoneId.systemDefault())
-							.toLocalDate();
-					LocalDate ngayDate = hoaDon.getNgayTaoHoaDon();
-					if (date1.isBefore(ngayDate) && date2.isAfter(ngayDate)) {
-						hienBang(hoaDon);
-						doanhThu += hoaDon.getTongTien();
-						if (hoaDon.getTinhTrang().equals("Bán ra"))
-							hdbr += 1;
-						else if (hoaDon.getTinhTrang().equals("Hoàn trả"))
-							hdht += 1;
-						else if (hoaDon.getTinhTrang().equals("Đổi thuốc"))
-							hddt += 1;
-						if (hoaDon.getLoaiHoaDon() == true)
-							hoaDonBanHang += 1;
-						else
-							hoaDonBanLe += 1;
-					}
-					else if(date1.isEqual(date2)&&date1.isEqual(ngayDate)) {
-						hienBang(hoaDon);
-						doanhThu += hoaDon.getTongTien();
-						if (hoaDon.getTinhTrang().equals("Bán ra"))
-							hdbr += 1;
-						else if (hoaDon.getTinhTrang().equals("Hoàn trả"))
-							hdht += 1;
-						else if (hoaDon.getTinhTrang().equals("Đổi thuốc"))
-							hddt += 1;
-						if (hoaDon.getLoaiHoaDon() == true)
-							hoaDonBanHang += 1;
-						else
-							hoaDonBanLe += 1;
-					}
-
-				}
-			}
-			table.setModel(model);
-			((JLabel) obj2[0][1]).setText(table.getRowCount() + "");
-
-			((JLabel) obj2[1][1]).setText(doanhThu + "");
-			((JLabel) obj2[2][1]).setText(hoaDonBanHang + "");
-			((JLabel) obj2[3][1]).setText(hoaDonBanLe + "");
-			((JLabel) obj2[4][1]).setText(hdbr + "");
-			((JLabel) obj2[5][1]).setText(hdht + "");
-			((JLabel) obj2[6][1]).setText(hddt + "");
-
+			LocalDate ngayDate = hoaDon.getNgayTaoHoaDon();
+			hienBang(hoaDon);
+			doanhThu += hoaDon.getTongTien();
+			if (hoaDon.getTinhTrang().equals("Bán ra"))
+				hdbr += 1;
+			else if (hoaDon.getTinhTrang().equals("Hoàn trả"))
+				hdht += 1;
+			else if (hoaDon.getTinhTrang().equals("Đổi thuốc"))
+				hddt += 1;
+			if (hoaDon.getLoaiHoaDon() == true)
+				hoaDonBanHang += 1;
+			else
+				hoaDonBanLe += 1;
 		}
+
+		table.setModel(model);
+		((JLabel) obj2[0][1]).setText(table.getRowCount() + "");
+
+		((JLabel) obj2[1][1]).setText(doanhThu + "");
+		((JLabel) obj2[2][1]).setText(hoaDonBanHang + "");
+		((JLabel) obj2[3][1]).setText(hoaDonBanLe + "");
+		((JLabel) obj2[4][1]).setText(hdbr + "");
+		((JLabel) obj2[5][1]).setText(hdht + "");
+		((JLabel) obj2[6][1]).setText(hddt + "");
+
 	}
 
 	public void hienBang(HoaDon hoaDon) {
@@ -240,31 +222,7 @@ public class ThongKe_UI {
 			if (objects[1] instanceof JLabel)
 				((JLabel) objects[1]).setText("");
 		}
-		((JDateChooser) obj[1][1]).setDate(null);
-		((JDateChooser) obj[2][1]).setDate(null);
-	}
-
-	public boolean regex() {
-		String value = getValueStringInJTextField(obj[0][1]);
-		JDateChooser date1 = ((JDateChooser) obj[1][1]);
-		// Lấy ngày được chọn từ JDateChooser 2
-		JDateChooser date2 = ((JDateChooser) obj[2][1]);
-
-		if (value.equals("") && (date1.getDate() != null || date2.getDate() != null)) {
-			JOptionPane.showMessageDialog(null, "Bạn chưa nhập mã nhân viên để thống kê");
-			((JTextField) obj[0][1]).requestFocus();
-			return false;
-		}
-		if (((date1.getDate() == null || date2.getDate() == null)) && value.equals("")) {
-			JOptionPane.showMessageDialog(null, "Bạn chưa chọn đủ mốc thống kê");
-			return false;
-		}
-		NhanVien nv = nhanVien_DAO.getNhanVienFindByID(value);
-		if(nv.getMaNV()==null) {
-			JOptionPane.showMessageDialog(null, "Mã nhân viên không có trong hệ thống");
-			return false;
-		}
-		return true;
+		setValueInThongKe();
 	}
 
 	public void xuatThongKe() {
@@ -274,10 +232,17 @@ public class ThongKe_UI {
 			HoaDon hd = hoaDon_DAO.getHoaDonByID(ma);
 			list.add(hd);
 		}
-		String maNhanVien = getValueStringInJTextField(obj[0][1]);
 
-		generateInvoiceBaoCao(list, maNhanVien);
+		int ngay = Integer.parseInt(((JSpinner) obj[0][1]).getValue().toString());
+		int thang = Integer.parseInt(((JSpinner) obj[1][1]).getValue().toString());
+		int nam = ((JYearChooser) obj[2][1]).getYear();
+		generateInvoiceBaoCaoDoanhThu(list, ngay, thang, nam);
 
+	}
+
+	public void setValueInThongKe() {
+		((JSpinner) obj[0][1]).setValue(LocalDate.now().getDayOfMonth());
+		((JSpinner) obj[1][1]).setValue(LocalDate.now().getMonthValue());
 	}
 
 	public JButton buttonThongKe(String nameBtn, String pathFile) {
@@ -285,14 +250,17 @@ public class ThongKe_UI {
 		btn.setPreferredSize(new Dimension(120, 40));
 		btn.addActionListener(e -> {
 			if (nameBtn.equals("Thống kê")) {
-				thongKe();
+				int ngay = Integer.parseInt(((JSpinner) obj[0][1]).getValue().toString());
+				int thang = Integer.parseInt(((JSpinner) obj[1][1]).getValue().toString());
+				int nam = ((JYearChooser) obj[2][1]).getYear();
+				thongKe(ngay, thang, nam);
 			} else if (nameBtn.equals("")) {
 				xoaTrang();
 
 			} else if (nameBtn.equals("In thống kê")) {
 				xuatThongKe();
 
-			} else  {
+			} else {
 				System.out.println(nameBtn);
 			}
 		});
