@@ -368,8 +368,9 @@ public class HoaDonBanThuoc_UI {
 				}else if(table.getValueAt(table.getSelectedRow(), 3).toString().equals("Đổi thuốc")) {
 					ArrayList<ChiTietHoaDon> cthd = hd.getListChiTietHoaDon();
 					generateInvoiceDoiThuoc(hd, cthd,hd.getLyDo());
-				}else if(table.getValueAt(table.getSelectedRow(), 3).toString().equals("Hòan trả")) {
-						generateInvoiceHoanTra(hd, hd.getTongTien());
+				}else if(table.getValueAt(table.getSelectedRow(), 3).toString().equals("Hoàn trả")) {
+						double tienTra = Double.parseDouble(table.getValueAt(table.getSelectedRow(),5 ).toString());
+						generateInvoiceHoanTra(hd, tienTra);
 				}
 			}
 		}

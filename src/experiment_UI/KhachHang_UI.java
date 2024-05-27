@@ -393,8 +393,7 @@ public class KhachHang_UI {
 
 		String gt = getValueInComboBox(cbGioiTinh);
 		String xepHang = getValueInComboBox(cbXepHang);
-		System.out.println(gt);
-		System.out.println(xepHang);
+	
 		if (gt.equals("") && xepHang.equals("")) {
 			JOptionPane.showMessageDialog(null, "Bạn phải chọn ít nhất 1 lựa chọn để lọc khách");
 

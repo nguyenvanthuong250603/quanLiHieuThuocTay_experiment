@@ -90,6 +90,7 @@ public class BanThuocKeLaiDon_UI {
 		enterTimKhach();
 		setDefaultText(maNhanVien);
 		suKienTable();
+		enterAction();
 		return keLaiDon;
 	}
 
@@ -681,8 +682,8 @@ public class BanThuocKeLaiDon_UI {
 
 	}
 
-	public void xoaThuoc() {
-		int index = table_product.getSelectedRow();
+	public void xoaThuoc(int index) {
+	
 		if (index > -1) {
 			int recomment = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa thuốc khỏi đơn thuốc đang tạo",
 					"Lưu ý", JOptionPane.YES_NO_OPTION);
@@ -707,8 +708,9 @@ public class BanThuocKeLaiDon_UI {
 						Thuoc th = thuoc_DAO
 								.getThuocByID(table_product.getValueAt(table_product.getSelectedRow(), 0).toString());
 						int newQuantity = Integer.parseInt(model_product.getValueAt(row, column).toString());
+						
 						model_product.setValueAt(th.getGia() * newQuantity, row, 5);
-						((JTextField) object_sell[2][1]).setText(tinhLaiTien() + "");
+						((JTextField) object_sell[2][1]).setText( "  "+tinhLaiTien() );
 					}
 				}
 
@@ -847,7 +849,23 @@ public class BanThuocKeLaiDon_UI {
 
 		return true;
 	}
+	public void enterAction() {
+		ActionListener enter3 = new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+
+					timHoaDon();
+
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+
+			}
+		};
+		textFind.addActionListener(enter3);
+	}
 	private JButton createButtonBanThuocKeLaiDon(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(180, 40));
@@ -871,7 +889,8 @@ public class BanThuocKeLaiDon_UI {
 					JOptionPane.showMessageDialog(null, "Bạn phải chọn hóa đơn để thực hiện chức năng");
 				}
 			} else if (nameButton.equals("Xóa Thuốc")) {
-				xoaThuoc();
+				int index = table_product.getSelectedRow();
+				xoaThuoc(index);
 			} else if (nameButton.equals("Tạo hóa đơn")) {
 				if (regexInHoaDon())
 					taoHoaDon();

@@ -298,7 +298,7 @@ public class DoiThuoc_UI {
 		if (hd != null && hd.getMaKh().getMaKH() != null) {
 			LocalDate ngayTao = hd.getNgayTaoHoaDon();
 			Long tinhNgay = ChronoUnit.DAYS.between( ngayTao,LocalDate.now());
-			System.out.println(tinhNgay);
+			
 			if (tinhNgay <= 7) {
 				String tinhTrang = hd.getTinhTrang();
 				radioSelection(tinhTrang);
@@ -340,60 +340,7 @@ public class DoiThuoc_UI {
 
 	}
 
-//	public void hienChungLocVaTim() {
-//		if (table.getRowCount() > 0) {
-//			((JTextField) object_sell[0][1]).setText(table.getValueAt(table.getSelectedRow(), 0).toString());
-//			((JTextField) object_sell[1][1]).setText(table.getValueAt(table.getSelectedRow(), 3).toString());
-//			((JTextField) object_sell[2][1]).setText(formatTime(LocalDate.now()));
-//
-//			String mahd = table.getValueAt(table.getSelectedRow(), 0).toString();
-//			HoaDon hd = hoaDon_DAO.getHoaDonByID(mahd);
-//			String tinhtrang = hd.getTinhTrang();
-//			labelMoney.setText("Tổng tiền : " + table.getValueAt(table.getSelectedRow(), 4));
-//
-//			jtetJTextAreReason.setText(hd.getLyDo());
-//			radioSelection(tinhtrang);
-//
-//			table.addMouseListener(new MouseListener() {
-//
-//				@Override
-//				public void mouseReleased(MouseEvent e) {
-//					// TODO Auto-generated method stub
-//
-//				}
-//
-//				@Override
-//				public void mousePressed(MouseEvent e) {
-//					// TODO Auto-generated method stub
-//
-//				}
-//
-//				@Override
-//				public void mouseExited(MouseEvent e) {
-//					// TODO Auto-generated method stub
-//
-//				}
-//
-//				@Override
-//				public void mouseEntered(MouseEvent e) {
-//					// TODO Auto-generated method stub
-//
-//				}
-//
-//				@Override
-//				public void mouseClicked(MouseEvent e) {
-//					labelMoney.setText("Tổng tiền : " + table.getValueAt(table.getSelectedRow(), 4));
-//					HoaDon hdon = hoaDon_DAO.getHoaDonByID(table.getValueAt(table.getSelectedRow(), 0).toString());
-//					String tinhtrang = hdon.getTinhTrang();
-//
-//					jtetJTextAreReason.setText(hdon.getLyDo());
-//					radioSelection(tinhtrang);
-//
-//				}
-//			});
-//
-//		}
-//	}
+
 
 	public void radioSelection(String tinhtrang) {
 
@@ -487,8 +434,11 @@ public class DoiThuoc_UI {
 						Thuoc th = thuoc_DAO
 								.getThuocByID(table_product.getValueAt(table_product.getSelectedRow(), 0).toString());
 						int newQuantity = Integer.parseInt(model_product.getValueAt(row, column).toString());
+						if(newQuantity==0) {
+							model_product.removeRow(table_product.getSelectedRow());
+						}
 						model_product.setValueAt(th.getGia() * newQuantity, row, 5);
-						labelMoney.setText("Tổng tiền :" + tinhLaiTien() + "");
+						labelMoney.setText("Tổng tiền :  " + tinhLaiTien() + "");
 					}
 
 				}

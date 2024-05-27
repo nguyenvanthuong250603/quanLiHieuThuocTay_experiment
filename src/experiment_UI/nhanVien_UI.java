@@ -141,7 +141,7 @@ public class NhanVien_UI {
 
 	public JPanel service() {
 		JPanel footer = new JPanel();
-		String[][] object = { { "Xóa trắng", "gift//brush.png" }, { "Thêm", "gift//them.png" },
+		String[][] object = { { "Xóa trắng", "gift//brush.png" }, { "Thêm", "gift//add.png" },
 				{ "Xóa", "gift//trash-bin.png" }, { "Cập nhật", "gift//update.png" },
 				{ "In danh sách", "gift//excel-file.png" } };
 		for (String[] strings : object) {
@@ -284,7 +284,10 @@ public class NhanVien_UI {
 			model.addRow(row);
 			xoaTrang();
 
+		}else {
+			JOptionPane.showMessageDialog(null, "Nhân viên đã có trong hệ thống");
 		}
+			
 	}
 
 	public void updateNhanVien() {
@@ -322,6 +325,7 @@ public class NhanVien_UI {
 
 		((JLabel) inf_personnel_left[0][0]).setText(generateCode("NV"));
 		((JTextField) inf_personnel_right[4][0]).setText(formatTime(LocalDate.now()));
+		displayImage(new File(""));
 		hienBangNhanVien();
 		labelImage.setText("");
 

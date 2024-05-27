@@ -428,6 +428,7 @@ public class QuanLyThuoc_UI {
 	}
 
 	public void hienThongTin(Thuoc thuoc) {
+	
 		jTextMaThuoc.setText(thuoc.getMaThuoc());
 		jTextTenThuoc.setText(thuoc.getTenThuoc());
 		((JTextField) object_inf[0][1]).setText(thuoc.getSoLuong() + "");
@@ -488,6 +489,10 @@ public class QuanLyThuoc_UI {
 	}
 
 	public boolean regexThem() {
+		if(jTextMaThuoc.getText().equals("")) {
+			JOptionPane.showMessageDialog(null, "bạn chưa nhập tên thuốc");
+			return false;
+		}
 		for (Object[] objects : object_inf) {
 			if (objects[1] instanceof JTextField) {
 				if (((JTextField) objects[1]).getText().equals("")) {
@@ -536,12 +541,27 @@ public class QuanLyThuoc_UI {
 			}
 
 		}
+		for (Object[] objects : object_detail) {
+			if (objects[1] instanceof JTextField) {
+				if (((JTextField) objects[1]).getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "Bạn chưa nhập thông tin vào " + objects[0].toString());
+					((JTextField) objects[1]).requestFocus();
+					return false;
+				}
+			}
+			if(jTextAreaMoTa.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "Bạn chưa nhập thông tin vào mô tả");
+				jTextAreaMoTa.requestFocus();
+				return false;
+			}
+			
+		}
+		
 		return true;
 
 	}
-
 	public void suaThuoc() {
-		if(table.getSelectedRow()<0) {
+		if(table.getSelectedRow()>0) {
 		String ma = jTextMaThuoc.getText();
 		String ten = jTextTenThuoc.getText();
 		int soLuong = getValueIntỊntextField(object_inf[0][1]);
@@ -589,7 +609,7 @@ public class QuanLyThuoc_UI {
 
 		}
 		}else {
-			JOptionPane.showMessageDialog(table, "Bạn chưa chọn thuốc để sửa");
+			JOptionPane.showMessageDialog(null, "Bạn chưa chọn thuốc để sửa");
 		}
 	}
 
@@ -633,6 +653,7 @@ public class QuanLyThuoc_UI {
 
 			model.setRowCount(0);
 			for (Thuoc thuoc : list_ThuocTim) {
+				
 				if (!tinhTrangThuoc.equals("")) {
 					if (tinhTrangThuoc.equals("sản phẩm còn hạn")) {
 						LocalDate date = thuoc.getNgayHetHan();

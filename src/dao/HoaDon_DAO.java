@@ -720,7 +720,7 @@ public class HoaDon_DAO {
 			p.setDate(1, java.sql.Date.valueOf(ngayBD));
 			p.setDate(2, java.sql.Date.valueOf(ngayKT));
 
-			p.setInt(5, loai);
+			p.setInt(3, loai);
 
 			rs = p.executeQuery();
 

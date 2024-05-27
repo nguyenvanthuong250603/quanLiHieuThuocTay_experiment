@@ -541,7 +541,7 @@ public class Generate_All {
 	}
 
 	public static void generateInvoiceDoiThuoc(HoaDon hd, ArrayList<ChiTietHoaDon> cthd, String lydo) {
-		// Tạo một đối tượng Document
+		
 		Document document = new Document();
 
 		try {

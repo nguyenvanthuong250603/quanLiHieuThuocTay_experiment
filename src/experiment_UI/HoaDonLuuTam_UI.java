@@ -158,8 +158,10 @@ public class HoaDonLuuTam_UI {
 	}
 
 	public void xoaDon() {
+		if(table.getRowCount()>0) {
 		int index = table.getSelectedRow();
-		String maHD = table.getValueAt(index, 0).toString();
+		String maHD = table.getValueAt(index, 0).toString().equals("")?"":table.getValueAt(index, 0).toString();
+		
 
 		if (index >= 0) {
 			int recomment = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa đơn thuốc ", "Lưu ý",
@@ -182,7 +184,9 @@ public class HoaDonLuuTam_UI {
 		} else {
 			JOptionPane.showMessageDialog(null, "Bạn phải chọn hóa đơn để xóa");
 		}
-
+		}else {
+			JOptionPane.showMessageDialog(null, "Không có  hóa đơn để xóa");
+		}
 	}
 
 	public void chonHoaDon() {

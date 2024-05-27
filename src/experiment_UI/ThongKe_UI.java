@@ -140,90 +140,85 @@ public class ThongKe_UI {
 		managerment.add(scoll, BorderLayout.CENTER);
 		return managerment;
 	}
-
 	public void thongKe() {
+	    if (regex()) {
+	        String value = getValueStringInJTextField(obj[0][1]);
+	        String maGui = value.substring(6);
 
-		// Tính số ngày giữa hai ngày
-//		long daysBetween = ChronoUnit.DAYS.between(date1, date2);
-		if (regex()) {
-			String value = getValueStringInJTextField(obj[0][1]);
-			String maGui = value.substring(6);
+	        model.setRowCount(0);
+	        ArrayList<HoaDon> lhd = hoaDon_DAO.getHoaDonThongKeByNhanVien(maGui);
+	        double doanhThu = 0;
+	        int hoaDonBanHang = 0;
+	        int hoaDonBanLe = 0;
+	        int hdbr = 0;
+	        int hddt = 0;
+	        int hdht = 0;
 
-			model.setRowCount(0);
-			ArrayList<HoaDon> lhd = hoaDon_DAO.getHoaDonThongKeByNhanVien(maGui);
-			double doanhThu = 0;
-			int hoaDonBanHang = 0;
-			int hoaDonBanLe = 0;
-			int hdbr = 0;
-			int hddt = 0;
-			int hdht = 0;
+	        for (HoaDon hoaDon : lhd) {
+	            LocalDate ngayDate = hoaDon.getNgayTaoHoaDon();
+	            if (((JDateChooser) obj[1][1]).getDate() == null && ((JDateChooser) obj[2][1]).getDate() == null) {
+	                if (ngayDate.isEqual(LocalDate.now())) {
+	                    hienBang(hoaDon);
+	                    doanhThu += hoaDon.getTongTien();
+	                    switch (hoaDon.getTinhTrang()) {
+	                        case "Bán ra":
+	                            hdbr += 1;
+	                            break;
+	                        case "Hoàn trả":
+	                            hdht += 1;
+	                            break;
+	                        case "Đổi thuốc":
+	                            hddt += 1;
+	                            break;
+	                    }
+	                    if (hoaDon.getLoaiHoaDon()) {
+	                        hoaDonBanHang += 1;
+	                    } else {
+	                        hoaDonBanLe += 1;
+	                    }
+	                }
+	            } else {
+	                LocalDate date1 = ((JDateChooser) obj[1][1]).getDate().toInstant()
+	                        .atZone(ZoneId.systemDefault())
+	                        .toLocalDate();
+	                LocalDate date2 = ((JDateChooser) obj[2][1]).getDate().toInstant()
+	                        .atZone(ZoneId.systemDefault())
+	                        .toLocalDate();
 
-			for (HoaDon hoaDon : lhd) {
-				if (((JDateChooser) obj[1][1]).getDate() == null && ((JDateChooser) obj[2][1]).getDate() == null) {
-					LocalDate ngayDate = hoaDon.getNgayTaoHoaDon();
-					if (ngayDate.isEqual(LocalDate.now())) {
-						hienBang(hoaDon);
-						doanhThu += hoaDon.getTongTien();
-						if (hoaDon.getTinhTrang().equals("Bán ra"))
-							hdbr += 1;
-						else if (hoaDon.getTinhTrang().equals("Hoàn trả"))
-							hdht += 1;
-						else if (hoaDon.getTinhTrang().equals("Đổi thuốc"))
-							hddt += 1;
-						if (hoaDon.getLoaiHoaDon() == true)
-							hoaDonBanHang += 1;
-						else
-							hoaDonBanLe += 1;
-					}
+	                if ((ngayDate.isEqual(date1) || ngayDate.isAfter(date1)) &&
+	                    (ngayDate.isEqual(date2) || ngayDate.isBefore(date2))) {
 
-				} else {
-					LocalDate date1 = ((JDateChooser) obj[1][1]).getDate().toInstant().atZone(ZoneId.systemDefault())
-							.toLocalDate();
-					LocalDate date2 = ((JDateChooser) obj[2][1]).getDate().toInstant().atZone(ZoneId.systemDefault())
-							.toLocalDate();
-					LocalDate ngayDate = hoaDon.getNgayTaoHoaDon();
-					if (date1.isBefore(ngayDate) && date2.isAfter(ngayDate)) {
-						hienBang(hoaDon);
-						doanhThu += hoaDon.getTongTien();
-						if (hoaDon.getTinhTrang().equals("Bán ra"))
-							hdbr += 1;
-						else if (hoaDon.getTinhTrang().equals("Hoàn trả"))
-							hdht += 1;
-						else if (hoaDon.getTinhTrang().equals("Đổi thuốc"))
-							hddt += 1;
-						if (hoaDon.getLoaiHoaDon() == true)
-							hoaDonBanHang += 1;
-						else
-							hoaDonBanLe += 1;
-					}
-					else if(date1.isEqual(date2)&&date1.isEqual(ngayDate)) {
-						hienBang(hoaDon);
-						doanhThu += hoaDon.getTongTien();
-						if (hoaDon.getTinhTrang().equals("Bán ra"))
-							hdbr += 1;
-						else if (hoaDon.getTinhTrang().equals("Hoàn trả"))
-							hdht += 1;
-						else if (hoaDon.getTinhTrang().equals("Đổi thuốc"))
-							hddt += 1;
-						if (hoaDon.getLoaiHoaDon() == true)
-							hoaDonBanHang += 1;
-						else
-							hoaDonBanLe += 1;
-					}
+	                    hienBang(hoaDon);
+	                    doanhThu += hoaDon.getTongTien();
+	                    switch (hoaDon.getTinhTrang()) {
+	                        case "Bán ra":
+	                            hdbr += 1;
+	                            break;
+	                        case "Hoàn trả":
+	                            hdht += 1;
+	                            break;
+	                        case "Đổi thuốc":
+	                            hddt += 1;
+	                            break;
+	                    }
+	                    if (hoaDon.getLoaiHoaDon()) {
+	                        hoaDonBanHang += 1;
+	                    } else {
+	                        hoaDonBanLe += 1;
+	                    }
+	                }
+	            }
+	        }
 
-				}
-			}
-			table.setModel(model);
-			((JLabel) obj2[0][1]).setText(table.getRowCount() + "");
-
-			((JLabel) obj2[1][1]).setText(doanhThu + "");
-			((JLabel) obj2[2][1]).setText(hoaDonBanHang + "");
-			((JLabel) obj2[3][1]).setText(hoaDonBanLe + "");
-			((JLabel) obj2[4][1]).setText(hdbr + "");
-			((JLabel) obj2[5][1]).setText(hdht + "");
-			((JLabel) obj2[6][1]).setText(hddt + "");
-
-		}
+	        table.setModel(model);
+	        ((JLabel) obj2[0][1]).setText(table.getRowCount() + "");
+	        ((JLabel) obj2[1][1]).setText(doanhThu + "");
+	        ((JLabel) obj2[2][1]).setText(hoaDonBanHang + "");
+	        ((JLabel) obj2[3][1]).setText(hoaDonBanLe + "");
+	        ((JLabel) obj2[4][1]).setText(hdbr + "");
+	        ((JLabel) obj2[5][1]).setText(hdht + "");
+	        ((JLabel) obj2[6][1]).setText(hddt + "");
+	    }
 	}
 
 	public void hienBang(HoaDon hoaDon) {

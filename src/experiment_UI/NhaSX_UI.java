@@ -150,7 +150,7 @@ public class NhaSX_UI {
 	public JPanel fotter_East() {
 		JPanel footer = new JPanel();
 
-		String[] object = { "Thêm", "gift\\trash-bin.png", "Xóa", "gift\\trash-bin.png", "Cập nhật", "gift\\update.png",
+		String[] object = { "Thêm", "gift\\add.png", "Xóa", "gift\\trash-bin.png", "Cập nhật", "gift\\update.png",
 				"Xuất Execl", "gift\\excel-file.png" };
 		for (int i = 0; i < object.length; i += 2) {
 			footer.add(buttonInPageCustommer(object[i], object[i + 1]));
@@ -350,6 +350,28 @@ public class NhaSX_UI {
 			}
 		}
 	}
+	public void capNhatNSX() {
+		String ma = getValueStringInJlabel(objects_custommer[0][1]);
+		String ten  = getValueStringInJTextField(objects_custommer[1][1]);
+		String diaChi =getValueStringInJTextField(objects_custommer[2][1]);
+		if(table.getSelectedRow()>=0) {
+			int question = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa nhà sản xuất đã chọn hay không ?",
+					"Chú ý", JOptionPane.YES_NO_OPTION);
+			if(question==JOptionPane.YES_OPTION) {
+				if(NhaSanXuat_DAO.updateNSX(ten, diaChi, ma)) {
+					JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+					xoaTrang();
+					
+				}else {
+					System.out.println("loi");
+				}
+					
+			}
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Bạn chưa chọn nhà sản xuất để cập nhật");
+		}
+	}
 	public JButton buttonInPageCustommer(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(150, 50));
@@ -364,6 +386,9 @@ public class NhaSX_UI {
 				xoaKhachHang();
 			} else if (nameButton.equals("Xuất Execl")) {
 				xuatFileExcel();
+			}
+			else if(nameButton.equals("Cập nhật")) {
+				capNhatNSX();
 			}
 
 			else {

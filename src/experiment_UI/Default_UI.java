@@ -79,12 +79,12 @@ public class Default_UI {
 		container = new JPanel();
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
+		container.add(createBanThuocKeDonMoi(MaNV), HDM);
 		container.add(createNhaSanXuat(),NSX);
 		container.add(createThongKeDoanhThuTheoThuoc(),TKDTT);
 		container.add(createThongKeDoanhThu(),TKDT);
 		container.add(createHoaDon(hoaDon_DAO), HĐBT);
 		container.add(createBanThuocKeLaiDon(MaNV), KLD);
-		container.add(createBanThuocKeDonMoi(MaNV), HDM);
 		container.add(createKhachHang(), KH);
 		container.add(createQuanLyThuoc(), T);
 		container.add(createThongKe(), TKNV);
@@ -193,7 +193,7 @@ public class Default_UI {
 							compoment.remove(i);
 						}
 					}
-//					cardLayout.show(container, BT);
+
 
 					break;
 				}
@@ -207,7 +207,14 @@ public class Default_UI {
 					break;
 				}
 				case NV: {
-					cardLayout.show(container, NV);
+					NhanVien nv  = nhanVien_DAO.getNhanVienFindByID(maNhanVien);
+					if(!nv.getChucVu().equals("Nhân viên")) {
+						
+					
+						cardLayout.show(container, NV);
+					}
+					else
+						JOptionPane.showMessageDialog(null, "Chức năng này chỉ dành cho quản lí");
 					break;
 				}
 				case HĐBT: {
@@ -262,11 +269,24 @@ public class Default_UI {
 					break;
 				}
 				case TKDT : {
-					cardLayout.show(container, TKDT);
+					NhanVien nv  = nhanVien_DAO.getNhanVienFindByID(maNhanVien);
+					if(!nv.getChucVu().equals("Nhân viên")) {
+						
+						cardLayout.show(container, TKDT);
+						
+					}
+					else
+						JOptionPane.showMessageDialog(null, "Chức năng này chỉ dành cho quản lí");
 					break;
 				}
 				case TKDTT : {
-					cardLayout.show(container, TKDTT);
+					NhanVien nv  = nhanVien_DAO.getNhanVienFindByID(maNhanVien);
+					if(!nv.getChucVu().equals("Nhân viên")) {
+						
+						cardLayout.show(container, TKDTT);
+					}
+					else
+						JOptionPane.showMessageDialog(null, "Chức năng này chỉ dành cho quản lí");
 					break;
 				}
 				case NSX : {
@@ -274,15 +294,15 @@ public class Default_UI {
 					break;
 				}
 				case HELP:{
-					   String filePath = "C:\\Users\\ADMIN\\Downloads\\1_DHKTPM17C_Nhom4_19042024_JPA ORM RMI_10-12.pdf";
+					   String filePath = "C:\\Users\\ADMIN\\Downloads\\hdsd.pdf";
 		                
-		                // Kiểm tra xem Desktop được hỗ trợ không
+		          
 		                if (Desktop.isDesktopSupported()) {
 		                    Desktop desktop = Desktop.getDesktop();
 		                    if (desktop.isSupported(Desktop.Action.OPEN)) {
 		                        try {
 		                            File file = new File(filePath);
-		                            desktop.open(file); // Mở file PDF bằng Microsoft Edge
+		                            desktop.open(file); 
 		                        } catch (IOException ex) {
 		                            ex.printStackTrace();
 		                        }

@@ -116,5 +116,35 @@ public class NhaSanXuat_DAO {
 		}
 
 	}
+	public boolean updateNSX(String ten,String diaChi,String maNSX) {
+	    Connection con = null;
+	    PreparedStatement p = null;
+
+	    try {
+	        con = connectDataBase.ConnectionData.accessDataBase();
+	        p = con.prepareStatement("UPDATE NhaSanXuat  SET  TenNSX  = ? , DiaChiNSX = ? WHERE MaNSX = ?");
+	        p.setString(1, ten);
+	        p.setString(2, diaChi);
+	        p.setString(3, maNSX);
+
+	        int rowsAffected = p.executeUpdate();
+	        return rowsAffected > 0;
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        try {
+	            if (p != null) {
+	                p.close();
+	            }
+	            if (con != null) {
+	                con.close();
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
 
 }

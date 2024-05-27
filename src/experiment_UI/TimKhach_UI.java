@@ -268,13 +268,12 @@ public class TimKhach_UI {
 		String gt = getValueInComboBox((JComboBox) objects_custommer[4][1]);
 		String sdt = getValueStringInJTextField(objects_custommer[5][1]);
 		String diaChi = getValueStringInJTextField(objects_custommer[6][1]);
-		String xepHang = getValueInComboBox(cbXepHang);
+		String xepHang = getValueInComboBox((JComboBox)objects_custommer[7][1]);
 
 		KhachHang kh = new KhachHang(maKh, tenKh, ngaySing, tuoi, transGenderToSQL(gt), sdt, diaChi, 0, xepHang);
 		if (lKhachHang_DAO.themKhachHang(kh)) {
 			JOptionPane.showMessageDialog(null, "Thêm khách hàng thành công");
-			String[] row = { maKh, tenKh, 0 + "", sdt, diaChi };
-			model.addRow(row);
+		
 			xoaTrang();
 			table.setRowSelectionInterval(model.getRowCount() - 1, model.getRowCount() - 1);
 		} else {
