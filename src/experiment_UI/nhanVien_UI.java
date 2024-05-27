@@ -421,14 +421,17 @@ public class NhanVien_UI {
 	}
 
 	public void xoaNhanVien() {
-		int index = table.getSelectedColumn();
+		int index = table.getSelectedRow();
 		if (index > -1) {
 			int question = JOptionPane.showConfirmDialog(null, "Bạn có chắc muốn xóa nhân viên hay không ?", "Chú ý",
 					JOptionPane.YES_NO_OPTION);
-			if (question == JOptionPane.YES_OPTION && nhanVien_DAO.xoaNhanVien(table.getValueAt(index, 0).toString())) {
-
+			if (question == JOptionPane.YES_OPTION ) {
+				if(nhanVien_DAO.xoaNhanVien(table.getValueAt(index, 0).toString())) {
 				JOptionPane.showMessageDialog(null, "Xóa nhân viên thành công");
 				model.removeRow(index);
+				}else {
+					System.out.println("sai");
+				}
 
 			}
 		} else {

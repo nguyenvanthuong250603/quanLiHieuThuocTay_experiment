@@ -1,5 +1,4 @@
-﻿CREATE DATABASE QLHTT
-GO
+﻿
 USE QLHTT
 
 GO
@@ -24,6 +23,8 @@ CREATE TABLE TaiKhoan (
     FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV)
 );
 GO
+
+
 
 CREATE TABLE NhaSanXuat(
 	MaNSX NVARCHAR(50) ,
@@ -93,11 +94,11 @@ CREATE TABLE ChiTietHoaDon(
 
 
 
-INSERT [dbo].[NhaSanXuat] ([TenNSX], [DiaChiNSX]) VALUES (N'Hà Nam', N'40 Nguyễn Huệ , Quận 1 ,HCM')
-INSERT [dbo].[NhaSanXuat] ([TenNSX], [DiaChiNSX]) VALUES (N'Nam Cao', N'13 Nam Văn , Gò Vấp,HCM')
-INSERT [dbo].[NhaSanXuat] ([TenNSX], [DiaChiNSX]) VALUES (N'Nam Hà', N'40 Nguyễn Huệ , Quận 1 ,HCM')
-INSERT [dbo].[NhaSanXuat] ([TenNSX], [DiaChiNSX]) VALUES (N'Phát Đạt', N'13 Nam Văn , Gò Vấp,HCM')
-INSERT [dbo].[NhaSanXuat] ([TenNSX], [DiaChiNSX]) VALUES (N'Thái Thịnh', N'40 Nguyễn Huệ , Quận 1 ,HCM')
+INSERT NhaSanXuat VALUES (N'NSX27051122',N'Hà Nam', N'40 Nguyễn Huệ , Quận 1 ,HCM')
+INSERT NhaSanXuat VALUES (N'NSX27051098',N'Nam Cao', N'13 Nam Văn , Gò Vấp,HCM')
+INSERT NhaSanXuat VALUES (N'NSX27051123',N'Nam Hà', N'40 Nguyễn Huệ , Quận 1 ,HCM')
+INSERT NhaSanXuat VALUES (N'NSX27051152',N'Phát Đạt', N'13 Nam Văn , Gò Vấp,HCM')
+INSERT NhaSanXuat VALUES (N'NSX27051166',N'Thái Thịnh', N'40 Nguyễn Huệ , Quận 1 ,HCM')
 
 GO
 INSERT INTO NhanVien VALUES ('NV12061111',N'Nguyễn Văn Thương',1,'2003-06-25',20,'0794571318','067203000247',N'ĐĂK NÔNG',N'Quản lý',N'Đang làm','2024-03-20','');
@@ -126,7 +127,7 @@ SELECT * FROM HoaDon WHERE NgayTaoHoaDon BETWEEN '2024-04-01' AND '2024-04-14';
 SELECT * FROM HoaDon WHERE MONTH(NgayTaoHoaDon) = 3 AND YEAR(NgayTaoHoaDon) = 2024;
 
 ------------------------------------
-INSERT INTO HoaDon VALUES (N'HĐ1321312',N'NV12061111','KH1205798',N'Nguyễn Thị Đào',N'Tiền mặt','2024-03-1',1,N'Bán ra','200000','')
+/*INSERT INTO HoaDon VALUES (N'HĐ1321312',N'NV12061111','KH1205798',N'Nguyễn Thị Đào',N'Tiền mặt','2024-03-1',1,N'Bán ra','200000','')
 
 select *from HoaDon where MaHD like '%1998%'
 
@@ -136,6 +137,7 @@ select * from ChiTietHoaDon group by MaThuoc
 select MaThuoc,sum(ThanhTien)  ,sum( SoLuongThuoc) from ChiTietHoaDon   c inner join HoaDon h  on c.MaHD = h.MaHD where  MaThuoc ='TH04050001' group by MaThuoc
 
 select MaThuoc,sum(ThanhTien)  , sum(SoLuongThuoc) from ChiTietHoaDon   c inner join HoaDon h  on c.MaHD = h.MaHD where  MaThuoc ='TH04050002'
+*/
 GO
 
 INSERT INTO Thuoc (MaThuoc, TenThuoc, SoLuong, Gia, LoaiThuoc, NhaSanXuat, NgaySanXuat, NgayHetHan, HinhAnh, DonVi, DangBaoChe, DoTuoi, ThanhPhan, ChiDinh, LieuDung, BaoQuan, MoTa)
@@ -379,11 +381,4 @@ INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT]
 INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH1204115', N'Nguyễn Văn Nam', CAST(N'2024-03-19' AS Date), 20, 1, N'01213562326', N'Ðak lak', 100, N'Đồng')
 INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH1205798', N'Nguyễn Thị Đào', CAST(N'2024-03-19' AS Date), 20, 0, N'01213562326', N'Ðak lak', 570, N'Bạc')
 INSERT [dbo].[KhachHang] ([MaKH], [TenKH], [NgaySinh], [Tuoi], [GioiTinh], [SDT], [DiaChi], [DiemThanhVien], [XepHang]) VALUES (N'KH1212888', N'Nguyễn Văn Hoàng', CAST(N'2024-03-19' AS Date), 20, 1, N'0794571318', N'Ðak lak', 1960, N'Vàng')
-GO
-INSERT [dbo].[NhanVien] ([MaNV], [HoTen], [GioiTinh], [NgaySinh], [Tuoi], [sdt], [cccd], [DiaChi], [ChucVu], [NgayVaoLam], [trangThai], [Anh]) VALUES (N'NV001', N'Nguyễn Văn Thương', 0, CAST(N'2003-06-25' AS Date), 20, N'0794571318', N'067203000247', N'ĐĂK NÔNG', N'Quản lý', CAST(N'2024-03-20' AS Date), N'Đang làm', N'')
-INSERT [dbo].[NhanVien] ([MaNV], [HoTen], [GioiTinh], [NgaySinh], [Tuoi], [sdt], [cccd], [DiaChi], [ChucVu], [NgayVaoLam], [trangThai], [Anh]) VALUES (N'NV15040001', N'Nguyễn Văn Linh', 0, CAST(N'1999-02-03' AS Date), 24, N'0123456789', N'012345678910', N'Hồ Chí Minh', N'Nhân viên', CAST(N'2024-03-15' AS Date), N'Đang làm', N'')
-INSERT [dbo].[NhanVien] ([MaNV], [HoTen], [GioiTinh], [NgaySinh], [Tuoi], [sdt], [cccd], [DiaChi], [ChucVu], [NgayVaoLam], [trangThai], [Anh]) VALUES (N'NV15040002', N'Lê Thị Huyền', 1, CAST(N'2000-10-10' AS Date), 23, N'0123456771', N'098765432110', N'Bình Dương', N'Quản lý', CAST(N'2024-02-10' AS Date), N'Đang làm', N'')
-INSERT [dbo].[NhanVien] ([MaNV], [HoTen], [GioiTinh], [NgaySinh], [Tuoi], [sdt], [cccd], [DiaChi], [ChucVu], [NgayVaoLam], [trangThai], [Anh]) VALUES (N'NV15040003', N'Bùi Nguyên Văn', 0, CAST(N'2000-08-22' AS Date), 23, N'0223344223', N'098811882839', N'Biên Hoà', N'Nhân viên', CAST(N'2024-04-01' AS Date), N'Đang làm', N'')
-INSERT [dbo].[NhanVien] ([MaNV], [HoTen], [GioiTinh], [NgaySinh], [Tuoi], [sdt], [cccd], [DiaChi], [ChucVu], [NgayVaoLam], [trangThai], [Anh]) VALUES (N'NV15040011', N'Lê Huyền Trân', 1, CAST(N'2002-07-29' AS Date), 22, N'0822334488', N'077788799776', N'An Giang', N'Nhân vien', CAST(N'2024-02-20' AS Date), N'Đã nghỉ', N'')
-INSERT [dbo].[NhanVien] ([MaNV], [HoTen], [GioiTinh], [NgaySinh], [Tuoi], [sdt], [cccd], [DiaChi], [ChucVu], [NgayVaoLam], [trangThai], [Anh]) VALUES (N'NV15042211', N'Đinh Văn Lễ', 0, CAST(N'2001-09-15' AS Date), 21, N'0688998123', N'078891837498', N'Khánh Hoà', N'Quản lý', CAST(N'2024-02-10' AS Date), N'Nghỉ phép', N'')
 GO

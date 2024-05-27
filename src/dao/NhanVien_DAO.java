@@ -144,21 +144,33 @@ public class NhanVien_DAO {
 
 	}
 	public boolean xoaNhanVien(String ma) {
-		Connection con = connectDataBase.ConnectionData.accessDataBase();
-		PreparedStatement p = null;
-		try {
+	    Connection con = null;
+	    PreparedStatement p = null;
 
-			p = con.prepareStatement("DELETE NhanVien WHERE MaNV = ?");
-			p.setString(1, ma);
+	    try {
+	        con = connectDataBase.ConnectionData.accessDataBase();
+	        p = con.prepareStatement("DELETE FROM NhanVien WHERE MaNV = ?");
+	        p.setString(1, ma);
 
-			p.executeUpdate();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-
+	        int rowsAffected = p.executeUpdate();
+	        return rowsAffected > 0;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return false;
+	    } finally {
+	        try {
+	            if (p != null) {
+	                p.close();
+	            }
+	            if (con != null) {
+	                con.close();
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
 	}
+
 
 	public boolean updateNhanVien(NhanVien nv) {
 		Connection con = connectDataBase.ConnectionData.accessDataBase();

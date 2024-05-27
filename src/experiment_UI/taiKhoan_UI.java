@@ -211,9 +211,7 @@ public class TaiKhoan_UI  extends JFrame{
 						
 						
 					}
-					else {
-						JOptionPane.showMessageDialog(this, "tai khoan sai");
-					}
+					
 				}
 			
 			}

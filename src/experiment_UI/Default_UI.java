@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -19,6 +20,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 import javax.swing.AbstractButton;
@@ -270,6 +273,23 @@ public class Default_UI {
 					cardLayout.show(container, NSX);
 					break;
 				}
+				case HELP:{
+					   String filePath = "C:\\Users\\ADMIN\\Downloads\\1_DHKTPM17C_Nhom4_19042024_JPA ORM RMI_10-12.pdf";
+		                
+		                // Kiểm tra xem Desktop được hỗ trợ không
+		                if (Desktop.isDesktopSupported()) {
+		                    Desktop desktop = Desktop.getDesktop();
+		                    if (desktop.isSupported(Desktop.Action.OPEN)) {
+		                        try {
+		                            File file = new File(filePath);
+		                            desktop.open(file); // Mở file PDF bằng Microsoft Edge
+		                        } catch (IOException ex) {
+		                            ex.printStackTrace();
+		                        }
+		                    }
+		                }
+		                break;
+				}
 				default:
 					throw new IllegalArgumentException("Unexpected value: " + nameButton);
 				}
@@ -296,8 +316,9 @@ public class Default_UI {
 		boxx.add(createCompoment("gift\\down.png", "Hóa Đơn", "gift\\bill.png", true));
 		boxx.add(createCompoment("gift\\upload.png", "Khách Hàng", "gift\\khachhang.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Nhân Viên", "gift\\nhanvien.png", true));
+		boxx.add(createCompoment("gift\\thuoc.png", "Nhà sản xuất", "gift\\nsx.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Thống Kê", "gift\\thongke.png", false));
-		boxx.add(createCompoment("gift\\thuoc.png", "Nhà sản xuất", "gift\\logout.png", true));
+		boxx.add(createCompoment("gift\\thuoc.png", "Trợ giúp", "gift\\help.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Đăng Xuất", "gift\\logout.png", true));
 		westt.add(boxx);
 		return westt;

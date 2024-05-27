@@ -679,7 +679,7 @@ public class BanThuocKeDonMoi_UI {
 		}
 
 		double tongTien = Double.parseDouble(getValueStringInJTextField(object_sell[2][1]));
-		HoaDon hd = new HoaDon(maHD, nv, kh, tenKh, hinhThucThanhToan, LocalDate.now(), loaiHoaDon, tinhTrang, tongTien,
+		HoaDon hd = new HoaDon(maHD, nv, kh, tenKh, hinhThucThanhToan, LocalDate.of(2024,05, 10) ,loaiHoaDon, tinhTrang, tongTien,
 				"", listCtHD);
 		return hd;
 	}

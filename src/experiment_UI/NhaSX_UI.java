@@ -21,10 +21,7 @@ import com.toedter.calendar.JDateChooser;
 import dao.KhachHang_DAO;
 import dao.NhaSanXuat_DAO;
 import dao.NhanVien_DAO;
-import entity.KhachHang;
-import entity.NhaSanXuat;
 import entity.*;
-import entity.Thuoc;
 import experiment_UI.Generate_All.CustomTableCellRenderer;
 
 import static experiment_UI.Generate_All.*;
@@ -35,6 +32,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.nio.channels.NonWritableChannelException;
@@ -169,6 +168,7 @@ public class NhaSX_UI {
 		((JTextField) objects_custommer[1][1]).setText("");
 
 		((JTextField) objects_custommer[2][1]).setText("");
+		((JTextField) objects_North[0][1]).setText("");
 
 	}
 
@@ -276,12 +276,12 @@ public class NhaSX_UI {
 	public void xuatFileExcel() {
 
 		if (table.getRowCount() > 0) {
-			ArrayList<KhachHang> list_Xuat = new ArrayList<KhachHang>();
+			ArrayList<NhaSanXuat> list_Xuat = new ArrayList<NhaSanXuat>();
 			for (int i = 0; i < table.getRowCount(); i++) {
-				KhachHang kh = khachHang_DAO.getKhachHangByID(table.getValueAt(i, 0).toString(), "");
+				NhaSanXuat kh = NhaSanXuat_DAO.getNhanVienFindByID(table.getValueAt(i, 0).toString());
 				list_Xuat.add(kh);
 			}
-			writeToExcelKhachHang(list_Xuat);
+			writeToExcelNhaSanXuat(list_Xuat);
 		} else {
 			JOptionPane.showMessageDialog(null, "Bạn cần có ít nhất 1 khách hàng để in danh sách");
 		}
@@ -295,9 +295,61 @@ public class NhaSX_UI {
 			model.addRow(row);
 		}
 		table.setModel(model);
-		;
-	}
+		table.addMouseListener(new MouseListener() {
 
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int index = table.getSelectedRow();
+				((JLabel)objects_custommer[0][1]).setText(table.getValueAt(index, 0).toString());
+				((JTextField)objects_custommer[1][1]).setText(table.getValueAt(index, 1).toString());
+				((JTextField)objects_custommer[2][1]).setText(table.getValueAt(index, 2).toString());
+				
+			}
+		});
+	}
+	public void timNSX() {
+		String maNV = getValueStringInJTextField(objects_North[0][1]);
+		if (maNV.equals("")) {
+			JOptionPane.showMessageDialog(null, "Bạn phải nhập mã nhà sản xuất  để tìm");
+		} else {
+			NhaSanXuat nhanVien = NhaSanXuat_DAO.getNhanVienFindByID(maNV);
+
+			if (nhanVien.getMaNSX() != null) {
+				model.setRowCount(0);
+				Object[] row = { nhanVien.getMaNSX(),nhanVien.getTenNSX(),nhanVien.getDiaChiNSX()};
+				model.addRow(row);
+				table.setModel(model);
+
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"Không tìm thấy nhà sản xuất trong hệ thống vui lòng kiểm tra thông tin tìm");
+			}
+		}
+	}
 	public JButton buttonInPageCustommer(String nameButton, String pathIcon) {
 		JButton btn = createJbutton(nameButton, pathIcon);
 		btn.setPreferredSize(new Dimension(150, 50));
@@ -306,8 +358,8 @@ public class NhaSX_UI {
 				xoaTrang();
 			} else if (nameButton.equals("Thêm")) {
 				themKhachHang();
-			} else if (nameButton.equals("Cập nhật")) {
-//				capNhatKhachHang();
+			} else if (nameButton.equals("Tìm")) {
+				timNSX();
 			} else if (nameButton.equals("Xóa")) {
 				xoaKhachHang();
 			} else if (nameButton.equals("Xuất Execl")) {
