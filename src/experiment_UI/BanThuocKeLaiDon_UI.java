@@ -394,52 +394,52 @@ public class BanThuocKeLaiDon_UI {
 		model.setRowCount(0);
 		model_product.setRowCount(0);
 		if (hd != null) {
-			if(hd.getLoaiHoaDon()==true) {
-			NhanVien nv = getNV(hd.getMaNV().getMaNV());
-			Object[] row = { hd.getMaHD(), nv.getHoTen(), hd.getMaKh().getMaKH(), formatTime(hd.getNgayTaoHoaDon()),
-					hd.getTongTien() };
-			model.addRow(row);
-			table.setModel(model);
+			if (hd.getLoaiHoaDon() == true) {
+				NhanVien nv = getNV(hd.getMaNV().getMaNV());
+				Object[] row = { hd.getMaHD(), nv.getHoTen(), hd.getMaKh().getMaKH(), formatTime(hd.getNgayTaoHoaDon()),
+						hd.getTongTien() };
+				model.addRow(row);
+				table.setModel(model);
 
-			ArrayList<ChiTietHoaDon> lChiTietHoaDons = hd.getListChiTietHoaDon();
-			for (ChiTietHoaDon ct : lChiTietHoaDons) {
-				Thuoc th = thuoc_DAO.getThuocByID(ct.getMaThuoc().getMaThuoc());
-				Object[] row_product = { ct.getMaThuoc().getMaThuoc(), th.getTenThuoc(), th.getDonVi(),
-						ct.getSoLuongThuoc(), th.getGia(), ct.getThanhTien() };
-				model_product.addRow(row_product);
+				ArrayList<ChiTietHoaDon> lChiTietHoaDons = hd.getListChiTietHoaDon();
+				for (ChiTietHoaDon ct : lChiTietHoaDons) {
+					Thuoc th = thuoc_DAO.getThuocByID(ct.getMaThuoc().getMaThuoc());
+					Object[] row_product = { ct.getMaThuoc().getMaThuoc(), th.getTenThuoc(), th.getDonVi(),
+							ct.getSoLuongThuoc(), th.getGia(), ct.getThanhTien() };
+					model_product.addRow(row_product);
 
-			}
-			table_product.setModel(model_product);
-
-			((JTextField) object_sell[2][1]).setText(hd.getTongTien() + "");
-			table.setRowSelectionInterval(0, 0);
-			if (hd.getMaKh().getMaKH() != null) {
-				hidden(true);
-				cb.setSelected(true);
-				KhachHang kh = getKH(hd.getMaKh().getMaKH(), "");
-
-				String xh = kh.getXepHang();
-				if (xh.equals("Đồng")) {
-					((JLabel) object_sell[3][1]).setText("0%");
-				} else if (xh.equals("Bạc")) {
-					((JLabel) object_sell[3][1]).setText("1%");
-				} else if (xh.equals("Vàng")) {
-					((JLabel) object_sell[3][1]).setText("2%");
-				} else if (xh.equals("Bạch kim")) {
-					((JLabel) object_sell[3][1]).setText("3%");
-				} else if (xh.equals("Kim cương")) {
-					((JLabel) object_sell[3][1]).setText("4.5%");
 				}
+				table_product.setModel(model_product);
 
-				((JTextField) object_custommer[0][1]).setText(kh.getMaKH());
-				((JTextField) object_custommer[1][1]).setText(kh.getTenKH());
-				jtextMaKH.setText(kh.getsDT());
-				((JTextField) object_custommer[2][1]).setText(kh.getTuoi() + "");
-				((JComboBox) object_custommer[3][1]).setSelectedItem(transGender(kh.isGioiTinh()));
-				((JTextField) object_custommer[4][1]).setText(kh.getXepHang());
+				((JTextField) object_sell[2][1]).setText(hd.getTongTien() + "");
+				table.setRowSelectionInterval(0, 0);
+				if (hd.getMaKh().getMaKH() != null) {
+					hidden(true);
+					cb.setSelected(true);
+					KhachHang kh = getKH(hd.getMaKh().getMaKH(), "");
 
-			}
-			}else {
+					String xh = kh.getXepHang();
+					if (xh.equals("Đồng")) {
+						((JLabel) object_sell[3][1]).setText("0%");
+					} else if (xh.equals("Bạc")) {
+						((JLabel) object_sell[3][1]).setText("1%");
+					} else if (xh.equals("Vàng")) {
+						((JLabel) object_sell[3][1]).setText("2%");
+					} else if (xh.equals("Bạch kim")) {
+						((JLabel) object_sell[3][1]).setText("3%");
+					} else if (xh.equals("Kim cương")) {
+						((JLabel) object_sell[3][1]).setText("4.5%");
+					}
+
+					((JTextField) object_custommer[0][1]).setText(kh.getMaKH());
+					((JTextField) object_custommer[1][1]).setText(kh.getTenKH());
+					jtextMaKH.setText(kh.getsDT());
+					((JTextField) object_custommer[2][1]).setText(kh.getTuoi() + "");
+					((JComboBox) object_custommer[3][1]).setSelectedItem(transGender(kh.isGioiTinh()));
+					((JTextField) object_custommer[4][1]).setText(kh.getXepHang());
+
+				}
+			} else {
 				hidden(false);
 				cb.setSelected(false);
 				NhanVien nv = getNV(hd.getMaNV().getMaNV());
@@ -460,7 +460,7 @@ public class BanThuocKeLaiDon_UI {
 
 				((JTextField) object_sell[2][1]).setText(hd.getTongTien() + "");
 				table.setRowSelectionInterval(0, 0);
-				
+
 			}
 		} else {
 			JOptionPane.showMessageDialog(null, "Không tìm thấy hóa đơn trong hệ thống");
@@ -666,7 +666,8 @@ public class BanThuocKeLaiDon_UI {
 			}
 			double truTien = (value1 / 100) * giampt;
 			result = value2 - value1 + truTien;
-			labelTotal.setText("SỐ TIỀN TRẢ LẠI : " + formatValueDouble(result) + "VND");
+			double vl = roundToNearest500(result);
+			labelTotal.setText("SỐ TIỀN TRẢ LẠI : " + formatValueDouble(vl) + "VND");
 		}
 	}
 
@@ -729,15 +730,14 @@ public class BanThuocKeLaiDon_UI {
 
 		for (int i = 0; i < table_product.getRowCount(); i++) {
 			Thuoc th = new Thuoc(table_product.getValueAt(i, 0).toString());
-			
-		
-					HoaDon hd = new HoaDon(getValueStringInJlabel(object_sell[0][1]));
-					int soLuong = Integer.parseInt(table_product.getValueAt(i, 3).toString());
 
-					double thanhTien = Double.parseDouble(table_product.getValueAt(i, 5).toString());
-					ChiTietHoaDon ct = new ChiTietHoaDon(hd, th, soLuong, thanhTien);
-					listCtHD.add(ct);
-				
+			HoaDon hd = new HoaDon(getValueStringInJlabel(object_sell[0][1]));
+			int soLuong = Integer.parseInt(table_product.getValueAt(i, 3).toString());
+
+			double thanhTien = Double.parseDouble(table_product.getValueAt(i, 5).toString());
+			ChiTietHoaDon ct = new ChiTietHoaDon(hd, th, soLuong, thanhTien);
+			listCtHD.add(ct);
+
 		}
 
 		String maHD = getValueStringInJlabel(object_sell[0][1]);
@@ -778,7 +778,7 @@ public class BanThuocKeLaiDon_UI {
 
 	public void thayDoiDiemXepHang() {
 		String maKh = jtextMaKH.getText();
-		int dtl = (int) tinhLaiTien() / 1000;
+		int dtl = (int) tinhLaiTien() / 10000;
 		KhachHang kh = khachHang_DAO.getKhachHangByID(maKh, "");
 		int tinhDiem = kh.getDiemThanhVien() + dtl;
 		String xepHang;
@@ -793,11 +793,8 @@ public class BanThuocKeLaiDon_UI {
 		} else {
 			xepHang = "Kim cương";
 		}
-		if (khachHang_DAO.updateKhachHangXepHang(tinhDiem, xepHang, maKh)) {
+		khachHang_DAO.updateKhachHangXepHang(tinhDiem, xepHang, maKh);
 
-		} else {
-			System.out.println("sai");
-		}
 	}
 
 	public void taoHoaDon() {

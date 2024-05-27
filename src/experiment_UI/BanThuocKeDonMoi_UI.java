@@ -1,6 +1,5 @@
 package experiment_UI;
 
-
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -382,7 +381,8 @@ public class BanThuocKeDonMoi_UI {
 			}
 			double truTien = (value1 / 100) * giampt;
 			result = value2 - value1 + truTien;
-			labelTotal.setText("SỐ TIỀN TRẢ LẠI : " + formatValueDouble(result) + "VND");
+			double vl = roundToNearest500(result);
+			labelTotal.setText("SỐ TIỀN TRẢ LẠI : " + formatValueDouble(vl) + "VND");
 		}
 	}
 
@@ -405,38 +405,38 @@ public class BanThuocKeDonMoi_UI {
 			maThuoc = textMaThuocFind.getText();
 
 			Thuoc th = th_DAO.getThuocByID(maThuoc);
-			if(regexthoiGian(th)) {
-			if (checkTrung(th.getMaThuoc()) == false) {
-				if (th.getMaThuoc() != null) {
-					// Kiểm tra nếu ô số lượng đã được điền
-					if (regexGetThuoc(th)) {
-						if (isSoLuongFilled()) {
+			if (regexthoiGian(th)) {
+				if (checkTrung(th.getMaThuoc()) == false) {
+					if (th.getMaThuoc() != null) {
+						// Kiểm tra nếu ô số lượng đã được điền
+						if (regexGetThuoc(th)) {
+							if (isSoLuongFilled()) {
 
-							String[] row = { th.getMaThuoc(), th.getTenThuoc(), th.getDonVi(), "", th.getGia() + "",
-									"" };
-							model.addRow(row);
-							int soLuongColumnIndex = 3;
+								String[] row = { th.getMaThuoc(), th.getTenThuoc(), th.getDonVi(), "", th.getGia() + "",
+										"" };
+								model.addRow(row);
+								int soLuongColumnIndex = 3;
 
-							int lastRowIndex = model.getRowCount() - 1;
+								int lastRowIndex = model.getRowCount() - 1;
 
-							table.requestFocus();
-							table.changeSelection(lastRowIndex, soLuongColumnIndex, false, false);
-							table.editCellAt(lastRowIndex, soLuongColumnIndex);
-							Component editor = table.getEditorComponent();
-							testBug(editor);
+								table.requestFocus();
+								table.changeSelection(lastRowIndex, soLuongColumnIndex, false, false);
+								table.editCellAt(lastRowIndex, soLuongColumnIndex);
+								Component editor = table.getEditorComponent();
+								testBug(editor);
 
-						} else {
-							JOptionPane.showMessageDialog(null,
-									"Vui lòng nhập số lượng trước khi tìm kiếm sản phẩm tiếp theo");
+							} else {
+								JOptionPane.showMessageDialog(null,
+										"Vui lòng nhập số lượng trước khi tìm kiếm sản phẩm tiếp theo");
+							}
 						}
+					} else {
+						JOptionPane.showMessageDialog(null, "Không tìm thấy mã thuốc trong hệ thống");
 					}
 				} else {
-					JOptionPane.showMessageDialog(null, "Không tìm thấy mã thuốc trong hệ thống");
+					JOptionPane.showMessageDialog(null, "Thuốc đã có trong danh sách");
 				}
-			} else {
-				JOptionPane.showMessageDialog(null, "Thuốc đã có trong danh sách");
-			}
-			textMaThuocFind.setText("");
+				textMaThuocFind.setText("");
 			}
 		}
 	}
@@ -495,19 +495,26 @@ public class BanThuocKeDonMoi_UI {
 		}
 		return true; // Nếu tất cả ô số lượng đã được điền, trả về true
 	}
+
 	public boolean regexthoiGian(Thuoc th) {
-		int soLuong =th.getSoLuong();
-		if(soLuong<0) {
+
+		int soLuong = th.getSoLuong();
+		if (th.getMaThuoc() == null) {
+			JOptionPane.showMessageDialog(null, "Thuốc không có trong hệ thống");
+			return false;
+		}
+		if (soLuong < 0) {
 			JOptionPane.showMessageDialog(null, "Thuốc đã hết hàng");
 			return false;
 		}
 		LocalDate ngayHh = th.getNgayHetHan();
-		if(ngayHh.isBefore(LocalDate.now())) {
+		if (th.getMaThuoc() != null && ngayHh.isBefore(LocalDate.now())) {
 			JOptionPane.showMessageDialog(null, "Thuốc đã hết hạn sử dụng");
 			return false;
 		}
 		return true;
 	}
+
 	private void updateTotalPrice() {
 		int soLuongColumnIndex = 3;
 		int lastRowIndex = model.getRowCount() - 1;
@@ -773,8 +780,9 @@ public class BanThuocKeDonMoi_UI {
 	}
 
 	public void thayDoiDiemXepHang() {
-		String maKh = jtextMaKH.getText();
-		int dtl = (int) tinhGia() / 1000;
+		String maKh = getValueStringInJTextField(object_custommer[0][1]);
+		
+		int dtl = (int) tinhGia() / 10000;
 		KhachHang kh = khachHang_DAO.getKhachHangByID(maKh, "");
 		int tinhDiem = kh.getDiemThanhVien() + dtl;
 		String xepHang;
@@ -789,11 +797,9 @@ public class BanThuocKeDonMoi_UI {
 		} else {
 			xepHang = "Kim cương";
 		}
-		if (khachHang_DAO.updateKhachHangXepHang(tinhDiem, xepHang, maKh)) {
+		khachHang_DAO.updateKhachHangXepHang(tinhDiem, xepHang, maKh);
 
-		} else {
-			System.out.println("sai");
-		}
+		
 	}
 
 	public void timTheoSdt() {
@@ -863,8 +869,8 @@ public class BanThuocKeDonMoi_UI {
 				hoaDonLuuTam.getHoaDonLuuTam(jtextMaKH, object_custommer, object_sell, table);
 				new Thread(() -> {
 					try {
-						// Wait for a short while to ensure the file is opened
-						Thread.sleep(3000); // Wait for 5 seconds
+
+						Thread.sleep(3000);
 						cb.setSelected(true);
 						hidden(true);
 					} catch (InterruptedException e1) {

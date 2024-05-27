@@ -168,7 +168,7 @@ public class KhachHang_DAO {
 		PreparedStatement p = null;
 		try {
 
-			p = con.prepareStatement("UPDATE KhachHang SET DiemThanhVien= ? ,XepHang = ? WHERE MaKH=?");
+			p = con.prepareStatement("UPDATE KhachHang SET DiemThanhVien= ? ,XepHang = ? WHERE MaKH = ?");
 
 			p.setInt(1, dtv);
 			p.setString(2, xh);

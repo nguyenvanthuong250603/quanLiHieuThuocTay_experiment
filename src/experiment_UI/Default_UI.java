@@ -39,6 +39,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.IconifyAction;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+
 import dao.HoaDon_DAO;
 import dao.NhanVien_DAO;
 import entity.HoaDon;
@@ -74,6 +76,7 @@ public class Default_UI {
 		container = new JPanel();
 		cardLayout = new CardLayout();
 		container.setLayout(cardLayout);
+		container.add(createNhaSanXuat(),NSX);
 		container.add(createThongKeDoanhThuTheoThuoc(),TKDTT);
 		container.add(createThongKeDoanhThu(),TKDT);
 		container.add(createHoaDon(hoaDon_DAO), HĐBT);
@@ -85,7 +88,7 @@ public class Default_UI {
 		container.add(createNhanVien(), NV);
 		container.add(createDoiThuoc(MaNV), DT);
 		container.add(createKhachHang(), KH);
-
+		
 		
 		jFrame.add(sidebar, BorderLayout.WEST);
 		jFrame.add(container, BorderLayout.CENTER);
@@ -263,6 +266,10 @@ public class Default_UI {
 					cardLayout.show(container, TKDTT);
 					break;
 				}
+				case NSX : {
+					cardLayout.show(container, NSX);
+					break;
+				}
 				default:
 					throw new IllegalArgumentException("Unexpected value: " + nameButton);
 				}
@@ -290,6 +297,7 @@ public class Default_UI {
 		boxx.add(createCompoment("gift\\upload.png", "Khách Hàng", "gift\\khachhang.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Nhân Viên", "gift\\nhanvien.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Thống Kê", "gift\\thongke.png", false));
+		boxx.add(createCompoment("gift\\thuoc.png", "Nhà sản xuất", "gift\\logout.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Đăng Xuất", "gift\\logout.png", true));
 		westt.add(boxx);
 		return westt;
@@ -361,5 +369,9 @@ public class Default_UI {
 	private JPanel createThongKeDoanhThuTheoThuoc() {
 		ThongKeDoanhThuTheoThuoc_UI tKDTT = new ThongKeDoanhThuTheoThuoc_UI();
 		return tKDTT.getThongKeDoanhThuTheoThuoc();
+	}
+	private JPanel createNhaSanXuat() {
+		NhaSX_UI nSX = new NhaSX_UI();
+		return nSX.getNSX();
 	}
 }

@@ -185,10 +185,12 @@ public class ThongKeDoanhThuTheoThuoc_UI {
 		ArrayList<Object[]> mangHD = hoaDon_DAO.getHoaDonDoanhThuTheoThuoc(tenThuoc, ngay, thang, nam);
 		size = mangHD.size();
 		model.setRowCount(0);
-		for (Object[] objects : mangHD) {
-			Object[] row = { objects[0].toString(), objects[1], objects[2] };
-			model.addRow(row);
-			doanhThu += Double.parseDouble(objects[2].toString());
+		if (size > 0) {
+			for (Object[] objects : mangHD) {
+				Object[] row = { objects[0].toString(), objects[1], objects[2] };
+				model.addRow(row);
+				doanhThu += Double.parseDouble(objects[2].toString());
+			}
 		}
 		table.setModel(model);
 		((JLabel) obj2[0][1]).setText(size + "");
@@ -292,7 +294,7 @@ public class ThongKeDoanhThuTheoThuoc_UI {
 					} else {
 						JOptionPane.showMessageDialog(null, "Thuốc không có trong danh sách");
 					}
-				}else {
+				} else {
 					thongKe(tenThuoc, ngay, thang, nam);
 				}
 

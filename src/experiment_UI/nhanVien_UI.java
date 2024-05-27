@@ -154,7 +154,7 @@ public class NhanVien_UI {
 
 	public JPanel table_personnel() {
 		JPanel managerment = new JPanel();
-		createTitle(managerment, "Danh sách khách hàng");
+		createTitle(managerment, "Danh sách nhân viên");
 		managerment.setLayout(new BorderLayout());
 		String[] column = { "Mã nhân viên", "Tên nhân viên", "Số điện thoại", "Chức vụ", "Trạng thái", "Địa chỉ" };
 		model = new DefaultTableModel(column, 0);

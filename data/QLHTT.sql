@@ -26,7 +26,8 @@ CREATE TABLE TaiKhoan (
 GO
 
 CREATE TABLE NhaSanXuat(
-	TenNSX NVARCHAR(255) NOT NULL PRIMARY KEY,
+	MaNSX NVARCHAR(50) ,
+	TenNSX NVARCHAR(255) NOT NULL PRIMARY KEY ,
 	DiaChiNSX NVARCHAR(255)
 );
 GO
@@ -131,10 +132,10 @@ select *from HoaDon where MaHD like '%1998%'
 
 select MaThuoc,sum (ThanhTien) , sum(SoLuongThuoc) from ChiTietHoaDon   group by MaThuoc
 
-select count(MaHD) from ChiTietHoaDon group by MaThuoc
-select MaThuoc,sum (ThanhTien) , sum(SoLuongThuoc) from ChiTietHoaDon   c inner join HoaDon h  on c.MaHD = h.MaHD where Day(h.NgayTaoHoaDon) = 10 and MONTH(h.NgayTaoHoaDon) = 5 group by MaThuoc
+select * from ChiTietHoaDon group by MaThuoc
+select MaThuoc,sum(ThanhTien)  ,sum( SoLuongThuoc) from ChiTietHoaDon   c inner join HoaDon h  on c.MaHD = h.MaHD where  MaThuoc ='TH04050001' group by MaThuoc
 
-
+select MaThuoc,sum(ThanhTien)  , sum(SoLuongThuoc) from ChiTietHoaDon   c inner join HoaDon h  on c.MaHD = h.MaHD where  MaThuoc ='TH04050002'
 GO
 
 INSERT INTO Thuoc (MaThuoc, TenThuoc, SoLuong, Gia, LoaiThuoc, NhaSanXuat, NgaySanXuat, NgayHetHan, HinhAnh, DonVi, DangBaoChe, DoTuoi, ThanhPhan, ChiDinh, LieuDung, BaoQuan, MoTa)

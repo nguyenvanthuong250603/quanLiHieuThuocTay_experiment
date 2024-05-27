@@ -1,8 +1,15 @@
 package entity;
 
 public class NhaSanXuat {
-	private String tenNSX,diaChiNSX;
+	private String maNSX, tenNSX, diaChiNSX;
 
+	public String getMaNSX() {
+		return maNSX;
+	}
+
+	public void setMaNSX(String maNSX) {
+		this.maNSX = maNSX;
+	}
 
 	public String getTenNSX() {
 		return tenNSX;
@@ -20,35 +27,25 @@ public class NhaSanXuat {
 		this.diaChiNSX = diaChiNSX;
 	}
 
-
-	public String toString() {
-		return "NhaSanXuat [  tenNSX=" + tenNSX + ", diaChiNSX=" + diaChiNSX + "]";
-	}
-
-	
-	
-
-	public NhaSanXuat( String tenNSX, String diaChiNSX) {
-		
-
+	public NhaSanXuat(String maNSX, String tenNSX, String diaChiNSX) {
+		super();
+		this.maNSX = maNSX;
 		this.tenNSX = tenNSX;
 		this.diaChiNSX = diaChiNSX;
 	}
 
+	@Override
+	public String toString() {
+		return "NhaSanXuat [maNSX=" + maNSX + ", tenNSX=" + tenNSX + ", diaChiNSX=" + diaChiNSX + "]";
+	}
+
+	public NhaSanXuat() {
+
+	}
+
 	public NhaSanXuat(String tenNSX) {
-	
+
 		this.tenNSX = tenNSX;
 	}
 
-
-
-
-	
-
-	
-
-
-
-	
-	
 }

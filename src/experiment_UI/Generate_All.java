@@ -198,8 +198,24 @@ public class Generate_All {
 	        Paragraph khauTru = new Paragraph("Khấu trừ : " + khuyenMai, fontWord);
 	        document.add(khauTru);
 
-	        double tt = hd.getTongTien();
-	        Paragraph thanhtoan = new Paragraph("Tổng tiền : " + tt, fontWord);
+	        double result1 = 0;
+	    	String giam = khuyenMai;
+	    	double giampt=0;
+			if (giam.equals("0%")) {
+				giampt = 0;
+			} else if (giam.equals("1%")) {
+				giampt = 1;
+			} else if (giam.equals("2%")) {
+				giampt = 2;
+			} else if (giam.equals("3%")) {
+				giampt = 3;
+			} else if (giam.equals("4.5%")) {
+				giampt = 4.5;
+			}
+			double truTien = (tongTien / 100) * giampt;
+			result1 = khachDua-tongTien + truTien;
+	        
+	        Paragraph thanhtoan = new Paragraph("Tổng tiền : " + roundToNearest500((khachDua-result1)),fontWord);
 	        document.add(thanhtoan);
 
 	        Paragraph khachDuaa = new Paragraph("Khách đưa : " + khachDua, fontWord);
@@ -221,8 +237,8 @@ public class Generate_All {
 	        Desktop.getDesktop().open(tempFile);
 	        new Thread(() -> {
 	            try {
-	                // Wait for a short while to ensure the file is opened
-	                Thread.sleep(1000); // Wait for 1 second
+	                
+	                Thread.sleep(1000); 
 	                if (tempFile.exists()) {
 	                    tempFile.delete();
 	                }
@@ -368,7 +384,18 @@ public class Generate_All {
 	        e.printStackTrace();
 	    }
 	}
-
+	
+	  public static double roundToNearest500(double value) {
+	        double lower = Math.floor(value / 500) * 500;
+	        double upper = Math.ceil(value / 500) * 500;
+	        
+	        if (value - lower < upper - value) {
+	            return lower;
+	        } else {
+	            return upper;
+	        }
+	    }
+	
 	public static void generateInvoiceHoanTra(HoaDon hd, double tienTra) {
 	    // Tạo một đối tượng Document
 	    Document document = new Document();
@@ -1252,7 +1279,17 @@ public class Generate_All {
 		return lb;
 
 	}
+	public static JLabel sampleModel6(String string) {
 
+		JLabel lb = new JLabel(string);
+		lb.setFont(new Font("Arial", Font.BOLD, 15));
+
+		lb.setHorizontalTextPosition(JLabel.LEFT);
+		lb.setPreferredSize(new Dimension(150, 30));
+//		lb.setBorder(new EmptyBorder(5, 0, 5, 0));
+		return lb;
+
+	}
 	public static JLabel sampleModel2(String string) {
 
 		JLabel lb = new JLabel(string);
@@ -1286,7 +1323,15 @@ public class Generate_All {
 		div.setBorder(new EmptyBorder(5, 0, 5, 0));
 		return div;
 	}
+	public static JPanel createNameAndTextField6(JTextField jtext, String nameLabel) {
 
+		JPanel div = new JPanel(new BorderLayout());
+		div.add(sampleModel6(nameLabel), BorderLayout.WEST);
+		div.add(jtext, BorderLayout.CENTER);
+
+		div.setBorder(new EmptyBorder(5, 0, 5, 0));
+		return div;
+	}
 	public static JPanel createNameAndTextField2(JTextField jtext, String nameLabel) {
 
 		JPanel div = new JPanel(new BorderLayout());

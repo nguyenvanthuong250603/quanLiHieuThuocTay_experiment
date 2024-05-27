@@ -216,7 +216,7 @@ public class KhachHang_UI {
 		String gt = getValueInComboBox((JComboBox) objects_custommer[4][1]);
 		String sdt = getValueStringInJTextField(objects_custommer[5][1]);
 		String diaChi = getValueStringInJTextField(objects_custommer[6][1]);
-		String xepHang = getValueStringInJTextField(objects_custommer[7][1]);
+		String xepHang = getValueInComboBox((JComboBox)objects_custommer[7][1]);
 		KhachHang kh = new KhachHang(maKh, tenKh, ngaySing, tuoi, transGenderToSQL(gt), sdt, diaChi, 0, xepHang);
 		return kh;
 	}

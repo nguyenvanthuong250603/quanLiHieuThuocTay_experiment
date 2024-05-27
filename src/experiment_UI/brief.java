@@ -17,5 +17,6 @@ public class Brief {
 	public final static String TKDT = "doanh thu";
 	public final static String TKDTT = "thuốc";
 	public final static String KHAC = "Khác";
+	public final static String NSX = "Nhà sản xuất";
 	
 }
