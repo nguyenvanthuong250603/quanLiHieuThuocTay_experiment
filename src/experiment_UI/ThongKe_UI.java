@@ -235,6 +235,7 @@ public class ThongKe_UI {
 			if (objects[1] instanceof JLabel)
 				((JLabel) objects[1]).setText("");
 		}
+		((JTextField)obj[0][1]).setText("");
 		((JDateChooser) obj[1][1]).setDate(null);
 		((JDateChooser) obj[2][1]).setDate(null);
 	}

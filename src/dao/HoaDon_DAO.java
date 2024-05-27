@@ -110,7 +110,7 @@ public class HoaDon_DAO {
 
 				return true;
 			} catch (Exception e) {
-
+				e.printStackTrace();
 				return false;
 			} finally {
 				try {

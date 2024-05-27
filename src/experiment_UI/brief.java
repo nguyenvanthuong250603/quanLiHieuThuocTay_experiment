@@ -5,7 +5,7 @@ public class Brief {
 	public final static String T = "Thuốc";
 	public final static String HD = "Hóa Đơn";
 	public final static String BT ="Bán Thuốc";
-	public final static String DT ="Đổi Thuốc";
+	public final static String DT ="Đổi Trả";
 	public final static String KH = "Khách Hàng";
 	public final static String NV = "Nhân Viên";
 	public final static String HĐBT = "Hóa Đơn Bán Thuốc";

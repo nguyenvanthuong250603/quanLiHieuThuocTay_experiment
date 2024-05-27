@@ -332,7 +332,7 @@ public class Default_UI {
 
 		boxx.add(createCompoment("gift\\thuoc.png", "Bán Thuốc", "gift\\banthuoc.png", false));
 		boxx.add(createCompoment("gift\\thuoc.png", "Thuốc", "gift\\quanlythuoc.png", true));
-		boxx.add(createCompoment("gift\\upload.png", "Đổi Thuốc", "gift\\doitra.png", true));
+		boxx.add(createCompoment("gift\\upload.png", "Đổi Trả", "gift\\doitra.png", true));
 		boxx.add(createCompoment("gift\\down.png", "Hóa Đơn", "gift\\bill.png", true));
 		boxx.add(createCompoment("gift\\upload.png", "Khách Hàng", "gift\\khachhang.png", true));
 		boxx.add(createCompoment("gift\\thuoc.png", "Nhân Viên", "gift\\nhanvien.png", true));
